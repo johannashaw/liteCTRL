@@ -1,7 +1,5 @@
 from machine import Pin, Timer
 
-
-
 class Motor:
 
     # class atributes
@@ -36,10 +34,9 @@ class Motor:
     # Uses a full-wave stepping pattern
     def Step(self, timer):
         # remember that you need to state that it's global, THEN do something with it.
-        global state
-        state += 1
+        self.State += 1
         
-        if state & 1 == 1:        
+        if self.State & 1 == 1:        
             self.PinC.toggle()
             self.PinD.toggle()
         else:
@@ -47,8 +44,8 @@ class Motor:
             self.PinB.toggle()
         
         # If the motor has completed one full rotation
-        if state % 200 == 0:
-            state = 0
+        if self.State % 200 == 0:
+            self.State = 0
             self.FullRotation()
 
     
@@ -56,3 +53,6 @@ class Motor:
     def FullRotation(self):
         self.RotIndLed.toggle()
     
+
+ourMotor = Motor(18, 19, 20, 21)
+ourMotor.StartMotor(500)
