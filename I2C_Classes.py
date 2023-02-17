@@ -1,4 +1,5 @@
-# 
+# This will contain all of the I2C classes
+# Separate classes for light sensor, colour sensor, and maybe lights (if it takes I2C)
 
 # the ambient light sensor
 class VEML7700:

@@ -6,6 +6,11 @@ from machine import Pin, Timer
 # Notes:
 #	Consider Adding an enable pin for the motor so that it doesn't overheat!
 
+# to implement:
+#	Stop
+#	Moving by a set amount
+
+
 
 class Motor:
 
