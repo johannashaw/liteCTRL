@@ -1,4 +1,11 @@
+# File contains a Class def for the motor
+#
 from machine import Pin, Timer
+
+
+# Notes:
+#	Consider Adding an enable pin for the motor so that it doesn't overheat!
+
 
 class Motor:
 
@@ -14,21 +21,29 @@ class Motor:
         self.PinB = Pin(pinB, Pin.OUT)
         self.PinC = Pin(pinC, Pin.OUT)
         self.PinD = Pin(pinD, Pin.OUT)
+        
+        # initialize the timer
+        self.Timer = Timer()
+        self.State = 0
 
+
+    def StartForward(self, frequency):        
         # set the initial motor values so they alternate
         self.PinA.value(0)
         self.PinB.value(1)
         self.PinC.value(0)
         self.PinD.value(1)
-
-        self.Timer = Timer()
-        self.State = 0
-
-
-    def StartMotor(self, frequency):
-        # initialize the timer
+        
         self.Timer.init(freq=frequency, mode=Timer.PERIODIC, callback=self.Step)
-  
+        
+    def StartBackward(self, frequency):
+        # set the initial motor values so they alternate
+        self.PinA.value(1)
+        self.PinB.value(0)
+        self.PinC.value(0)
+        self.PinD.value(1)
+        
+        self.Timer.init(freq=frequency, mode=Timer.PERIODIC, callback=self.Step)
 
     # The Callback function driving each motor step
     # Uses a full-wave stepping pattern
@@ -36,6 +51,7 @@ class Motor:
         # remember that you need to state that it's global, THEN do something with it.
         self.State += 1
         
+        # if State is an odd number (aka alternate between these two)
         if self.State & 1 == 1:        
             self.PinC.toggle()
             self.PinD.toggle()
@@ -56,3 +72,4 @@ class Motor:
 
 #ourMotor = Motor(18, 19, 20, 21)
 #ourMotor.StartMotor(500)
+
