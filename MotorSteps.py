@@ -4,16 +4,16 @@ class Motor:
 
     # class atributes
     # Indicator LED for when one rotation has been completed
-    RotIndLed = machine.Pin(0, Pin.OUT)
+    RotIndLed = Pin(0, Pin.OUT)
 
     def __init__(self, pinA, pinB, pinC, pinD):
         
         # initialize the pins
         # note: pins A and B are friends, and pins C and D are friends
-        self.PinA = machine.Pin(pinA, Pin.OUT)
-        self.PinB = machine.Pin(pinB, Pin.OUT)
-        self.PinC = machine.Pin(pinC, Pin.OUT)
-        self.PinD = machine.Pin(pinD, Pin.OUT)
+        self.PinA = Pin(pinA, Pin.OUT)
+        self.PinB = Pin(pinB, Pin.OUT)
+        self.PinC = Pin(pinC, Pin.OUT)
+        self.PinD = Pin(pinD, Pin.OUT)
 
         # set the initial motor values so they alternate
         self.PinA.value(0)
@@ -54,5 +54,5 @@ class Motor:
         self.RotIndLed.toggle()
     
 
-ourMotor = Motor(18, 19, 20, 21)
-ourMotor.StartMotor(500)
+#ourMotor = Motor(18, 19, 20, 21)
+#ourMotor.StartMotor(500)
