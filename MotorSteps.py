@@ -18,7 +18,7 @@ class Motor:
     # Indicator LED for when one rotation has been completed
     RotIndLed = Pin(0, Pin.OUT)
 
-    def __init__(self, pinA, pinB, pinC, pinD):
+    def __init__(self, pinA, pinB, pinC, pinD, pinEnable):
         
         # initialize the pins
         # note: pins A and B are friends, and pins C and D are friends
@@ -31,6 +31,10 @@ class Motor:
         self.Timer = Timer()
         self.State = 0
 
+        # Pin dedicated to enabling the motor
+        # So that the motor doesn't get super hot
+        self.EnablePin = Pin(pinEnable, Pin.OUT)
+
 
     def StartForward(self, frequency):        
         # set the initial motor values so they alternate
@@ -39,7 +43,8 @@ class Motor:
         self.PinC.value(0)
         self.PinD.value(1)
         
-        self.Timer.init(freq=frequency, mode=Timer.PERIODIC, callback=self.Step)
+        self.Start(frequency)
+
         
     def StartBackward(self, frequency):
         # set the initial motor values so they alternate
@@ -48,7 +53,27 @@ class Motor:
         self.PinC.value(0)
         self.PinD.value(1)
         
+        self.Start(frequency)
+    
+
+    # Helper function for StartBackwards and StartForwards
+    def Start(self, frequency):
+        # Enable the motor and then start the timer
+        self.EnablePin.value(1)
+
         self.Timer.init(freq=frequency, mode=Timer.PERIODIC, callback=self.Step)
+
+        self.Started = True
+
+
+    # Stops the motor and makes it so that there's no electricity going through it
+    def Stop(self):
+        self.EnablePin.value(0)
+        self.Timer.deinit()
+
+        
+        self.Started = False
+
 
     # The Callback function driving each motor step
     # Uses a full-wave stepping pattern
@@ -75,6 +100,4 @@ class Motor:
         self.RotIndLed.toggle()
     
 
-#ourMotor = Motor(18, 19, 20, 21)
-#ourMotor.StartMotor(500)
 
