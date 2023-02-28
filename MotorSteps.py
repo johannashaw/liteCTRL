@@ -1,5 +1,9 @@
-# File contains a Class def for the motor
+# Project: liteCTRL
+# File: Class def for Motor object
 #
+# Created by: Johanna Shaw
+
+
 from machine import Pin, Timer
 
 
@@ -71,8 +75,13 @@ class Motor:
         self.EnablePin.value(0)
         self.Timer.deinit()
 
-        
+        # Easy reference for whether or not the motor is currentlty running        
         self.Started = False
+
+        # The State variable us used to determine which direction the motor turns
+        # NEEDS to be reset to an even number each time it stops, 
+        # otherwise there's no guarantee which direction it will go in when it starts up again.
+        self.State = 0
 
 
     # The Callback function driving each motor step
