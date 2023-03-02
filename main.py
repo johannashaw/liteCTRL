@@ -8,6 +8,7 @@
 
 from machine import Pin, Timer, I2C, SoftI2C
 from MotorSteps import Motor
+from I2C_Classes import VEML7700
 
 
 ourMotor = None
@@ -22,14 +23,10 @@ def Main():
     print("Got to main")
 
     # MotorTesting()
+    VEML_Testing()
 
-    # TESTING I2C:
-    # initialize the I2C channels
-    # GPIO pins 4 and 5 map to irl pins 6 and 7
-    i2c = I2C(id=0, scl=Pin(5, mode=Pin.ALT), sda=Pin(4, mode=Pin.ALT),  freq=400000)
-    
-    print(i2c.scan())
-    print('done scanning')
+
+
 
 
 def MotorTesting():       
@@ -43,6 +40,20 @@ def MotorTesting():
 
     # Timer for testing start/stop functionality of the motor.
     timrr.init(freq=1, mode=Timer.PERIODIC, callback=m_OnOff)
+
+
+def VEML_Testing():
+    # TESTING I2C:
+    # initialize the I2C channels
+    # GPIO pins 4 and 5 map to irl pins 6 and 7
+    i2c = I2C(id=0, scl=Pin(5, mode=Pin.ALT), sda=Pin(4, mode=Pin.ALT),  freq=400000)
+    
+    print(i2c.scan())
+    print('done scanning')
+
+    Veml = VEML7700(5, 4)
+    print('Veml init')
+
 
 # Used for testing motor library. Toggles motor between on and off using the enable pin.
 def m_OnOff(PIN):
