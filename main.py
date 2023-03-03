@@ -16,9 +16,9 @@ ourMotor = None
 MGoBrr = Pin(27, Pin.IN)
 timrr = Timer()
 
+
 # basic initializations
 def Main():
-    global ourMotor, MGoBrr, timrr
 
     print("Got to main")
 
@@ -28,8 +28,9 @@ def Main():
 
 
 
-
 def MotorTesting():       
+    global ourMotor, MGoBrr, timrr
+
     # lets go for pins [24:27] (gp 18:21)
     # enable pin is on GPIO 28, or pin 34 irl
     ourMotor = Motor(18, 19, 20, 21, 28)
@@ -42,7 +43,7 @@ def MotorTesting():
     timrr.init(freq=1, mode=Timer.PERIODIC, callback=m_OnOff)
 
 
-def VEML_Testing():
+def Basic_I2C():
     # TESTING I2C:
     # initialize the I2C channels
     # GPIO pins 4 and 5 map to irl pins 6 and 7
@@ -51,8 +52,26 @@ def VEML_Testing():
     print(i2c.scan())
     print('done scanning')
 
-    Veml = VEML7700(5, 4)
+
+def VEML_Testing():
+    global timrr, VEML
+
+    # GPIO pins 4 and 5 map to irl pins 6 and 7
+    VEML = VEML7700(SCL=5, SDA=4)
+
     print('Veml init')
+    
+    printLUX(None)
+    
+    # VEML.Get_Lux()
+    # timrr.init(freq=1, mode=Timer.PERIODIC, callback=printLUX)
+
+
+def printLUX(PIN):
+    global VEML
+
+    print(VEML.Get_Lux())
+
 
 
 # Used for testing motor library. Toggles motor between on and off using the enable pin.
