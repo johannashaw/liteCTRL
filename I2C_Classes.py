@@ -10,6 +10,7 @@ from machine import Pin, I2C, SoftI2C
 # the ambient light sensor
 class VEML7700:
     # Attributes:
+    address = 16    # PLEASE DON"T CHANGE THIS
     
     # Note:
     #   ALS means Ambient Light Sensor
@@ -38,13 +39,14 @@ class VEML7700:
             print('VEML7700 says hi')
 
         # configure the 7700
-        #self.I2C_Write(b'00', MSB=b'0C', LSB=b'00')
+        # self.I2C_Write(b'\x00', MSB=b'\x0C', LSB=b'\x00')
+        self.I2C_Write(0, MSB= 12, LSB=0)
 
     
     # Formats the info given so that you can write to the device easily
     def I2C_Write(self, Cmd_code, LSB, MSB):
-
-        buff = Cmd_code + LSB + MSB
+        # buff = Cmd_code + LSB + MSB
+        buff = bytes([self.address << 1] + [Cmd_code] + [LSB] + [MSB])
 
         # VEML7700 write I2C formatting:
         #   Start condition
@@ -58,37 +60,63 @@ class VEML7700:
         #   ACK
         #   MSB Data
         #   ACK        
-        #   Stop Condition
 
-        temp = self.i2c.writeto(16, buff, True)
+        # temp = self.i2c.writeto(16, buff, True)
+        temp = self.i2c.write(buff)
+
         if temp != 4:
             print(f'VLEM7700:I2C_Write: 4 ACK expected, {temp} ACK received')
             return 1
 
+        #   Stop Condition
+        self.i2c.stop()
+
         return 0
     
+    
     def I2C_Read(self, Cmd_code):
+        buff = bytes([self.address << 1] + [Cmd_code])
         
         # start
+        self.i2c.start()
         # device address
         # write bit
         # ACK
         # Command code      ##
         # ACK
-        temp = self.i2c.writeto(16, Cmd_code, False)
+
+        # temp = self.i2c.writeto(16, Cmd_code, False)
+        temp = self.i2c.write(buff)
         if temp != 2:
-            print(f'VLEM7700:I2C_Read: 4 ACK expected, {temp} ACK received')
+            print(f'VLEM7700:I2C_Read: 2 ACK expected, {temp} ACK received')
             return 1
+        
+        buff = bytes([self.address << 1 + 1] + [Cmd_code])
 
         # Start
+        self.i2c.start()
         # device address
         # read bit
         # ACK
+
+        temp = self.i2c.write(buff)
+        if temp != 2:
+            print(f'VLEM7700:I2C_Read: 2 ACK expected, {temp} ACK received')
+            return 1
+        
+        LSB = None
+        MSB = None
+
         ## receive LSB      ##
         # we ACK
+        self.i2c.readinto(LSB, False)
+
         # receive MSB
-        # we don't ACK      ##
+        # we don't ACK      ##        
+        self.i2c.readinto(LSB, True)
+
         # Stop bit
+        self.i2c.stop()
 
         # I2C.readfrom(addr, nbytes, stop=True, /)
         byRead  = self.i2c.readfrom(16, 2, True)

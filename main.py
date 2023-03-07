@@ -25,7 +25,11 @@ def Main():
     # MotorTesting()
     VEML_Testing()
 
-
+    # print(b'\x00')
+    # print(b'\x0C')
+    # print(b'\x00')
+    # print( bytes([(16 << 1)]) + bytes([0]) + bytes([12]) + bytes([5]))
+    # print( bytes([(16 << 1)] + [0] + [12] + [5]))
 
 
 def MotorTesting():       
@@ -61,7 +65,8 @@ def VEML_Testing():
 
     print('Veml init')
     
-    printLUX(None)
+    # printLUX(None)
+    VEML.I2C_Read(AAAAAAAAAAAAAAAAAAAAAAAAAA *command code here*)
     
     # VEML.Get_Lux()
     # timrr.init(freq=1, mode=Timer.PERIODIC, callback=printLUX)
