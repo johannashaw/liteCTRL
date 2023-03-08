@@ -22,14 +22,27 @@ def Main():
 
     print("Got to main")
 
+
+    # print(int.from_bytes(b'\x48', "big"))
+    
+    # byRead = (int.from_bytes(b'\x12', "big") << 8) + int.from_bytes(b'\x48', "big")
+    # print(byRead)
+
+    # MSB = bytearray(2)    
+    # MSB = bytearray(b'\x01\x02')
+
+    # print(MSB[0])
+    # # print(int.from_bytes(MSB, "big"))
+    # for Byte in MSB:
+    #     print(Byte)
+    
+    # print(int.from_bytes(MSB, "big"))
+    # print(int.from_bytes(MSB, "little"))
+
+
     # MotorTesting()
     VEML_Testing()
 
-    # print(b'\x00')
-    # print(b'\x0C')
-    # print(b'\x00')
-    # print( bytes([(16 << 1)]) + bytes([0]) + bytes([12]) + bytes([5]))
-    # print( bytes([(16 << 1)] + [0] + [12] + [5]))
 
 
 def MotorTesting():       
@@ -66,7 +79,7 @@ def VEML_Testing():
     print('Veml init')
     
     # printLUX(None)
-    VEML.I2C_Read(AAAAAAAAAAAAAAAAAAAAAAAAAA *command code here*)
+    print(VEML.I2C_Read(4))		# 4 is the command code for reading Ambient light
     
     # VEML.Get_Lux()
     # timrr.init(freq=1, mode=Timer.PERIODIC, callback=printLUX)
