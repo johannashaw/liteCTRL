@@ -7,10 +7,13 @@
 from machine import Pin, I2C, SoftI2C
 
 
+class I2C_:
+    pass
+
 # the ambient light sensor
 class VEML7700:
     # Attributes:
-    address = 16    # PLEASE DON"T CHANGE THIS
+    address = 0x10    # PLEASE DON"T CHANGE THIS, address = 16
     
     # Note:
     #   ALS means Ambient Light Sensor
@@ -40,7 +43,7 @@ class VEML7700:
 
         # configure the 7700
         # self.I2C_Write(b'\x00', MSB=b'\x0C', LSB=b'\x00')
-        self.I2C_Write(0, MSB= 12, LSB=0)
+        self.I2C_Write(Cmd_code=0x00, MSB= 0x00, LSB=0x80)
 
     
     # Formats the info given so that you can write to the device easily
@@ -66,7 +69,7 @@ class VEML7700:
 
         if temp != 4:
             print(f'VLEM7700:I2C_Write: 4 ACK expected, {temp} ACK received')
-            return 1
+            return None#1
 
         #   Stop Condition
         self.i2c.stop()
@@ -74,7 +77,7 @@ class VEML7700:
         return 0
     
     
-    def I2C_Read(self, Cmd_code):
+    def I2C_Read(self, Cmd_code, ):
 
         buff = bytes([self.address << 1] + [Cmd_code])
         
@@ -86,13 +89,12 @@ class VEML7700:
         # Command code      ##
         # ACK
 
-        # temp = self.i2c.writeto(16, Cmd_code, False)
         temp = self.i2c.write(buff)
         if temp != 2:
             print(f'VLEM7700:I2C_Read: Write command: 2 ACK expected, {temp} ACK received')
-            return 1
+            return None#1
         
-        buff = bytes([(self.address << 1) + 1] + [Cmd_code])
+        buff = bytes([(self.address << 1) + 1] )
 
         # Start
         self.i2c.start()
@@ -103,7 +105,7 @@ class VEML7700:
         temp = self.i2c.write(buff)
         if temp != 1:
             print(f'VLEM7700:I2C_Read: Read command: 1 ACK expected, {temp} ACK received')
-            return 2
+            return None #2
         
         read = bytearray(2)        
 
@@ -112,37 +114,32 @@ class VEML7700:
 
         # receive MSB
         # we don't ACK      ##        
-        self.i2c.readinto(read, True)
+        self.i2c.readinto(read,True)
 
         # Stop bit
-        self.i2c.stop()
-
-        # I2C.readfrom(addr, nbytes, stop=True, /)
-        # byRead  = self.i2c.readfrom(16, 2, True)
-        
+        self.i2c.stop()       
 
         # return LSB and MSB
-        # byRead = (int.from_bytes(MSB, "big") << 8) + int.from_bytes(LSB, "big")
-        # print(byRead)
-        # print(MSB)
         print(read)
 
-        print(int.from_bytes(read, "big"))
-        print(int.from_bytes(read, "little"))
-
-        # assuming 
-
-        # print(int.from_bytes(MSB, "big"))
-
-        # return (int.from_bytes(MSB, "big") << 8) + int.from_bytes(LSB, "big")
-
         return int.from_bytes(read, "little")      # assuming that the readinto method stores starting at 0
+    
+        # return int.from_bytes(read, "big")        # if readinto starts in reverse order for some reasom
 
     
     # Returns the ALS High Res Output Data
     def Get_Lux(self):
         # Uses Command code #4 ( 04h, idk)
-        # return self.I2C_Read(b'04')
         return self.I2C_Read(4)
+    
+
+    # Returns the white value (?)
+    def Get_White(self):
+        return self.I2C_Read(5)
 
 
+
+class APDS9960:
+
+    def __init__():
+        pass
