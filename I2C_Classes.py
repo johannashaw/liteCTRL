@@ -21,15 +21,15 @@ class VEML7700:
     def __init__(self, SCL, SDA):
         # not sure if this is necessary yet but I'm putting it here anyway
 
-        # 000                   -- reserved
-        #    00                 -- gain of x1, starting simple
-        #      0                -- Res
-        #       0000            -- Integration time, starting at 100ms (idk)
-        #           ??          -- ALS persistence (no idea)
-        #             00        -- Res
-        #               0       -- Interrupt disabled
-        #                0      -- ALS power on
-        # 0000 1100 0000 0000   MSB = 0C, LSB = 00
+        # 000                       -- reserved
+        #    0 0                    -- gain of x1, starting simple
+        #       0                   -- Res
+        #        00 00              -- Integration time, starting at 100ms (idk)
+        #             ??            -- ALS persistence (no idea)
+        #                00         -- Res
+        #                  0        -- Interrupt disabled
+        #                   0       -- ALS power on
+        # 0000 0000 1000 0000   MSB = 0C, LSB = 00
 
         # initializes the I2C channels
         # self.i2c = I2C(id=0, scl=Pin(SCL, mode=Pin.ALT), sda=Pin(SDA, mode=Pin.ALT),  freq=400000)
@@ -119,8 +119,7 @@ class VEML7700:
         # Stop bit
         self.i2c.stop()       
 
-        # return LSB and MSB
-        print(read)
+        # return formatted(?) data
 
         return int.from_bytes(read, "little")      # assuming that the readinto method stores starting at 0
     
