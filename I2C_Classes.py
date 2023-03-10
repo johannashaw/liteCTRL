@@ -7,19 +7,28 @@
 from machine import Pin, I2C, SoftI2C
 
 
-class I2C_:
-    pass
+class base_i2c:
+    i2c = None
+
+    def __init__(self, SCL, SDA):
+        
+        base_i2c.i2c = SoftI2C(scl=Pin(SCL, mode=Pin.ALT), sda=Pin(SDA, mode=Pin.ALT), freq=400000, timeout=35000)
+
 
 # the ambient light sensor
-class VEML7700:
+class VEML7700(base_i2c):
     # Attributes:
     address = 0x10    # PLEASE DON"T CHANGE THIS, address = 16
     
     # Note:
     #   ALS means Ambient Light Sensor
     #   Light level [lx] is (ALS OUTPUT DATA [dec.] / ALS Gain x responsivity)
-    def __init__(self, SCL, SDA):
-        # not sure if this is necessary yet but I'm putting it here anyway
+    def __init__(self):
+        # Checks if the device is responding to calls
+        if self.address not in base_i2c.i2c.scan():
+            print('VEML7700 is not responding')
+        else:
+            print('VEML7700 says hi')
 
         # 000                       -- reserved
         #    0 0                    -- gain of x1, starting simple
@@ -30,30 +39,19 @@ class VEML7700:
         #                  0        -- Interrupt disabled
         #                   0       -- ALS power on
         # 0000 0000 1000 0000   MSB = 0C, LSB = 00
-
-        # initializes the I2C channels
-        # self.i2c = I2C(id=0, scl=Pin(SCL, mode=Pin.ALT), sda=Pin(SDA, mode=Pin.ALT),  freq=400000)
-        self.i2c = SoftI2C(scl=Pin(SCL, mode=Pin.ALT), sda=Pin(SDA, mode=Pin.ALT), freq=400000, timeout=35000)
-
-        
-        if 16 not in self.i2c.scan():
-            print('VEML7700 is not responding')
-        else:
-            print('VEML7700 says hi')
-
+    
         # configure the 7700
-        # self.I2C_Write(b'\x00', MSB=b'\x0C', LSB=b'\x00')
-        self.I2C_Write(Cmd_code=0x00, MSB= 0x00, LSB=0x80)
+        self.Write(Cmd_code=0x00, MSB= 0x00, LSB=0x80)
 
     
     # Formats the info given so that you can write to the device easily
-    def I2C_Write(self, Cmd_code, LSB, MSB):
+    def Write(self, Cmd_code, LSB, MSB):
         # buff = Cmd_code + LSB + MSB
         buff = bytes([self.address << 1] + [Cmd_code] + [LSB] + [MSB])
 
         # VEML7700 write I2C formatting:
         #   Start condition
-        self.i2c.start()
+        base_i2c.i2c.start()
         #   Send Device address
         #   Write bit (0)
         #   ACK
@@ -65,46 +63,46 @@ class VEML7700:
         #   ACK        
 
         # temp = self.i2c.writeto(16, buff, True)
-        temp = self.i2c.write(buff)
+        temp = base_i2c.i2c.write(buff)
 
         if temp != 4:
-            print(f'VLEM7700:I2C_Write: 4 ACK expected, {temp} ACK received')
-            return None#1
+            print(f'VLEM7700:Write: 4 ACK expected, {temp} ACK received')
+            return 1
 
         #   Stop Condition
-        self.i2c.stop()
+        base_i2c.i2c.stop()
 
         return 0
     
     
-    def I2C_Read(self, Cmd_code, ):
+    def Read(self, Cmd_code, ):
 
         buff = bytes([self.address << 1] + [Cmd_code])
         
         # start
-        self.i2c.start()
+        base_i2c.i2c.start()
         # device address
         # write bit
         # ACK
         # Command code      ##
         # ACK
 
-        temp = self.i2c.write(buff)
+        temp = base_i2c.i2c.write(buff)
         if temp != 2:
-            print(f'VLEM7700:I2C_Read: Write command: 2 ACK expected, {temp} ACK received')
+            print(f'VLEM7700:Read: Write command: 2 ACK expected, {temp} ACK received')
             return None#1
         
         buff = bytes([(self.address << 1) + 1] )
 
         # Start
-        self.i2c.start()
+        base_i2c.i2c.start()
         # device address
         # read bit
         # ACK
 
-        temp = self.i2c.write(buff)
+        temp = base_i2c.i2c.write(buff)
         if temp != 1:
-            print(f'VLEM7700:I2C_Read: Read command: 1 ACK expected, {temp} ACK received')
+            print(f'VLEM7700:Read: Read command: 1 ACK expected, {temp} ACK received')
             return None #2
         
         read = bytearray(2)        
@@ -114,10 +112,10 @@ class VEML7700:
 
         # receive MSB
         # we don't ACK      ##        
-        self.i2c.readinto(read,True)
+        base_i2c.i2c.readinto(read,True)
 
         # Stop bit
-        self.i2c.stop()       
+        base_i2c.i2c.stop()       
 
         # return formatted(?) data
 
@@ -129,16 +127,81 @@ class VEML7700:
     # Returns the ALS High Res Output Data
     def Get_Lux(self):
         # Uses Command code #4 ( 04h, idk)
-        return self.I2C_Read(4)
+        return self.Read(4)
     
 
     # Returns the white value (?)
     def Get_White(self):
-        return self.I2C_Read(5)
+        return self.Read(5)
 
 
+# NOTE: READ AND WRITE AREN'T TESTED
+class APDS9960(base_i2c):
+    address = 0x39
 
-class APDS9960:
+    def __init__(self):
+        # Checks if the device is responding to calls
+        if self.address not in base_i2c.i2c.scan():
+            print('APDS9960 is not responding')
+        else:
+            print('APDS9960 says hi')
 
-    def __init__():
+
+    def Write(self, Reg, Data):
+
+        buff = bytes([self.address << 1] + [Reg] + [Data])
+
+        # Start
+        base_i2c.i2c.start()
+        # Address [7]
+        # Write = 0 [1]
+        # ACK
+        # Register_Address [8]
+        # ACK
+        # Data [8]
+        # ACK
+
+        temp = base_i2c.i2c.write(buff)
+        if temp != 3:
+            print(f'APDS9960:Write: 3 ACK expected, {temp} ACK received')
+            return 1
+
+        # Stop
+        base_i2c.i2c.stop()
+
+        return 0
+
+    def Read(self, Reg):
+        buff = bytes([self.address << 1] + [Reg])
+
+        # Start
+        base_i2c.i2c.start()
+        # Address [7]
+        # Write = 0 [1]
+        # ACK
+        # Register_Address [8]
+        # ACK
+
+        temp = base_i2c.i2c.write(buff)
+        if temp != 2:
+            print(f'VLEM7700:Read: Write command: 2 ACK expected, {temp} ACK received')
+            return None#1
+
+        buff = bytes([(self.address << 1) + 1] + [Reg])
+        # Start
+        base_i2c.i2c.start()
+        # Address [7]
+        # Read = 1 [1]
+        # ACK
+
+        read = bytearray(2)
+        # Data [8]
+        # ACK (us)
+        # Data [8]
+        # ACK (us)
+        base_i2c.i2c.readinto(read, False)
+
+        # stop
+        base_i2c.i2c.stop()
+
         pass
