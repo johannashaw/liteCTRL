@@ -45,7 +45,7 @@ class Main:
         self.ourMotor.StartForward(500)
         # ourMotor.StartBackward(500)
 
-        #MGoBrr.irq(handler=m_OnOff, wake=Pin.IDLE)#, trigger=Pin.IRQ_RISING)#, wake=machine.IDLE|machine.SLEEP)
+        # self.MGoBrr.irq(handler=self.m_OnOff, wake=Pin.IDLE)#, trigger=Pin.IRQ_RISING)#, wake=machine.IDLE|machine.SLEEP)
 
         # Timer for testing start/stop functionality of the motor.
         self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.m_OnOff)
@@ -59,8 +59,8 @@ class Main:
         
         # print(VEML.I2C_Read(4))		# 4 is the command code for reading Ambient light
         
-        # # VEML.Get_Lux()
-        # timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.printLUX)
+        # VEML.Get_Lux()
+        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.printLUX)
 
 
     def APDS_Testing(self):
@@ -69,6 +69,8 @@ class Main:
 
         print('APDS init')
 
+        self.APDS.GetColours()
+        
 
     # Callback for VEML testing, prints LUX
     def printLUX(self, PIN):       

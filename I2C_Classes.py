@@ -39,9 +39,10 @@ class VEML7700(base_i2c):
         #                  0        -- Interrupt disabled
         #                   0       -- ALS power on
         # 0000 0000 1000 0000   MSB = 0C, LSB = 00
-    
+        # MSB       LSB
+
         # configure the 7700
-        self.Write(Cmd_code=0x00, MSB= 0x00, LSB=0x80)
+        self.Write(Cmd_code=0x00, MSB= 0x00, LSB=0x00)
 
     
     # Formats the info given so that you can write to the device easily
@@ -125,9 +126,11 @@ class VEML7700(base_i2c):
 
     
     # Returns the ALS High Res Output Data
+    # Lux = ALS_output / (Gain * integration_time[ms] / 10)
     def Get_Lux(self):
         # Uses Command code #4 ( 04h, idk)
-        return self.Read(4)
+        # if you're using a different integration time you'll need to change this.
+        return self.Read(4) / 10
     
 
     # Returns the white value (?)
@@ -145,6 +148,17 @@ class APDS9960(base_i2c):
             print('APDS9960 is not responding')
         else:
             print('APDS9960 says hi')
+
+        # Remember that you need to actually initialize the bloody device
+        # bit 0 = power on
+        # bit 1 = ALS Enable
+        if self.Write(0x80, 0x03) != 0:
+            print('APDS9960 not initialized')
+        else:
+            print('APDS9960 initialized')
+
+        # set integration time
+        self.Write(0x81, 219)
 
 
     def Write(self, Reg, Data):
@@ -184,17 +198,22 @@ class APDS9960(base_i2c):
 
         temp = base_i2c.i2c.write(buff)
         if temp != 2:
-            print(f'VLEM7700:Read: Write command: 2 ACK expected, {temp} ACK received')
+            print(f'VLEM7700:Read: Write command ({Reg:X}): 2 ACK expected, {temp} ACK received')
             return None#1
 
-        buff = bytes([(self.address << 1) + 1] + [Reg])
+        buff = bytes([(self.address << 1) + 1])
         # Start
         base_i2c.i2c.start()
         # Address [7]
         # Read = 1 [1]
         # ACK
+        
+        temp = base_i2c.i2c.write(buff)
+        if temp != 1:
+            print(f'VLEM7700:Read: Read command ({Reg:X}): 1 ACK expected, {temp} ACK received')
+            return None#1
 
-        read = bytearray(2)
+        read = bytearray(6)
         # Data [8]
         # ACK (us)
         # Data [8]
@@ -202,6 +221,31 @@ class APDS9960(base_i2c):
         base_i2c.i2c.readinto(read, False)
 
         # stop
+        # base_i2c.i2c.stop()
+
+        return read
+
+
+    def GetColours(self):
+
+        # get red
+        red =self.Read(0x96)
+        # print(self.Read(0x97))
+         
+
+        # # get Green
+        # green =self.Read(0x98)
+        # # print(self.Read(0x99))
+
+
+        # # get Blue
+        # blue = self.Read(0x9A)
+        # # print(self.Read(0x9B))
+
+        # stop bit        
         base_i2c.i2c.stop()
 
-        pass
+        print (f"red = {red}")#, green = {green}, blue = {blue}")
+
+        # Return RGB
+        return
