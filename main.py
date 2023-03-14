@@ -69,12 +69,25 @@ class Main:
 
         print('APDS init')
 
-        self.APDS.GetColours()
+        self.APDS.GetCRGB()
+        
+        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ColourTest)
+
+    
+    def ColourTest(self, PIN):
+        
+        clear, red, green, blue = self.APDS.GetCRGB()
+        # RGB = bytearray(b'9\x02\xcd\x00\x98\x00\x9c\x00'
+        
+        print(f'clear ={clear}, red = {red}, green = {green}, blue = {blue}')
         
 
     # Callback for VEML testing, prints LUX
     def printLUX(self, PIN):       
         print(self.VEML.Get_Lux())
+
+
+       #  clear =565, red = 203, green = 148, blue = 151
 
 
 

@@ -157,8 +157,11 @@ class APDS9960(base_i2c):
         else:
             print('APDS9960 initialized')
 
-        # set integration time
-        self.Write(0x81, 219)
+        # set integration time to 100ms
+        self.Write(0x81, 220)
+
+        # Control Reg 1 (set gain)
+        self.Write(0x8F, 0x00)
 
 
     def Write(self, Reg, Data):
@@ -185,7 +188,7 @@ class APDS9960(base_i2c):
 
         return 0
 
-    def Read(self, Reg):
+    def Read(self, Reg, numbytes):
         buff = bytes([self.address << 1] + [Reg])
 
         # Start
@@ -213,39 +216,42 @@ class APDS9960(base_i2c):
             print(f'VLEM7700:Read: Read command ({Reg:X}): 1 ACK expected, {temp} ACK received')
             return None#1
 
-        read = bytearray(6)
+        read = bytearray(numbytes)
         # Data [8]
         # ACK (us)
         # Data [8]
         # ACK (us)
-        base_i2c.i2c.readinto(read, False)
+        base_i2c.i2c.readinto(read, True)
 
         # stop
-        # base_i2c.i2c.stop()
+        base_i2c.i2c.stop()
 
         return read
 
 
-    def GetColours(self):
+    def GetCRGB(self):
+        # Get the Clear + RGB values
+        CRGB =self.Read(0x94, 8)        # read 8 bytes starting at reg 0x94 (clear lower to blue high)
+
+        # Clear value can translate to ambient light
+        clear = int.from_bytes(CRGB[0:2], "little")     # this subarray but here is first number inclusive, second exclusive
 
         # get red
-        red =self.Read(0x96)
-        # print(self.Read(0x97))
+        red = int.from_bytes(CRGB[2:4], "little")
          
 
-        # # get Green
-        # green =self.Read(0x98)
-        # # print(self.Read(0x99))
+        # get Green
+        green = int.from_bytes(CRGB[4:6], "little")
 
 
-        # # get Blue
-        # blue = self.Read(0x9A)
-        # # print(self.Read(0x9B))
+        # get Blue
+        blue = int.from_bytes(CRGB[6:8], "little")
 
         # stop bit        
-        base_i2c.i2c.stop()
+        # base_i2c.i2c.stop()
 
-        print (f"red = {red}")#, green = {green}, blue = {blue}")
+        # print (f"CRGB = {CRGB}")#, green = {green}, blue = {blue}")
+        print(f'clear ={clear}, red = {red}, green = {green}, blue = {blue}')
 
         # Return RGB
-        return
+        return clear, red, green, blue
