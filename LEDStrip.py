@@ -21,6 +21,10 @@ class LEDStrip:
             # send byte of Red
             # send byte of Blue
 
+            # 0 bit is  220ns~380ns high, 580ns~1µs low
+            # 1 bit is  580ns~1µs high, 220ns~420ns low
+            # reset is low for >280µs
+
         pass
 
     def Clear():
@@ -32,5 +36,9 @@ class Colour:
         self.Red = Red
         self.Green = Green
         self.Blue = Blue
+
+
+    def GetAllBits(self):
+        pass
 
 
