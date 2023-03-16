@@ -1,6 +1,9 @@
 <?php
 
+
 require_once "liteCTRLdatabase.php";
+
+// --- Initial Test Code ------------------------------------------------------------------------
 
 if (isset($_GET['device']) && $_GET['device'] == 'motor')
 {
@@ -23,5 +26,11 @@ if (isset($_GET))
 }
 
 error_log(json_encode(($_GET)));
+
+// --- Pico Webservice -----------------------------------------------------------------------
+
+
+
+// --- Website Webservice --------------------------------------------------------------------
 
 ?>
