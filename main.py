@@ -9,6 +9,7 @@
 from machine import Pin, Timer, I2C, SoftI2C
 from MotorSteps import Motor
 from I2C_Classes import base_i2c, VEML7700, APDS9960
+from LEDStrip import LEDStrip, Colour
 
 
 # ourMotor = None
@@ -30,11 +31,12 @@ class Main:
 
         # MotorTesting()
 
-        # GPIO pins 4 and 5 map to irl pins 6 and 7
-        base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
-        self.VEML_Testing()
-        self.APDS_Testing()
+        # # GPIO pins 4 and 5 map to irl pins 6 and 7
+        # base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
+        # self.VEML_Testing()
+        # self.APDS_Testing()
 
+        self.LightTesting()
 
 
     def MotorTesting(self):       
@@ -72,6 +74,12 @@ class Main:
         self.APDS.GetCRGB()
         
         self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ColourTest)
+
+
+    # This tests the LED strip
+    def LightTesting(self):
+        
+        pass
 
     
     def ColourTest(self, PIN):
