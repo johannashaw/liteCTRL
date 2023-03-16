@@ -8,49 +8,100 @@
 
 from machine import Pin, Timer, I2C, SoftI2C
 from MotorSteps import Motor
+from I2C_Classes import base_i2c, VEML7700, APDS9960
 
 
-ourMotor = None
-# MGoBrr uses irl pin 32
-MGoBrr = Pin(27, Pin.IN)
-timrr = Timer()
+# ourMotor = None
+# # MGoBrr uses irl pin 32
+# MGoBrr = Pin(27, Pin.IN)
+# timrr = Timer()
 
-# basic initializations
-def Main():
-    global ourMotor, MGoBrr, timrr
+class Main:
+    # basic initializations
 
-    print("First")
+    def __init__(self):
 
-    # lets go for pins [24:27] (gp 18:21)
-    # enable pin is on GPIO 28, or pin 34 irl
-    ourMotor = Motor(18, 19, 20, 21, 28)
-    ourMotor.StartForward(500)
-    # ourMotor.StartBackward(500)
+        self.ourMotor = None
+        # MGoBrr uses irl pin 32
+        self.MGoBrr = Pin(27, Pin.IN)
+        self.timrr = Timer()
 
-    #MGoBrr.irq(handler=m_OnOff, wake=Pin.IDLE)#, trigger=Pin.IRQ_RISING)#, wake=machine.IDLE|machine.SLEEP)
+        print("Got to main")
 
-    timrr.init(freq=1, mode=Timer.PERIODIC, callback=m_OnOff)
+        # MotorTesting()
+
+        # GPIO pins 4 and 5 map to irl pins 6 and 7
+        base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
+        self.VEML_Testing()
+        self.APDS_Testing()
 
 
-    # TESTING I2C:
-    # initialize the I2C channels
-    #i2c = SoftI2C(Pin(5), Pin(4))
+
+    def MotorTesting(self):       
+
+        # lets go for pins [24:27] (gp 18:21)
+        # enable pin is on GPIO 28, or pin 34 irl
+        self.ourMotor = Motor(18, 19, 20, 21, 28)
+        self.ourMotor.StartForward(500)
+        # ourMotor.StartBackward(500)
+
+        # self.MGoBrr.irq(handler=self.m_OnOff, wake=Pin.IDLE)#, trigger=Pin.IRQ_RISING)#, wake=machine.IDLE|machine.SLEEP)
+
+        # Timer for testing start/stop functionality of the motor.
+        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.m_OnOff)
+
+
+    def VEML_Testing(self):
+        
+        self.VEML = VEML7700()
+
+        print('VEML init')
+        
+        # print(VEML.I2C_Read(4))		# 4 is the command code for reading Ambient light
+        
+        # VEML.Get_Lux()
+        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.printLUX)
+
+
+    def APDS_Testing(self):
+
+        self.APDS = APDS9960()
+
+        print('APDS init')
+
+        self.APDS.GetCRGB()
+        
+        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ColourTest)
+
     
-    #print(i2c.scan())
+    def ColourTest(self, PIN):
+        
+        clear, red, green, blue = self.APDS.GetCRGB()
+        # RGB = bytearray(b'9\x02\xcd\x00\x98\x00\x9c\x00'
+        
+        print(f'clear ={clear}, red = {red}, green = {green}, blue = {blue}')
+        
+
+    # Callback for VEML testing, prints LUX
+    def printLUX(self, PIN):       
+        print(self.VEML.Get_Lux())
 
 
-# Used for testing motor library. Toggles motor between on and off using the enable pin.
-def m_OnOff(PIN):
-    global ourMotor
-
-    print("I'm in.")
-
-    if ourMotor.Started:
-        ourMotor.Stop()
-    else:
-        # ourMotor.StartForward(500)
-        ourMotor.StartBackward(500)
+       #  clear =565, red = 203, green = 148, blue = 151
 
 
 
-Main()
+    # Used for testing motor library. Toggles motor between on and off using the enable pin.
+    def m_OnOff(self, PIN):
+        print("I'm in.")
+
+        if self.ourMotor.Started:
+            self.ourMotor.Stop()
+        else:
+            # ourMotor.StartForward(500)
+            self.ourMotor.StartBackward(500)
+
+
+
+if __name__ == '__main__':
+    Main()
