@@ -78,8 +78,17 @@ class Main:
 
     # This tests the LED strip
     def LightTesting(self):
-        
-        pass
+        # initialize the light strip object
+        # GPIO in 13, maps to irl pin 17
+        self.strip = LEDStrip(13)
+
+        # create the array of lights
+        lights = []
+        for i in range(60):
+            lights[i] = Colour(109, 0, 162)
+
+        # send Colours
+        self.strip.SetColours(lights)
 
     
     def ColourTest(self, PIN):
