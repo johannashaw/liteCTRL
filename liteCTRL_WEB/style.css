@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+body {
+    background-color: black;
+    min-height: 800px;
+    font-family: 'VT323', monospace;
+    
+}
+
+div, section, footer, td, p {
+    
+    color: white;
+    border: 1px solid white;
+    margin: 5px;
+    padding: 5px;
+    font-size: large;
+}
+
+p {
+    text-align: center;
+}
+
+
+
+footer {
+    text-align: center;
+}
+
