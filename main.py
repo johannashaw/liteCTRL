@@ -29,17 +29,14 @@ class Main:
 
         print("Got to main")
 
-        # MotorTesting()
+        self.MotorInit()
 
-        # # GPIO pins 4 and 5 map to irl pins 6 and 7
-        # base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
-        # self.VEML_Testing()
-        # self.APDS_Testing()
+        self.SensorsInit()
 
         self.LightTesting()
+    
 
-
-    def MotorTesting(self):       
+    def MotorInit(self):       
 
         # lets go for pins [24:27] (gp 18:21)
         # enable pin is on GPIO 28, or pin 34 irl
@@ -53,11 +50,27 @@ class Main:
         self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.m_OnOff)
 
 
-    def VEML_Testing(self):
+    # initializes the VEML, APDS, and thier shared I2C channel
+    def SensorsInit(self):
+        # GPIO pins 4 and 5 map to irl pins 6 and 7
+        base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
         
-        self.VEML = VEML7700()
+        self.VEMLInit()
+        self.APDSInit()
 
-        print('VEML init')
+
+    # VEML is the ambient light sensor
+    def VEMLInit(self):
+        # try to initialize the VEML, if not responding, variable is set to none and exits function
+        try:
+            self.VEML = VEML7700()
+            print('VEML init')
+        except:
+            self.VEML = None
+            print('VEML failed to initialize')
+            return
+        finally:
+            pass
         
         # print(VEML.I2C_Read(4))		# 4 is the command code for reading Ambient light
         
@@ -65,11 +78,18 @@ class Main:
         # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.printLUX)
 
 
-    def APDS_Testing(self):
-
-        self.APDS = APDS9960()
-
-        print('APDS init')
+    # APDS is the Colour light sensor
+    def APDSInit(self):
+        # try to initialize the APDS, if not responding, variable is set to none and exits function
+        try:
+            self.APDS = APDS9960()
+            print('APDS init')
+        except:
+            self.APDS = None
+            print('APDS failed to initialize')
+            return
+        finally:
+            pass
 
         self.APDS.GetCRGB()
         
