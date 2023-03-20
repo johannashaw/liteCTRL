@@ -36,6 +36,12 @@ error_log(json_encode(($_GET)));
 
 // Pico Check In
 
+if(isset($_GET["checkin"]))
+{
+    GetData();
+    //echo "checked";
+}
+
 // Pico Control Field Resets
 
 // Exterior Light Intensity Log
@@ -60,5 +66,28 @@ error_log(json_encode(($_GET)));
 // LED
 
 
+// --- Database Operations -------------------------------------------------------------------
+
+function GetData()
+{
+    $query = "SELECT *";
+    $query .= " FROM MotorControl";
+
+    $results = mySQLQuery( $query );
+
+    if ($results)
+    {
+        while ( $row = $results->fetch_assoc())
+        {
+            $returnArray[] = $row;
+        }
+
+        echo json_encode($returnArray);
+    }
+    else
+    {
+        echo "GetData Error";
+    }
+}
 
 ?>
