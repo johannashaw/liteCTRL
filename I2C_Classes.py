@@ -6,12 +6,14 @@
 # Created by: Johanna Shaw
 from machine import Pin, I2C, SoftI2C
 
-
+# Base class for both sensors. 
+# Created under the assumption that both sensors are using the same I2C channel and his class ensures that they are.
 class base_i2c:
-    i2c = None
+    base_i2c.i2c = None
 
     def __init__(self, SCL, SDA):
-        
+        # Sets the I2C channel at a class level
+        #uses SoftI2C to allow more control over the channel
         base_i2c.i2c = SoftI2C(scl=Pin(SCL, mode=Pin.ALT), sda=Pin(SDA, mode=Pin.ALT), freq=400000, timeout=35000)
 
 
@@ -24,9 +26,13 @@ class VEML7700(base_i2c):
     #   ALS means Ambient Light Sensor
     #   Light level [lx] is (ALS OUTPUT DATA [dec.] / ALS Gain x responsivity)
     def __init__(self):
+        # I2C channel needs to be initialized.
+        if base_i2c.i2c is None:
+            raise Exception('You forgot to initialize the base I2C channel')
+
         # Checks if the device is responding to calls
         if self.address not in base_i2c.i2c.scan():
-            print('VEML7700 is not responding')
+            raise Exception('VEML7700 is not responding')
         else:
             print('VEML7700 says hi')
 
@@ -42,7 +48,8 @@ class VEML7700(base_i2c):
         # MSB       LSB
 
         # configure the 7700
-        self.Write(Cmd_code=0x00, MSB= 0x00, LSB=0x00)
+        if  self.Write(Cmd_code=0x00, MSB= 0x00, LSB=0x00) != 0:            
+            raise Exception('VEML7700 failed to initialize')
 
     
     # Formats the info given so that you can write to the device easily
@@ -143,9 +150,13 @@ class APDS9960(base_i2c):
     address = 0x39
 
     def __init__(self):
+        # the cannel needs to be initialized in order for the sensor to be used
+        if base_i2c.i2c is None:
+            raise Exception('You forgot to initialize the base I2C channel')
+
         # Checks if the device is responding to calls
         if self.address not in base_i2c.i2c.scan():
-            print('APDS9960 is not responding')
+            raise Exception('APDS9960 is not responding')
         else:
             print('APDS9960 says hi')
 
@@ -153,7 +164,7 @@ class APDS9960(base_i2c):
         # bit 0 = power on
         # bit 1 = ALS Enable
         if self.Write(0x80, 0x03) != 0:
-            print('APDS9960 not initialized')
+            raise Exception('APDS9960 not initialized')
         else:
             print('APDS9960 initialized')
 

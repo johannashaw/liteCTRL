@@ -47,10 +47,12 @@ class LEDStrip:
         self.DataPin.value(0)
              
 
+    # this is meant to turn off all of the lights on the strip
     def Clear(self):
         pass
 
 
+# Represents individual lights on the LED strip
 class Colour:
     def __init__(self, Red, Green, Blue):
         self.Red = Red
@@ -58,8 +60,8 @@ class Colour:
         self.Blue = Blue
 
 
-    # used as an enumeration where it returns bits in order Green, Red, Blue
-    # tested, looks good :)
+    # Used as an enumeration where it returns bits in order Green, Red, Blue, MSB first
+    # Tested, looks good :)
     def GetAllBits(self):
         # return all of the bits for green
         for i in range(7, -1, -1):
