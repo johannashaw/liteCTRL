@@ -11,14 +11,9 @@
 </head>
 <body>
     <p>Magic is Imminent</p>
+    <div><img src="./images/lightwindow.webp" alt=""></div>
     <p>Coming Soon</p>
-    <?php
-        if (isset($_GET))//['action']) && $_GET['action'] == 'lightOn')
-        {
-            #
-            error_log("Get request made");
-        }
-    ?>
+    
 </body>
 </html>
 
