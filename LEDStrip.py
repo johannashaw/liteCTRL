@@ -1,8 +1,19 @@
+# Project: liteCTRL
+# File: Project's main file, starts the machine.
+#       Is currently being used for testing 
+#
+# Created by: Johanna Shaw
+# 
+# Note: Still having issues with the GPIO input callback, fix later (?)
 
 from machine import Pin
 import time
 
+# 0.0106
+# 0.0128
 
+
+# Designed for strip using WS2812B LEDs
 class LEDStrip:
 
     # Maybe use the Enable pin, idk
@@ -10,7 +21,8 @@ class LEDStrip:
     def __init__(self, DataPin): #, EnablePin):
 
         # initialize GPIO pin that will be used for Data sent
-        self.DataPin = Pin(DataPin, Pin.Out)
+        self.DataPin = Pin(DataPin, Pin.OUT)
+        self.DataPin.value(0)
 
         # (maybe) initialize the Enable pin for the strip
 
@@ -24,17 +36,18 @@ class LEDStrip:
             if type(Col) != Colour:
                 raise TypeError("LEDStrip.LEDStrip.SetColours: an object in Colrz isn't of type Colour")
             # For each colour:
-            for bit in Col.GetAllBits():
+            for bitt in Col.GetAllBits():
                 # set the high and low times
-                match bit:
-                    case 0:
-                        # 0 bit is  220ns~380ns high, 580ns~1µs low
-                        high = 270
-                        low = 750
-                    case 1:
-                        # 1 bit is  580ns~1µs high, 220ns~420ns low
-                        high = 750
-                        low = 270
+                if bitt == 0:
+                    # 0 bit is  220ns~380ns high, 580ns~1µs low
+                    high = 400 / 1000000000
+                    low = 850 / 1000000000
+                elif bitt == 1:
+                    # 1 bit is  580ns~1µs high, 220ns~420ns low
+                    high = 800 / 1000000000
+                    low = 450 / 1000000000
+                else:
+                    print("Something messed up in LEDStrip")
                 
                 # send the bit to the light machine
                 self.DataPin.value(1)
@@ -73,5 +86,4 @@ class Colour:
         for i in range(7, -1, -1):
             yield (self.Blue >> i) & 1
         return
-
 
