@@ -65,16 +65,14 @@ class Main:
         try:
             self.VEML = VEML7700()
             print('VEML init')
-        except:
+        except Exception as err:
             self.VEML = None
-            print('VEML failed to initialize')
+            print(err)
             return
-        finally:
-            pass
         
         # print(VEML.I2C_Read(4))		# 4 is the command code for reading Ambient light
         
-        # VEML.Get_Lux()
+        VEML.Get_Lux()
         # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.printLUX)
 
 
@@ -84,20 +82,21 @@ class Main:
         try:
             self.APDS = APDS9960()
             print('APDS init')
-        except:
+        except Exception as err:
             self.APDS = None
-            print('APDS failed to initialize')
+            print(err)
             return
         finally:
             pass
 
         self.APDS.GetCRGB()
         
-        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ColourTest)
+        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ColourTest)
 
 
     # This tests the LED strip
     def LightTesting(self):
+        
         # initialize the light strip object
         # GPIO in 13, maps to irl pin 17
         self.strip = LEDStrip(13)
