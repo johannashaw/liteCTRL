@@ -79,8 +79,30 @@ function LogData()
 // changes up to the database
 
 // Motor 
+// If user has indicated operation that requires motor, post arguments up to the database
+
+if(isset($_GET["Motor"]))
+{
+    Motor();
+}
+
+function Motor()
+{
+
+}
 
 // LED
+// If user has indicated operation that requires LED, post arguments up to the database
+
+if(isset($_GET["LED"]))
+{
+    LED();
+}
+
+function LED()
+{
+
+}
 
 
 
