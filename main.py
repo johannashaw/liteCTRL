@@ -10,6 +10,7 @@ from machine import Pin, Timer, I2C, SoftI2C
 from MotorSteps import Motor
 from I2C_Classes import base_i2c, VEML7700, APDS9960
 from LEDStrip import LEDStrip, Colour
+import time
 
 
 # ourMotor = None
@@ -29,11 +30,14 @@ class Main:
 
         print("Got to main")
 
-        self.MotorInit()
+        # self.MotorInit()
 
-        self.SensorsInit()
+        # self.SensorsInit()
+
+
 
         self.LightTesting()
+
     
 
     def MotorInit(self):       
@@ -72,7 +76,7 @@ class Main:
         
         # print(VEML.I2C_Read(4))		# 4 is the command code for reading Ambient light
         
-        VEML.Get_Lux()
+        self.VEML.Get_Lux()
         # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.printLUX)
 
 
@@ -104,10 +108,13 @@ class Main:
         # create the array of lights
         lights = []
         for i in range(60):
-            lights[i] = Colour(109, 0, 162)
+            lights.append(Colour(109, 0, 162))
 
+        time.sleep(2)
         # send Colours
         self.strip.SetColours(lights)
+
+        print("Done Light Testing")
 
     
     def ColourTest(self, PIN):
