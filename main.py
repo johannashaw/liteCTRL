@@ -30,28 +30,52 @@ class Main:
 
         print("Got to main")
 
+        # # initialize the Motor, sensors, and LEDs
         # self.MotorInit()
 
         # self.SensorsInit()
 
+        # self.LightTesting()
+
+        self.thing = Pin(13, Pin.OUT)
+        self.Timeval = 0
+        self.timrr.init(freq=10e6, mode=Timer.PERIODIC, callback=self.TestTimer)
+
+        # self.TestTicks()
 
 
-        self.LightTesting()
-
+    def TestTimer(self, PIN):
+        self.Timeval ^= 1
+        self.thing.value(self.Timeval)
+        
     
+    # figuring out the period of each tick
+    def TestTicks(self):
+        thing = Pin(13, Pin.OUT)
+        while True:            
+            lastTick = time.ticks_cpu() 
+            while time.ticks_diff(time.ticks_cpu(), lastTick) < 10:
+                pass
+            thing.value(1)   
+
+            lastTick = time.ticks_cpu() 
+            while time.ticks_diff(time.ticks_cpu(), lastTick) < 10:
+                pass
+            thing.value(0)
+
 
     def MotorInit(self):       
 
         # lets go for pins [24:27] (gp 18:21)
         # enable pin is on GPIO 28, or pin 34 irl
         self.ourMotor = Motor(18, 19, 20, 21, 28)
-        self.ourMotor.StartForward(500)
+        # self.ourMotor.StartForward(500)
         # ourMotor.StartBackward(500)
 
         # self.MGoBrr.irq(handler=self.m_OnOff, wake=Pin.IDLE)#, trigger=Pin.IRQ_RISING)#, wake=machine.IDLE|machine.SLEEP)
 
         # Timer for testing start/stop functionality of the motor.
-        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.m_OnOff)
+        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.m_OnOff)
 
 
     # initializes the VEML, APDS, and thier shared I2C channel
@@ -97,32 +121,39 @@ class Main:
         
         # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ColourTest)
 
-
-    # This tests the LED strip
-    def LightTesting(self):
-        
-        # initialize the light strip object
-        # GPIO in 13, maps to irl pin 17
-        self.strip = LEDStrip(13)
-
-        # create the array of lights
-        lights = []
-        for i in range(60):
-            lights.append(Colour(109, 0, 162))
-
-        time.sleep(2)
-        # send Colours
-        self.strip.SetColours(lights)
-
-        print("Done Light Testing")
-
-    
     def ColourTest(self, PIN):
         
         clear, red, green, blue = self.APDS.GetCRGB()
         # RGB = bytearray(b'9\x02\xcd\x00\x98\x00\x9c\x00'
         
         print(f'clear ={clear}, red = {red}, green = {green}, blue = {blue}')
+
+    # This tests the LED strip
+    def LightTesting(self):
+        
+        # initialize the light strip object
+        # GPIO in 13, maps to irl pin 17
+        self.strip = LEDStrip(13, 1)
+
+        # # create the array of lights
+        # lights = []
+        # for i in range(60):
+        #     lights.append(Colour(109, 0, 162))
+
+        self.strip.SetColours(109, 0, 162, False)
+
+        time.sleep(1)
+        # send Colours
+        self.strip.SendColours()
+
+        print("Done Light Testing")
+
+        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ColourSendTest)
+
+    
+    def ColourSendTest(self, PIN):
+        
+        self.strip.SendColours()
         
 
     # Callback for VEML testing, prints LUX
