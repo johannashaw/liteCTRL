@@ -6,15 +6,65 @@
 # 
 # 
 
-from machine import Pin
+from machine import Pin, PWM
 import time
 
-# 0.0106
-# 0.0128
+
+# class to drive an LED strip where the colours are set by PWM 
+class LED_Strip_PWM:
+    # class variables
+    freq = 500     # set frequency of all PWMs
+
+
+    # Takes in 3 int arguments representing the GPIO pins for RGB PWMs
+    # All PWMs are off by default (ie Colour(0, 0, 0) )
+    def __init__(self, R_Pin, G_Pin, B_Pin):
+        # set Red
+        self.Red = self.__create_helper(R_Pin)
+        # set Green
+        self.Green = self.__create_helper(G_Pin)
+        # set Blue PWN
+        self.Blue = self.__create_helper(B_Pin)
+
+
+        self.colour = Colour(0, 0, 0)
+
+
+    # helps initialize the PWM pins. Sets frequency to default and duty to 0
+    def __create_helper(self, pin):
+        pwm = PWM(Pin(pin))
+        pwm.freq(self.freq)
+        pwm.duty_u16(0)
+
+        return pwm
+
+
+    # Sets the Colour of the LED strip
+    # Takes a Colour object as an argument, returns None
+    def Set_Colour(self, colour):
+        # raise error if colour is not type Colour
+        if type(colour) is not Colour:
+            raise TypeError(f"""LEDStrip.LED_Strip_PWM.Set_Colour : "colour" argument needs to be of type Colour, {type(colour)} was given""")
+
+        #   as an unsigned 16-bit value in the range 0 (all off) to 65535 (all on) inclusive
+
+        # Convert colour.Red to duty value / 1023
+        # set duty cycle
+        self.Red.duty_u16(colour.Red * (65535 // 255))
+
+        # Convert colour.Green to duty value / 1023
+        # set duty cycle
+        self.Green.duty_u16(colour.Green * (65535 // 255))
+
+        # Convert colour.Blue to duty value / 1023
+        # set duty cycle
+        self.Blue.duty_u16(colour.Blue * (65535 // 255))
+
+        self.colour = colour
 
 
 # Designed for strip using WS2812B LEDs
-class LEDStrip:
+class WS2812B_Strip:
 
     # DataPin takes an int representing the GPIO pin that the data will be sent on
     # qtyLights is an int that is used to create the list of lights
