@@ -6,10 +6,10 @@
 # 
 # Note: Still having issues with the GPIO input callback, fix later (?)
 
-from machine import Pin, Timer, I2C, SoftI2C
+from machine import Pin, Timer, I2C, SoftI2C, PWM
 from MotorSteps import Motor
 from I2C_Classes import base_i2c, VEML7700, APDS9960
-from LEDStrip import LEDStrip, Colour
+from LEDStrip import WS2812B_Strip, LED_Strip_PWM, Colour
 import time
 
 
@@ -35,35 +35,34 @@ class Main:
 
         # self.SensorsInit()
 
-        # self.LightTesting()
+        # self.WS2812B_Strip_Test()
 
-        self.thing = Pin(13, Pin.OUT)
-        self.Timeval = 0
-        self.timrr.init(freq=10e6, mode=Timer.PERIODIC, callback=self.TestTimer)
-
-        # self.TestTicks()
-
-
-    def TestTimer(self, PIN):
-        self.Timeval ^= 1
-        self.thing.value(self.Timeval)
+        # self.PWM_StripTest()
         
-    
-    # figuring out the period of each tick
-    def TestTicks(self):
-        thing = Pin(13, Pin.OUT)
-        while True:            
-            lastTick = time.ticks_cpu() 
-            while time.ticks_diff(time.ticks_cpu(), lastTick) < 10:
-                pass
-            thing.value(1)   
-
-            lastTick = time.ticks_cpu() 
-            while time.ticks_diff(time.ticks_cpu(), lastTick) < 10:
-                pass
-            thing.value(0)
+        # self.Red = PWM(Pin(11))
+        # self.Red.freq(500)
+        # self.Red.duty_u16(512)
+        pwm  = PWM(Pin(11))
+        
+        pwm.freq(500)
+        pwm.duty_u16(16383)   # 25% duty
 
 
+    # testing a strip that runs off of PWM
+    def PWM_StripTest(self):
+
+        # initialize strip
+        # GPIO pins: 11, 12, 13  =  irl pin: 15, 16, 17
+        self.Strip = LED_Strip_PWM(11, 12, 13)
+
+        # pass a couple of different colour values
+        self.Strip.Set_Colour(Colour(255, 0, 0))
+        # self.Strip.Set_Colour(Colour())
+        # self.Strip.Set_Colour(Colour())
+        # self.Strip.Set_Colour(Colour())
+        # self.Strip.Set_Colour(Colour())
+
+      
     def MotorInit(self):       
 
         # lets go for pins [24:27] (gp 18:21)
@@ -129,11 +128,11 @@ class Main:
         print(f'clear ={clear}, red = {red}, green = {green}, blue = {blue}')
 
     # This tests the LED strip
-    def LightTesting(self):
+    def WS2812B_Strip_Test(self):
         
         # initialize the light strip object
         # GPIO in 13, maps to irl pin 17
-        self.strip = LEDStrip(13, 1)
+        self.strip = WS2812B_Strip(13, 1)
 
         # # create the array of lights
         # lights = []

@@ -5,6 +5,7 @@
 #           - LED_Strip (maybe, depends if it needs I2C)
 # Created by: Johanna Shaw
 from machine import Pin, I2C, SoftI2C
+from LEDStrip import Colour
 
 # Base class for both sensors. 
 # Created under the assumption that both sensors are using the same I2C channel and his class ensures that they are.
