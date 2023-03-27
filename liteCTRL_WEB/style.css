@@ -18,6 +18,7 @@ div, footer, td, p {
 
 input {
     border-radius: 10px;
+    width: 100%;
 }
 
 
