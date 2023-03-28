@@ -1,7 +1,7 @@
 # 
 # Pico internet connection protocol
 # Now testing the ability to reconnect upon disconnection
-# March 16, 2023
+# March 28, 2023
 #
 # Sources:
 # projects.raspberrypi.org
@@ -45,12 +45,14 @@ def connect():
 # function for making get requests to our server
 def GetRequest(**kwargs):
 
-    httpURL = "https://thor.cnt.sast.ca/~litectrl/webservice.php?"
-    
+    httpURL = "https://thor.cnt.sast.ca/~litectrl/webservice.php?" 
     for key, value in kwargs.items():
          httpURL += key + "=" + value + "&"
+
+    httpURL = httpURL[:-1]
+    print(httpURL)
     
-    response = urequests.get()
+    response = urequests.get(httpURL)
     print(f"Response status code: {response.status_code}")
     print(f"Response text: {response.text}")
     response.close()
@@ -63,7 +65,7 @@ counter = 0
 while True:
         counter += 1
         print (f"Get Request #: {counter}")
-        GetRequest(device="motor", action="GoBrr")
+        GetRequest(Motor="GoBrr")
         sleep(5)
         
 
