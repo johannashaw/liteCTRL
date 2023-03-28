@@ -1,5 +1,6 @@
 # 
 # Pico internet connection protocol
+# Now testing the ability to reconnect upon disconnection
 # March 28, 2023
 #
 # Sources:
@@ -7,7 +8,7 @@
 
 import network
 from time import sleep
-from picozero import pico_led
+from picozero import pico_temp_sensor, pico_led
 import machine
 import urequests
 import json
@@ -19,7 +20,7 @@ password = "deskmate"
 # function to connect to WLAN
 # Sets up wlan object, activates the wireless,
 # and provides ssid and password
-def ConnectToInternet():
+def connect():
     #connect to WLAN
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
@@ -58,7 +59,7 @@ def GetRequest(**kwargs):
         
 
 
-wlan = ConnectToInternet()
+wlan = connect()
 
 counter = 0
 while True:
