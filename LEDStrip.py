@@ -50,15 +50,20 @@ class LED_Strip_PWM:
 
         # Convert colour.Red to duty value / 1023
         # set duty cycle
-        self.Red.duty_u16(colour.Red * (65535 // 255))
+        rdut = colour.Red * (65535 // 255)
+        self.Red.duty_u16(rdut)
 
         # Convert colour.Green to duty value / 1023
         # set duty cycle
-        self.Green.duty_u16(colour.Green * (65535 // 255))
+        gdut = colour.Green * (65535 // 255)
+        self.Green.duty_u16(gdut)
 
         # Convert colour.Blue to duty value / 1023
         # set duty cycle
-        self.Blue.duty_u16(colour.Blue * (65535 // 255))
+        bdut = colour.Blue * (65535 // 255)
+        self.Blue.duty_u16(bdut)
+
+        print(f'duty: red = {rdut}, green = {gdut}, blue = {bdut}')
 
         self.colour = colour
 
