@@ -10,7 +10,7 @@ body {
 div, footer, td, p {
     
     color: white;
-    border: 1px solid white;
+    border: 1px solid #555B63;
     margin: 5px;
     padding: 5px;
     font-size: large;
@@ -18,7 +18,12 @@ div, footer, td, p {
 
 input {
     border-radius: 10px;
-    width: 100%;
+    width: 85%;
+    text-align: center;
+    margin: inherit;
+    font-family: 'Kanit', sans-serif;
+    font-size: large;
+    font-weight: 600;
 }
 
 
@@ -73,7 +78,7 @@ input {
 
     .rightMenu {
         display: grid;
-        justify-content: left;
+        justify-content: stretch;
         align-content: center;
     }
     
@@ -131,7 +136,7 @@ input {
 
     .rightMenu {
         grid-column: 2/5;
-        display: grid;
+        /* display: flex; */
         justify-content: left;
         align-content: center;
     }

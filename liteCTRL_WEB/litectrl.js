@@ -2,6 +2,18 @@
 // ensures document is loaded before contents are executed
 $(document).ready(function(){
 
+// Light Intensity Event Handler
+$("#intensity").change(function()
+{
+    console.log("Desired intensity is " + this.value)
+})
+
+// Light Temperature Event Handler
+$("#temperature").change(function()
+{
+    console.log("Desired temperature is " + this.value)
+})
+
 });
 
 

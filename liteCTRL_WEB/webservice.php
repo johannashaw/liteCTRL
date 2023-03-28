@@ -10,6 +10,8 @@ require_once "database.php";
 // to the resting state. If the Pico is in automatic mode it will have no need to 
 // interact with database at all, other than logging data
 
+
+
 // Pico Check In
 // Query the database control fields to determine if user has indicated any operations
 
@@ -42,12 +44,12 @@ function CheckIn()
 
 // Pico Control Field Resets
 
-if(isset($_GET["Reset"]))
+if(isset($_GET["ResetControls"]))
 {
-    Reset();
+    ResetControls();
 }
 
-function Reset()
+function ResetControls()
 {
 
 }
@@ -81,14 +83,9 @@ function LogData()
 // Motor 
 // If user has indicated operation that requires motor, post arguments up to the database
 
-if(isset($_GET["Motor"]))
-{
-    Motor();
-}
-
 function Motor()
 {
-
+    error_log(json_encode(($_GET)));
 }
 
 // LED
@@ -103,8 +100,6 @@ function LED()
 {
 
 }
-
-
 
 
 ?>
