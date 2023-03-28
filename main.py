@@ -37,15 +37,10 @@ class Main:
 
         # self.WS2812B_Strip_Test()
 
-        # self.PWM_StripTest()
-        
-        # self.Red = PWM(Pin(11))
-        # self.Red.freq(500)
-        # self.Red.duty_u16(512)
-        pwm  = PWM(Pin(11))
-        
-        pwm.freq(500)
-        pwm.duty_u16(16383)   # 25% duty
+        self.PWM_StripTest()
+
+        # prints the data received from both sensors every second
+        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
 
 
     # testing a strip that runs off of PWM
@@ -54,6 +49,7 @@ class Main:
         # initialize strip
         # GPIO pins: 11, 12, 13  =  irl pin: 15, 16, 17
         self.Strip = LED_Strip_PWM(11, 12, 13)
+        print('Light strip initialized')
 
         # pass a couple of different colour values
         self.Strip.Set_Colour(Colour(255, 0, 0))
@@ -61,6 +57,7 @@ class Main:
         # self.Strip.Set_Colour(Colour())
         # self.Strip.Set_Colour(Colour())
         # self.Strip.Set_Colour(Colour())
+        print('Colour Changed')
 
       
     def MotorInit(self):       
@@ -68,11 +65,10 @@ class Main:
         # lets go for pins [24:27] (gp 18:21)
         # enable pin is on GPIO 28, or pin 34 irl
         self.ourMotor = Motor(18, 19, 20, 21, 28)
+
         # self.ourMotor.StartForward(500)
-        # ourMotor.StartBackward(500)
-
+        # self.ourMotor.StartBackward(500)
         # self.MGoBrr.irq(handler=self.m_OnOff, wake=Pin.IDLE)#, trigger=Pin.IRQ_RISING)#, wake=machine.IDLE|machine.SLEEP)
-
         # Timer for testing start/stop functionality of the motor.
         # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.m_OnOff)
 
@@ -115,17 +111,19 @@ class Main:
             return
         finally:
             pass
+        
 
-        self.APDS.GetCRGB()
-        
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ColourTest)
+    def SensorDataCallback(self, PIN):
+        # receive the colours
+        if self.APDS is not None:
+            clear, red, green, blue = self.APDS.GetCRGB()
 
-    def ColourTest(self, PIN):
+        # Get Lux
+        if self.VEML is not None:
+            lux = self.VEML.Get_Lux()
+
         
-        clear, red, green, blue = self.APDS.GetCRGB()
-        # RGB = bytearray(b'9\x02\xcd\x00\x98\x00\x9c\x00'
-        
-        print(f'clear ={clear}, red = {red}, green = {green}, blue = {blue}')
+        print(f'lux = {lux}, clear ={clear}, red = {red}, green = {green}, blue = {blue}')
 
     # This tests the LED strip
     def WS2812B_Strip_Test(self):
