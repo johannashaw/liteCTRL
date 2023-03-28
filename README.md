@@ -1,2 +1,0 @@
-# liteCTRL
-Capstone micro code
