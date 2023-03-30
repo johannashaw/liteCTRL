@@ -14,22 +14,18 @@
         <div id="header">liteCTRL Panel</div>
             <div id="automaticMenu">
                 <div class="twoSpan">Automatic</div>
-                <div class="leftMenu">Intensity</div><div class="rightMenu"><input id="intensity" type="text"></div>
-                <div class="leftMenu">Temperature</div><div class="rightMenu"><input id="temperature" type="text"></div>
+                <div class="leftMenu">Light Intensity</div><div class="rightMenu"><input id="intensity" max="100" min="0" type="text"></div>
+                <div class="leftMenu">Light Temperature</div><div class="rightMenu"><input id="temperature" max="100" min="0" type="text"></div>
             </div>
 
             <div id="manualMenu">
                 <div class="twoSpan">Manual</div>
-                <div class="leftMenu">Curtain</div><div class="rightMenu"><input type="range"></div>
+                <div class="leftMenu">Curtain Position</div><div class="rightMenu"><input id="curtain" max="100" min="0" type="range"></div>
                 <div class="leftMenu">
-                    <label for="red">Red</label>
-                    <label for="green">Green</label>
-                    <label for="blue">Blue</label>
+                    <label for="red">LED Colour</label>
                 </div>
                 <div class="rightMenu">
-                    <input type="range" name="red">
-                    <input type="range" name="green">
-                    <input type="range" name="blue">
+                    <input id="colour" type="color" name="blue">
                 </div>
             </div>
 

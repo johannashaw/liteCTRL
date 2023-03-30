@@ -2,21 +2,133 @@
 // ensures document is loaded before contents are executed
 $(document).ready(function(){
 
+// Populate webpage inputs with previously saved values from database
+GetSettings()
+{
+
+}
+
+
 // Light Intensity Event Handler
 $("#intensity").change(function()
 {
     console.log("Desired intensity is " + this.value)
+    LightIntensityAjax(this.value)
 })
 
 // Light Temperature Event Handler
 $("#temperature").change(function()
 {
     console.log("Desired temperature is " + this.value)
+    LightTemperatureAjax(this.value)
+})
+
+// Curtain Position Event Handler
+$("#curtain").change(function()
+{
+    console.log("Curtain position is " + this.value)
+    CurtainPositionAjax(this.value)
+})
+
+// LED Colour Event Handler
+$("#colour").change(function()
+{
+    console.log("LED colour is " + this.value)
+    LEDColourAjax(this.value)
 })
 
 });
 
+// --- ajax call to retrieve all settings values from database ----------------------------
+function GetSettingsAjax(){
+    console.log("In get settings ajax")
+    let sendData = {}
+    sendData["settings"] = "hello:)";
 
+    AjaxRequest("webservice.php", "GET", sendData, "json", GetSettingsSuccess, GetSettingsAjaxError)
+}
+function GetSettingsSuccess(data)
+{
+    console.log("Get Settings Success")
+}
+function GetSettingsAjaxError()
+{
+    console.log("Get Settings Ajax Error")
+}
+}
+
+
+// --- ajax call to save changed input value to database ----------------------------------
+
+function LightIntensityAjax(intensityValue){
+    console.log("In light intensity change ajax")
+    let sendData = {}
+    sendData["intensity"] = intensityValue;
+
+    AjaxRequest("webservice.php", "GET", sendData, "json", LightIntensitySuccess, LightIntensityAjaxError)
+}
+function LightIntensitySuccess()
+{
+    console.log("Light Intensity Success")
+}
+function LightIntensityAjaxError()
+{
+    console.log("Light Intensity Ajax Error")
+}
+
+// -------------------------------------------------------------------------------------------
+
+function LightTemperatureAjax(temperatureValue){
+    console.log("In light temperature change ajax")
+    let sendData = {}
+    sendData["temperature"] = temperatureValue;
+
+    AjaxRequest("webservice.php", "GET", sendData, "json", LightTemperatureSuccess, LightTemperatureAjaxError)
+}
+function LightTemperatureSuccess()
+{
+    console.log("Light Temperature Success")
+}
+function LightTemperatureAjaxError()
+{
+    console.log("Light Temperature Ajax Error")
+}
+
+// -------------------------------------------------------------------------------------------
+
+function CurtainPositionAjax(curtainValue){
+    console.log("In curtain position change ajax")
+    let sendData = {}
+    sendData["curtain"] = curtainValue;
+
+    AjaxRequest("webservice.php", "GET", sendData, "json", CurtainPositionSuccess, CurtainPositionAjaxError)
+}
+function CurtainPositionSuccess()
+{
+    console.log("Curtain Position Success")
+}
+function CurtainPositionAjaxError()
+{
+    console.log("Curtain Position Ajax Error")
+}
+
+// -------------------------------------------------------------------------------------------
+
+function LEDColourAjax(colourValue){
+    console.log("In LED colour change ajax")
+    let sendData = {}
+    sendData["colour"] = colourValue;
+
+    AjaxRequest("webservice.php", "GET", sendData, "json", LEDColourSuccess, LEDColourAjaxError)
+}
+function LEDColourSuccess()
+{
+    console.log("LED Colour Success")
+}
+function LEDColourAjaxError()
+{
+    console.log("LED Colour Ajax Error")
+}
 
 
 

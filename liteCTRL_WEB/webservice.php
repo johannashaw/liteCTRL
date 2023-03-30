@@ -101,5 +101,143 @@ function LED()
 
 }
 
+// System Settings
+// Storage of webpage user settings so they're not lost upon refresh
+
+// --- Set all inputs from database ----------------------------------------------------------
+
+if(isset($_GET["settings"]))
+{
+    error_log("Settings {$_GET["settings"]}");
+    GetSettings();
+}
+
+function GetSettings()
+{
+    $returnArray = [];
+
+    $results = mysqlQuery( $query );
+
+    // leaving off here
+    // I need to query each of my four settings tables, appending the results to my returnArray,
+    // which I will then echo back to my ajax call, from there the javascript will populate the
+    // input fields
+    if ($results)
+    {
+        while ( $row = $results->fetch_assoc() )
+        {
+            $localArray[] = $row;
+        }
+    }
+}
+
+// --- Light Intensity Change --------------------------------------------------------- 
+if(isset($_GET["intensity"]))
+{
+    error_log("Light Intensity {$_GET["intensity"]}");
+    LightIntensityDelete();
+    LightIntensityInsert($_GET["intensity"]);
+}
+
+function LightIntensityDelete()
+{
+    $query = "DELETE FROM LightIntensity";
+
+    $results = mySQLNonQuery( $query );
+
+    // I can't echo here, it terminates the server process, equivalent to return in a function
+    //echo $results;
+}
+
+function LightIntensityInsert($value)
+{
+    $query = "INSERT INTO `LightIntensity` (`Value`) VALUES ($value)";
+
+    $results = mySQLNonQuery( $query );
+
+    echo $results;
+}
+
+// --- Light Temperature Change ---------------------------------------------------------
+if(isset($_GET["temperature"]))
+{
+    error_log("Light Temperature {$_GET["temperature"]}");
+    LightTemperatureDelete();
+    LightTemperatureInsert($_GET["temperature"]);
+}
+
+function LightTemperatureDelete()
+{
+    $query = "DELETE FROM LightTemperature";
+
+    $results = mySQLNonQuery( $query );
+
+    // I can't echo here, it terminates the server process, equivalent to return in a function
+    //echo $results;
+}
+
+function LightTemperatureInsert($value)
+{
+    $query = "INSERT INTO `LightTemperature` (`Value`) VALUES ($value)";
+
+    $results = mySQLNonQuery( $query );
+
+    echo $results;
+}
+
+// --- Curtain Position Change -----------------------------------------------------------
+if(isset($_GET["curtain"]))
+{
+    error_log("Curtain Position {$_GET["curtain"]}");
+    CurtainPositionDelete();
+    CurtainPositionInsert($_GET["curtain"]);
+}
+
+function CurtainPositionDelete()
+{
+    $query = "DELETE FROM CurtainPosition";
+
+    $results = mySQLNonQuery( $query );
+
+    // I can't echo here, it terminates the server process, equivalent to return in a function
+    //echo $results;
+}
+
+function CurtainPositionInsert($value)
+{
+    $query = "INSERT INTO `CurtainPosition` (`Value`) VALUES ($value)";
+
+    $results = mySQLNonQuery( $query );
+
+    echo $results;
+}
+
+// --- LED Colour Change -----------------------------------------------------------
+if(isset($_GET["colour"]))
+{
+    error_log("LED Colour {$_GET["colour"]}");
+    LEDColourDelete();
+    LEDColourInsert($_GET["colour"]);
+}
+
+function LEDColourDelete()
+{
+    $query = "DELETE FROM LEDColour";
+
+    $results = mySQLNonQuery( $query );
+
+    // I can't echo here, it terminates the server process, equivalent to return in a function
+    //echo $results;
+}
+
+function LEDColourInsert($value)
+{
+    $query = "INSERT INTO `LEDColour` (`HEX`) VALUES ('$value')";
+
+    $results = mySQLNonQuery( $query );
+
+    echo $results;
+}
+
 
 ?>
