@@ -37,10 +37,14 @@ class Main:
 
         # self.WS2812B_Strip_Test()
 
+        # pwm = PWM(Pin(11, mode=Pin.ALT))
+        # pwm.freq(500)
+        # pwm.duty_u16(5000)
+
         self.PWM_StripTest()
 
         # prints the data received from both sensors every second
-        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
+        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
 
 
     # testing a strip that runs off of PWM
@@ -52,8 +56,8 @@ class Main:
         print('Light strip initialized')
 
         # pass a couple of different colour values
-        self.Strip.Set_Colour(Colour(255, 0, 0))
-        # self.Strip.Set_Colour(Colour())
+        #self.Strip.Set_Colour(Colour(255, 255, 255))
+        self.Strip.Set_Colour(Colour(0, 0, 0))
         # self.Strip.Set_Colour(Colour())
         # self.Strip.Set_Colour(Colour())
         # self.Strip.Set_Colour(Colour())
