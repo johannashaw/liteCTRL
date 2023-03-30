@@ -57,7 +57,7 @@ class Main:
 
         # pass a couple of different colour values
         #self.Strip.Set_Colour(Colour(255, 255, 255))
-        self.Strip.Set_Colour(Colour(0, 0, 0))
+        self.Strip.Set_Colour(Colour(255, 0, 0))
         # self.Strip.Set_Colour(Colour())
         # self.Strip.Set_Colour(Colour())
         # self.Strip.Set_Colour(Colour())
