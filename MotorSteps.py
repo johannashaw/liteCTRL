@@ -18,56 +18,78 @@ from machine import Pin, Timer
 
 class Motor:
 
-    # class atributes
-    # Indicator LED for when one rotation has been completed
-    RotIndLed = Pin(0, Pin.OUT)
+    # class members
+    # Step is the value of the current positiion of the curtain interms of steps
+    Step = 0
+    # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
+    MaxStep = 0
+    # Moving holds the direction that the curtain is moving in
+    # 1 = forwards (openning), 0 = stopped, -1 = backwards (closing)
+    Moving = 0
+    # StepCheck tells motor whether or not to check for step positionend case
+    StepCheck = False
 
-    def __init__(self, pinA, pinB, pinC, pinD, pinEnable):
+    def __init__(self, pinA, pinB, pinC, pinD, pinEnable, pinBarrier):
         
-        # initialize the pins
+        # initialize the output Step pins
         # note: pins A and B are friends, and pins C and D are friends
         self.PinA = Pin(pinA, Pin.OUT)
         self.PinB = Pin(pinB, Pin.OUT)
         self.PinC = Pin(pinC, Pin.OUT)
         self.PinD = Pin(pinD, Pin.OUT)
         
+        # Pin dedicated to enabling the motor  (So that the motor doesn't get super hot)
+        self.EnablePin = Pin(pinEnable, Pin.OUT)
+
+        # Pin that tells us whether or not we hit an edge
+
         # initialize the timer
         self.Timer = Timer()
-        self.State = 0
-
-        # Pin dedicated to enabling the motor
-        # So that the motor doesn't get super hot
-        self.EnablePin = Pin(pinEnable, Pin.OUT)
 
 
     def StartForward(self, frequency):        
         # set the initial motor values so they alternate
-        self.PinA.value(0)
-        self.PinB.value(1)
-        self.PinC.value(0)
-        self.PinD.value(1)
+        if self.Step & 1 == 0:
+            self.__set1()
+        else:
+            self.__set2()
         
-        self.Start(frequency)
+        self.Start(frequency, 1)
 
         
     def StartBackward(self, frequency):
         # set the initial motor values so they alternate
+        if self.Step & 1 == 0:
+            self.__set2()
+        else:
+            self.__set1()
+        
+        self.Start(frequency, -1)
+
+    # used for 
+    def __set1(self):
+        self.PinA.value(0)
+        self.PinB.value(1)
+        self.PinC.value(0)
+        self.PinD.value(1)
+
+    def __set2(self):
         self.PinA.value(1)
         self.PinB.value(0)
         self.PinC.value(0)
         self.PinD.value(1)
-        
-        self.Start(frequency)
-    
 
     # Helper function for StartBackwards and StartForwards
-    def Start(self, frequency):
+    def Start(self, frequency, direction):
         # Enable the motor and then start the timer
         self.EnablePin.value(1)
 
         self.Timer.init(freq=frequency, mode=Timer.PERIODIC, callback=self.Step)
 
-        self.Started = True
+        if direction < -1 or direction > 1:
+            raise ValueError("MotorSteps.Start : Variable 'direction' needs to be within range: [-1, 1]")
+
+        self.Moving = direction
 
 
     # Stops the motor and makes it so that there's no electricity going through it
@@ -76,37 +98,48 @@ class Motor:
         self.Timer.deinit()
 
         # Easy reference for whether or not the motor is currentlty running        
-        self.Started = False
+        self.Moving = 0
 
-        # The State variable us used to determine which direction the motor turns
-        # NEEDS to be reset to an even number each time it stops, 
-        # otherwise there's no guarantee which direction it will go in when it starts up again.
-        self.State = 0
+        # 
+        self.StepCheck = False
 
 
     # The Callback function driving each motor step
     # Uses a full-wave stepping pattern
     def Step(self, timer):
-        # remember that you need to state that it's global, THEN do something with it.
-        self.State += 1
+        # if forward: Step += 1,
+        # if backwards Step -= 1
+        self.Step += self.Moving
         
-        # if State is an odd number (aka alternate between these two)
-        if self.State & 1 == 1:        
+        # if Step is an odd number (aka alternate between these two)
+        if self.Step & 1 == 1:        
             self.PinC.toggle()
             self.PinD.toggle()
         else:
             self.PinA.toggle()
             self.PinB.toggle()
         
-        # If the motor has completed one full rotation
-        if self.State % 200 == 0:
-            self.State = 0
-            self.FullRotation()
 
-    
-    # One rotation has been completed
-    def FullRotation(self):
-        self.RotIndLed.toggle()
+
+
+    # will fully open and then fully close the curtains in order to get the total steps value
+    def Calibrate(self):
+        pass
+
+
+    # will completely open the curtains
+    def Open(self):
+        pass
+
+
+    # will completely close the curtains
+    def Close(self):
+        pass
+
+
+    # will move curtains to percent open
+    def MoveToPercent(self, percent):
+        pass
     
 
 
