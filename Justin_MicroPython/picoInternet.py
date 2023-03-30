@@ -12,7 +12,9 @@ from picozero import pico_temp_sensor, pico_led
 import machine
 import urequests
 import json
-#import micropython_urequests as requests
+
+# Connection indicator off
+pico_led.off()
 
 ssid = "Justin’s iPhone"
 password = "deskmate"
@@ -34,6 +36,9 @@ def connect():
         pico_led.toggle()
         sleep(1)
         
+    # Connection indicator on
+    pico_led.on()
+
     # print Pico ip address
     ip = wlan.ifconfig()[0]
     print(f"Connected on: {ip}")
@@ -61,6 +66,8 @@ def GetRequest(**kwargs):
 
 wlan = connect()
 
+
+# Get testing
 counter = 0
 while True:
         counter += 1
