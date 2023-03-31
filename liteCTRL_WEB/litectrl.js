@@ -8,15 +8,36 @@ GetSettingsAjax()
 // Light Intensity Event Handler
 $("#intensity").change(function()
 {
-    console.log("Desired intensity is " + this.value)
-    LightIntensityAjax(this.value)
+    number = Number(this.value)
+    if (0 <= number & number <= 100 )
+    {
+        console.log("Desired intensity is " + this.value)
+        $("#intensity").css("background-color", "white")
+        LightIntensityAjax(this.value)
+    }
+    else{
+        $("#intensity").css("background-color", "red")
+        $("#intensity").val("No")
+    }
+    
 })
 
 // Light Temperature Event Handler
 $("#temperature").change(function()
 {
-    console.log("Desired temperature is " + this.value)
-    LightTemperatureAjax(this.value)
+    number = Number(this.value)
+    if (0 <= number & number <= 100 )
+    {
+        console.log("Desired temperature is " + this.value)
+        $("#temperature").css("background-color", "white")
+        LightTemperatureAjax(this.value)
+    }
+    else{
+        $("#temperature").css("background-color", "red")
+        $("#temperature").val("No")
+    }
+
+    
 })
 
 // Curtain Position Event Handler
