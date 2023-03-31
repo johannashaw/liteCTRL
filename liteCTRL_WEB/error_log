@@ -91,3 +91,58 @@ Stack trace:
 #2 /home/litectrl/public_html/webservice.php(193): CurtainPositionInsert('#45277c')
 #3 {main}
   thrown in /home/litectrl/public_html/database.php on line 62
+[30-Mar-2023 22:26:12 UTC] Connection Successfully Established
+[30-Mar-2023 22:26:12 UTC] LED Colour #0f0d8c
+[30-Mar-2023 22:26:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Cu...')
+#1 /home/litectrl/public_html/webservice.php(183): mySQLNonQuery('INSERT INTO `Cu...')
+#2 /home/litectrl/public_html/webservice.php(193): CurtainPositionInsert('#0f0d8c')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[30-Mar-2023 22:29:22 UTC] Connection Successfully Established
+[30-Mar-2023 22:29:22 UTC] LED Colour #ea2a2a
+[30-Mar-2023 22:29:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Cu...')
+#1 /home/litectrl/public_html/webservice.php(183): mySQLNonQuery('INSERT INTO `Cu...')
+#2 /home/litectrl/public_html/webservice.php(193): CurtainPositionInsert('#ea2a2a')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[30-Mar-2023 22:29:30 UTC] Connection Successfully Established
+[30-Mar-2023 22:29:30 UTC] LED Colour #a50d0d
+[30-Mar-2023 22:29:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Cu...')
+#1 /home/litectrl/public_html/webservice.php(183): mySQLNonQuery('INSERT INTO `Cu...')
+#2 /home/litectrl/public_html/webservice.php(193): CurtainPositionInsert('#a50d0d')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[30-Mar-2023 22:30:06 UTC] Connection Successfully Established
+[30-Mar-2023 22:30:06 UTC] LED Colour #d32222
+[30-Mar-2023 22:30:06 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `LE...')
+#1 /home/litectrl/public_html/webservice.php(210): mySQLNonQuery('INSERT INTO `LE...')
+#2 /home/litectrl/public_html/webservice.php(193): LEDColourInsert('#d32222')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[30-Mar-2023 22:30:28 UTC] Connection Successfully Established
+[30-Mar-2023 22:30:28 UTC] Curtain Position 68
+[30-Mar-2023 22:30:46 UTC] Connection Successfully Established
+[30-Mar-2023 22:30:46 UTC] LED Colour #17644d
+[30-Mar-2023 22:30:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''(#17644d)'' at line 1 in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `LE...')
+#1 /home/litectrl/public_html/webservice.php(210): mySQLNonQuery('INSERT INTO `LE...')
+#2 /home/litectrl/public_html/webservice.php(193): LEDColourInsert('#17644d')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[30-Mar-2023 22:31:38 UTC] Connection Successfully Established
+[30-Mar-2023 22:31:38 UTC] LED Colour #21876e
+[30-Mar-2023 22:32:44 UTC] Connection Successfully Established
+[30-Mar-2023 22:32:44 UTC] LED Colour #aa4646
+[31-Mar-2023 16:16:35 UTC] Connection Successfully Established
+[31-Mar-2023 16:16:35 UTC] Settings hello :)
+[31-Mar-2023 16:16:35 UTC] {}
+[31-Mar-2023 16:16:35 UTC] PHP Warning:  Array to string conversion in /home/litectrl/public_html/webservice.php on line 134

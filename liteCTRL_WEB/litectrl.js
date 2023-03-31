@@ -3,11 +3,7 @@
 $(document).ready(function(){
 
 // Populate webpage inputs with previously saved values from database
-GetSettings()
-{
-
-}
-
+GetSettingsAjax()
 
 // Light Intensity Event Handler
 $("#intensity").change(function()
@@ -43,19 +39,26 @@ $("#colour").change(function()
 function GetSettingsAjax(){
     console.log("In get settings ajax")
     let sendData = {}
-    sendData["settings"] = "hello:)";
+    sendData["settings"] = "hello :)";
 
     AjaxRequest("webservice.php", "GET", sendData, "json", GetSettingsSuccess, GetSettingsAjaxError)
 }
 function GetSettingsSuccess(data)
 {
     console.log("Get Settings Success")
+    console.log(data)
+    //data = JSON.parse(data)
+
+    $("#intensity").val(data["LightIntensity"]["Value"])
+    $("#temperature").val(data["LightTemperature"]["Value"])
+    $("#curtain").val(data["CurtainPosition"]["Value"])
+    $("#colour").val(data["LEDColour"]["HEX"])
 }
 function GetSettingsAjaxError()
 {
     console.log("Get Settings Ajax Error")
 }
-}
+
 
 
 // --- ajax call to save changed input value to database ----------------------------------
