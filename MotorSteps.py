@@ -4,7 +4,7 @@
 # Created by: Johanna Shaw
 
 
-from machine import Pin, Timer
+from machine import Pin, Timer, ADC
 
 
 # Notes:
@@ -18,7 +18,8 @@ from machine import Pin, Timer
 
 class Motor:
 
-    # class members
+    # Class Members:
+
     # Step is the value of the current positiion of the curtain interms of steps
     Step = 0
     # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
@@ -42,6 +43,8 @@ class Motor:
         self.EnablePin = Pin(pinEnable, Pin.OUT)
 
         # Pin that tells us whether or not we hit an edge
+        self.BarPin = ADC(Pin(pinBarrier))
+        # self.BarPin.read_u16()    # returns ADC value between 0 and 65535
 
         # initialize the timer
         self.Timer = Timer()
@@ -84,7 +87,7 @@ class Motor:
         # Enable the motor and then start the timer
         self.EnablePin.value(1)
 
-        self.Timer.init(freq=frequency, mode=Timer.PERIODIC, callback=self.Step)
+        self.Timer.init(freq=frequency, mode=Timer.PERIODIC, callback=self.MoveStep)
 
         if direction < -1 or direction > 1:
             raise ValueError("MotorSteps.Start : Variable 'direction' needs to be within range: [-1, 1]")
@@ -100,13 +103,13 @@ class Motor:
         # Easy reference for whether or not the motor is currentlty running        
         self.Moving = 0
 
-        # 
+        # reset the Stepcheck value
         self.StepCheck = False
 
 
     # The Callback function driving each motor step
     # Uses a full-wave stepping pattern
-    def Step(self, timer):
+    def MoveStep(self, timer):
         # if forward: Step += 1,
         # if backwards Step -= 1
         self.Step += self.Moving
@@ -119,7 +122,9 @@ class Motor:
             self.PinA.toggle()
             self.PinB.toggle()
         
-
+        # check for if we've stopped at the desired location
+        if self.StepCheck and self.Step == self.StepTarget:
+            self.Stop()
 
 
     # will fully open and then fully close the curtains in order to get the total steps value
@@ -139,6 +144,11 @@ class Motor:
 
     # will move curtains to percent open
     def MoveToPercent(self, percent):
+        # set desired position
+        self.StepTarget = (self.MaxStep * percent) // 100
+        
+        # set stepcheck so that the pico checks and stops at the desired location.
+        self.StepCheck = True
         pass
     
 
