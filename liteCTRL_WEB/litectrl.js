@@ -3,24 +3,41 @@
 $(document).ready(function(){
 
 // Populate webpage inputs with previously saved values from database
-GetSettings()
-{
-
-}
-
+GetSettingsAjax()
 
 // Light Intensity Event Handler
 $("#intensity").change(function()
 {
-    console.log("Desired intensity is " + this.value)
-    LightIntensityAjax(this.value)
+    number = Number(this.value)
+    if (0 <= number & number <= 100 )
+    {
+        console.log("Desired intensity is " + this.value)
+        $("#intensity").css("background-color", "white")
+        LightIntensityAjax(this.value)
+    }
+    else{
+        $("#intensity").css("background-color", "red")
+        $("#intensity").val("No")
+    }
+    
 })
 
 // Light Temperature Event Handler
 $("#temperature").change(function()
 {
-    console.log("Desired temperature is " + this.value)
-    LightTemperatureAjax(this.value)
+    number = Number(this.value)
+    if (0 <= number & number <= 100 )
+    {
+        console.log("Desired temperature is " + this.value)
+        $("#temperature").css("background-color", "white")
+        LightTemperatureAjax(this.value)
+    }
+    else{
+        $("#temperature").css("background-color", "red")
+        $("#temperature").val("No")
+    }
+
+    
 })
 
 // Curtain Position Event Handler
@@ -43,19 +60,26 @@ $("#colour").change(function()
 function GetSettingsAjax(){
     console.log("In get settings ajax")
     let sendData = {}
-    sendData["settings"] = "hello:)";
+    sendData["settings"] = "hello :)";
 
     AjaxRequest("webservice.php", "GET", sendData, "json", GetSettingsSuccess, GetSettingsAjaxError)
 }
 function GetSettingsSuccess(data)
 {
     console.log("Get Settings Success")
+    console.log(data)
+    //data = JSON.parse(data)
+
+    $("#intensity").val(data["LightIntensity"]["Value"])
+    $("#temperature").val(data["LightTemperature"]["Value"])
+    $("#curtain").val(data["CurtainPosition"]["Value"])
+    $("#colour").val(data["LEDColour"]["HEX"])
 }
 function GetSettingsAjaxError()
 {
     console.log("Get Settings Ajax Error")
 }
-}
+
 
 
 // --- ajax call to save changed input value to database ----------------------------------

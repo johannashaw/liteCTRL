@@ -116,19 +116,56 @@ function GetSettings()
 {
     $returnArray = [];
 
+    // Get Light Intensity
+    $query = "SELECT * FROM LightIntensity";
     $results = mysqlQuery( $query );
 
-    // leaving off here
-    // I need to query each of my four settings tables, appending the results to my returnArray,
-    // which I will then echo back to my ajax call, from there the javascript will populate the
-    // input fields
     if ($results)
     {
         while ( $row = $results->fetch_assoc() )
         {
-            $localArray[] = $row;
+            $returnArray["LightIntensity"] = $row;
         }
     }
+
+    // Get Light Temperature
+    $query = "SELECT * FROM LightTemperature";
+    $results = mysqlQuery( $query );
+
+    if ($results)
+    {
+        while ( $row = $results->fetch_assoc() )
+        {
+            $returnArray["LightTemperature"] = $row;
+        }
+    }
+
+    // Get Curtain Position
+    $query = "SELECT * FROM CurtainPosition";
+    $results = mysqlQuery( $query );
+
+    if ($results)
+    {
+        while ( $row = $results->fetch_assoc() )
+        {
+            $returnArray["CurtainPosition"] = $row;
+        }
+    }
+
+    // Get Light Intensity
+    $query = "SELECT * FROM LEDColour";
+    $results = mysqlQuery( $query );
+
+    if ($results)
+    {
+        while ( $row = $results->fetch_assoc() )
+        {
+            $returnArray["LEDColour"] = $row;
+        }
+    }
+
+
+    echo json_encode($returnArray);
 }
 
 // --- Light Intensity Change --------------------------------------------------------- 
