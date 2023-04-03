@@ -44,7 +44,7 @@ session_unset();
                 <div class="leftMenu">
                     <label for="red">Colour</label>
                 </div>
-                <div class="rightMenu">
+                <div class="rightMenu ">
                     <input id="colour" type="color" name="blue">
                 </div>
             </div>
