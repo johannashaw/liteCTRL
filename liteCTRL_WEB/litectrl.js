@@ -5,6 +5,9 @@ $(document).ready(function(){
 // Populate webpage inputs with previously saved values from database
 GetSettingsAjax()
 
+// Sweet sweet sunrise
+ColourWash()
+
 // Light Intensity Event Handler
 $("#intensity").change(function()
 {
@@ -55,6 +58,16 @@ $("#colour").change(function()
 })
 
 });
+
+// --- function to handle colouring of page -----------------------------------------------
+function ColourWash()
+{
+    console.log("colourwash")
+    $("footer").attr("class", "calico")
+    setTimeout(function(){
+        $("footer").attr("class", "towergray")
+    }, 1000)
+}
 
 // --- ajax call to retrieve all settings values from database ----------------------------
 function GetSettingsAjax(){

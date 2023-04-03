@@ -1,3 +1,47 @@
+<?php
+
+require_once "validate.php";
+
+/*  If the $_POST submit has been created and is Login, ensure the username and password are not 
+*   empty strings, then cleanse them of potential html tags and external whitespace, dump all of that 
+*   into a key/value array, and toss that array to the Validate function to check legitimacy of
+*   username and password
+*/
+
+
+
+if(isset($_POST['submit']) && $_POST["submit"] == "Login"
+    && isset($_POST["username"]) && strlen($_POST["username"]) > 0
+    && isset($_POST['password']) && strlen($_POST["password"]) > 0)
+    {
+        error_log("In login block");
+
+        $info = array();
+        $info['username'] = strip_tags( trim($_POST["username"]) );
+        $info['password'] = strip_tags( trim($_POST["password"]) );
+        $info['response'] = "";
+        $info['status'] = false;
+
+        $info = Validate($info);
+
+        $_SESSION['response'] = $info['response'];
+
+        error_log($_SESSION['response']);
+
+        // if status returns as true, we redirect to the index page
+        if ($info['status'])
+        {
+            error_log("In info status block");
+            $_SESSION['username'] = $info['username'];
+            header("Location: index.php");
+            die();
+        }
+
+        
+    }
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,9 +55,12 @@
 </head>
 <body>
     <div id="login">
-        <div class="twoSpan">Authenticate</div>
-        <div class="leftMenu">Username</div><div class="rightMenu"><input type="text"></div>
-        <div class="leftMenu">Password</div><div class="rightMenu"><input type="text"></div>
+        <div class="twoSpan brightText">Authenticate</div>
+        <form id="login" class="twoSpan" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+            <div class="leftMenu brightText">Username</div><div class="rightMenu"><input name="username" type="text"></div>
+            <div class="leftMenu brightText">Password</div><div class="rightMenu"><input name="password" type="password"></div>
+            <input id="submit" type="submit" name="submit" value="Login" class="twoSpan">
+        </form>
     </div>
     <div id="mainGrid">
         <div id="header">liteCTRL Panel</div>

@@ -1,16 +1,21 @@
 <?php
 
+require_once "validate.php";
+
 // check for an active
 // session by checking for a session variable called username with an assigned user name. If the
 // username is not set, redirect the user to the login.php page. 
-if (!isset($_SESSION['username']))
-{
-    header("Location: login.php");
-    die();
-}
+
+// if (!isset($_SESSION['username']))
+// {
+//     header("Location: login.php");
+//     die();
+// }
 
 // This is how we redirect to pages 
 //header("Location: index.php");
+
+session_unset();
 
 ?>
 <!DOCTYPE html>
@@ -39,7 +44,7 @@ if (!isset($_SESSION['username']))
                 <div class="leftMenu">
                     <label for="red">Colour</label>
                 </div>
-                <div class="rightMenu">
+                <div class="rightMenu ">
                     <input id="colour" type="color" name="blue">
                 </div>
             </div>

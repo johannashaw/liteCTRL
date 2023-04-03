@@ -9,11 +9,15 @@ body {
 
 div, footer, td, p {
     
-    color: white;
+    color: grey;
     border: 1px solid #555B63;
     margin: 5px;
     padding: 5px;
     font-size: large;
+}
+
+.brightText {
+    color: white;
 }
 
 input {
@@ -24,6 +28,10 @@ input {
     font-family: 'Kanit', sans-serif;
     font-size: large;
     font-weight: 600;
+}
+
+#submit {
+    justify-self: center;
 }
 
 
@@ -97,6 +105,8 @@ input {
     #login {
         display: grid;
         grid-template-columns: 1fr 1fr;
+
+        
     }
 
     #mainGrid {

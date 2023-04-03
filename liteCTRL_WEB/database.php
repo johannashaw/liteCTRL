@@ -14,12 +14,12 @@ function Connect()
     if ($connection->connect_error)
     {
         $response = "Connect Error (" .$connection->connect_errno . ") " . $connection->connect_error;
-        error_log($response);
+        //error_log($response);
         die();
     }
     else
     {
-        error_log("Connection Successfully Established");
+        //error_log("Connection Successfully Established");
     }
         
 }
@@ -41,7 +41,7 @@ function mySQLQuery( $query )
         
         $response = "Query Error : {$connection->errno} : {$connection->error}";
     }
-    error_log(json_encode( $connection));
+    //error_log(json_encode( $connection));
     
     return $result;
 
