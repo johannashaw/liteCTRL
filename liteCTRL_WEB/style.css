@@ -10,6 +10,7 @@ body {
 div, footer, td, p {
     
     color: white;
+    /* background-color: #ADB9C1; */
     border: 1px solid #555B63;
     margin: 5px;
     padding: 5px;
@@ -24,6 +25,22 @@ input {
     font-family: 'Kanit', sans-serif;
     font-size: large;
     font-weight: 600;
+}
+
+.abbey {
+    background-color: #555B63;
+}
+
+.calico {
+    background-color: #DFCA91;
+}
+
+.towergray {
+    background-color: #ADB9C1;
+}
+
+.poloblue {
+    background-color: #8998C4;
 }
 
 
