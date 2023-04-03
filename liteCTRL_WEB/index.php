@@ -1,3 +1,18 @@
+<?php
+
+// check for an active
+// session by checking for a session variable called username with an assigned user name. If the
+// username is not set, redirect the user to the login.php page. 
+if (!isset($_SESSION['username']))
+{
+    header("Location: login.php");
+    die();
+}
+
+// This is how we redirect to pages 
+//header("Location: index.php");
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

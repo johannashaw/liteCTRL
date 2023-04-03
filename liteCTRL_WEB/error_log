@@ -1,148 +1,168 @@
-[28-Mar-2023 19:38:00 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:38:10 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:39:15 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:39:28 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:39:38 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:40:31 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:40:42 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:40:54 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:41:05 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:41:16 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:41:26 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 50
-[28-Mar-2023 19:44:43 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 55
-[28-Mar-2023 19:45:10 UTC] PHP Fatal error:  Cannot redeclare Reset() in /home/litectrl/public_html/webservice.php on line 55
-[28-Mar-2023 19:46:46 UTC] Connection Successfully Established
-[28-Mar-2023 19:46:46 UTC] is set
-[28-Mar-2023 19:46:46 UTC] {"Motor":"GoBrr"}
-[28-Mar-2023 19:46:56 UTC] Connection Successfully Established
-[28-Mar-2023 19:46:56 UTC] is set
-[28-Mar-2023 19:46:56 UTC] {"Motor":"GoBrr"}
-[28-Mar-2023 19:47:07 UTC] Connection Successfully Established
-[28-Mar-2023 19:47:07 UTC] is set
-[28-Mar-2023 19:47:07 UTC] {"Motor":"GoBrr"}
-[28-Mar-2023 20:15:35 UTC] Connection Successfully Established
-[28-Mar-2023 20:15:51 UTC] Connection Successfully Established
-[28-Mar-2023 20:16:35 UTC] Connection Successfully Established
-[30-Mar-2023 21:43:51 UTC] Connection Successfully Established
-[30-Mar-2023 21:43:51 UTC] Light Intensity 55
-[30-Mar-2023 21:43:51 UTC] {}
-[30-Mar-2023 21:46:13 UTC] Connection Successfully Established
-[30-Mar-2023 21:46:13 UTC] Light Intensity 55
-[30-Mar-2023 21:49:37 UTC] Connection Successfully Established
-[30-Mar-2023 21:49:37 UTC] Light Intensity 33
-[30-Mar-2023 21:49:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '33' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO Lig...')
-#1 /home/litectrl/public_html/webservice.php(127): mySQLNonQuery('INSERT INTO Lig...')
-#2 /home/litectrl/public_html/webservice.php(111): LightIntensityInsert('33')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 21:50:47 UTC] Connection Successfully Established
-[30-Mar-2023 21:50:47 UTC] Light Intensity 50
-[30-Mar-2023 21:50:47 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '50' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Li...')
-#1 /home/litectrl/public_html/webservice.php(127): mySQLNonQuery('INSERT INTO `Li...')
-#2 /home/litectrl/public_html/webservice.php(111): LightIntensityInsert('50')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 21:51:18 UTC] Connection Successfully Established
-[30-Mar-2023 21:51:18 UTC] Light Intensity 55
-[30-Mar-2023 21:51:18 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '55' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Li...')
-#1 /home/litectrl/public_html/webservice.php(127): mySQLNonQuery('INSERT INTO `Li...')
-#2 /home/litectrl/public_html/webservice.php(111): LightIntensityInsert('55')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 21:51:39 UTC] Connection Successfully Established
-[30-Mar-2023 21:51:39 UTC] Light Intensity 55
-[30-Mar-2023 21:51:50 UTC] Connection Successfully Established
-[30-Mar-2023 21:51:50 UTC] Light Intensity 12
-[30-Mar-2023 21:52:01 UTC] Connection Successfully Established
-[30-Mar-2023 21:52:01 UTC] Light Intensity 99
-[30-Mar-2023 21:58:04 UTC] Connection Successfully Established
-[30-Mar-2023 21:58:04 UTC] Light Temperature 22
-[30-Mar-2023 21:58:11 UTC] Connection Successfully Established
-[30-Mar-2023 21:58:11 UTC] Light Temperature 99
-[30-Mar-2023 21:58:38 UTC] Connection Successfully Established
-[30-Mar-2023 21:58:38 UTC] Light Temperature 777
-[30-Mar-2023 21:58:45 UTC] Connection Successfully Established
-[30-Mar-2023 21:58:45 UTC] Light Temperature 9999
-[30-Mar-2023 21:58:45 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Data too long for column 'Value' at row 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Li...')
-#1 /home/litectrl/public_html/webservice.php(156): mySQLNonQuery('INSERT INTO `Li...')
-#2 /home/litectrl/public_html/webservice.php(139): LightTemperatureInsert('9999')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 21:59:01 UTC] Connection Successfully Established
-[30-Mar-2023 21:59:01 UTC] Light Temperature 123
-[30-Mar-2023 22:09:47 UTC] Connection Successfully Established
-[30-Mar-2023 22:09:47 UTC] Light Temperature 77
-[30-Mar-2023 22:17:33 UTC] Connection Successfully Established
-[30-Mar-2023 22:17:33 UTC] Curtain Position 69
-[30-Mar-2023 22:24:42 UTC] Connection Successfully Established
-[30-Mar-2023 22:24:42 UTC] LED Colour #45277c
-[30-Mar-2023 22:24:42 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Cu...')
-#1 /home/litectrl/public_html/webservice.php(183): mySQLNonQuery('INSERT INTO `Cu...')
-#2 /home/litectrl/public_html/webservice.php(193): CurtainPositionInsert('#45277c')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 22:26:12 UTC] Connection Successfully Established
-[30-Mar-2023 22:26:12 UTC] LED Colour #0f0d8c
-[30-Mar-2023 22:26:12 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Cu...')
-#1 /home/litectrl/public_html/webservice.php(183): mySQLNonQuery('INSERT INTO `Cu...')
-#2 /home/litectrl/public_html/webservice.php(193): CurtainPositionInsert('#0f0d8c')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 22:29:22 UTC] Connection Successfully Established
-[30-Mar-2023 22:29:22 UTC] LED Colour #ea2a2a
-[30-Mar-2023 22:29:22 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Cu...')
-#1 /home/litectrl/public_html/webservice.php(183): mySQLNonQuery('INSERT INTO `Cu...')
-#2 /home/litectrl/public_html/webservice.php(193): CurtainPositionInsert('#ea2a2a')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 22:29:30 UTC] Connection Successfully Established
-[30-Mar-2023 22:29:30 UTC] LED Colour #a50d0d
-[30-Mar-2023 22:29:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Cu...')
-#1 /home/litectrl/public_html/webservice.php(183): mySQLNonQuery('INSERT INTO `Cu...')
-#2 /home/litectrl/public_html/webservice.php(193): CurtainPositionInsert('#a50d0d')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 22:30:06 UTC] Connection Successfully Established
-[30-Mar-2023 22:30:06 UTC] LED Colour #d32222
-[30-Mar-2023 22:30:06 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `LE...')
-#1 /home/litectrl/public_html/webservice.php(210): mySQLNonQuery('INSERT INTO `LE...')
-#2 /home/litectrl/public_html/webservice.php(193): LEDColourInsert('#d32222')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 22:30:28 UTC] Connection Successfully Established
-[30-Mar-2023 22:30:28 UTC] Curtain Position 68
-[30-Mar-2023 22:30:46 UTC] Connection Successfully Established
-[30-Mar-2023 22:30:46 UTC] LED Colour #17644d
-[30-Mar-2023 22:30:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''(#17644d)'' at line 1 in /home/litectrl/public_html/database.php:62
-Stack trace:
-#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `LE...')
-#1 /home/litectrl/public_html/webservice.php(210): mySQLNonQuery('INSERT INTO `LE...')
-#2 /home/litectrl/public_html/webservice.php(193): LEDColourInsert('#17644d')
-#3 {main}
-  thrown in /home/litectrl/public_html/database.php on line 62
-[30-Mar-2023 22:31:38 UTC] Connection Successfully Established
-[30-Mar-2023 22:31:38 UTC] LED Colour #21876e
-[30-Mar-2023 22:32:44 UTC] Connection Successfully Established
-[30-Mar-2023 22:32:44 UTC] LED Colour #aa4646
-[31-Mar-2023 16:16:35 UTC] Connection Successfully Established
-[31-Mar-2023 16:16:35 UTC] Settings hello :)
-[31-Mar-2023 16:16:35 UTC] {}
-[31-Mar-2023 16:16:35 UTC] PHP Warning:  Array to string conversion in /home/litectrl/public_html/webservice.php on line 134
+[03-Apr-2023 20:28:06 UTC] in login redirect
+[03-Apr-2023 20:28:06 UTC] in login redirect
+[03-Apr-2023 20:28:06 UTC] in login redirect
+[03-Apr-2023 20:28:06 UTC] in login redirect
+[03-Apr-2023 20:28:06 UTC] in login redirect
+[03-Apr-2023 20:28:06 UTC] in login redirect
+[03-Apr-2023 20:28:06 UTC] in login redirect
+[03-Apr-2023 20:28:06 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:07 UTC] in login redirect
+[03-Apr-2023 20:28:08 UTC] in login redirect
+[03-Apr-2023 20:28:08 UTC] in login redirect
+[03-Apr-2023 20:28:08 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:09 UTC] in login redirect
+[03-Apr-2023 20:28:10 UTC] in login redirect
+[03-Apr-2023 20:28:10 UTC] in login redirect
+[03-Apr-2023 20:28:10 UTC] in login redirect
+[03-Apr-2023 20:28:10 UTC] in login redirect
+[03-Apr-2023 20:28:10 UTC] in login redirect
+[03-Apr-2023 20:28:10 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:11 UTC] in login redirect
+[03-Apr-2023 20:28:16 UTC] in login redirect
+[03-Apr-2023 20:28:16 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:17 UTC] in login redirect
+[03-Apr-2023 20:28:18 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:48 UTC] in login redirect
+[03-Apr-2023 20:28:49 UTC] in login redirect
+[03-Apr-2023 20:28:49 UTC] in login redirect
+[03-Apr-2023 20:28:49 UTC] in login redirect
+[03-Apr-2023 20:28:49 UTC] in login redirect
+[03-Apr-2023 20:28:49 UTC] in login redirect
+[03-Apr-2023 20:29:35 UTC] in login redirect
+[03-Apr-2023 20:29:36 UTC] Connection Successfully Established
+[03-Apr-2023 20:29:36 UTC] Settings hello :)
+[03-Apr-2023 20:29:36 UTC] {}
+[03-Apr-2023 20:29:36 UTC] {}
+[03-Apr-2023 20:29:36 UTC] {}
+[03-Apr-2023 20:29:36 UTC] {}
+[03-Apr-2023 20:30:08 UTC] Connection Successfully Established
+[03-Apr-2023 20:30:08 UTC] Settings hello :)
+[03-Apr-2023 20:30:08 UTC] {}
+[03-Apr-2023 20:30:08 UTC] {}
+[03-Apr-2023 20:30:08 UTC] {}
+[03-Apr-2023 20:30:08 UTC] {}
+[03-Apr-2023 20:30:20 UTC] in login redirect
+[03-Apr-2023 20:30:21 UTC] Connection Successfully Established
+[03-Apr-2023 20:30:21 UTC] Settings hello :)
+[03-Apr-2023 20:30:21 UTC] {}
+[03-Apr-2023 20:30:21 UTC] {}
+[03-Apr-2023 20:30:21 UTC] {}
+[03-Apr-2023 20:30:21 UTC] {}
+[03-Apr-2023 20:30:51 UTC] Connection Successfully Established
+[03-Apr-2023 20:30:51 UTC] Settings hello :)
+[03-Apr-2023 20:30:51 UTC] {}
+[03-Apr-2023 20:30:51 UTC] {}
+[03-Apr-2023 20:30:51 UTC] {}
+[03-Apr-2023 20:30:51 UTC] {}
+[03-Apr-2023 20:32:26 UTC] Connection Successfully Established
+[03-Apr-2023 20:32:26 UTC] Settings hello :)
+[03-Apr-2023 20:32:26 UTC] {}
+[03-Apr-2023 20:32:26 UTC] {}
+[03-Apr-2023 20:32:26 UTC] {}
+[03-Apr-2023 20:32:26 UTC] {}
+[03-Apr-2023 20:32:51 UTC] Connection Successfully Established
+[03-Apr-2023 20:32:51 UTC] Settings hello :)
+[03-Apr-2023 20:32:51 UTC] {}
+[03-Apr-2023 20:32:51 UTC] {}
+[03-Apr-2023 20:32:51 UTC] {}
+[03-Apr-2023 20:32:51 UTC] {}
+[03-Apr-2023 20:33:14 UTC] Connection Successfully Established
+[03-Apr-2023 20:33:14 UTC] Settings hello :)
+[03-Apr-2023 20:33:14 UTC] {}
+[03-Apr-2023 20:33:14 UTC] {}
+[03-Apr-2023 20:33:14 UTC] {}
+[03-Apr-2023 20:33:14 UTC] {}
+[03-Apr-2023 20:33:51 UTC] Connection Successfully Established
+[03-Apr-2023 20:33:51 UTC] Settings hello :)
+[03-Apr-2023 20:33:51 UTC] {}
+[03-Apr-2023 20:33:51 UTC] {}
+[03-Apr-2023 20:33:51 UTC] {}
+[03-Apr-2023 20:33:51 UTC] {}
+[03-Apr-2023 20:34:10 UTC] Connection Successfully Established
+[03-Apr-2023 20:34:10 UTC] Settings hello :)
+[03-Apr-2023 20:34:10 UTC] {}
+[03-Apr-2023 20:34:10 UTC] {}
+[03-Apr-2023 20:34:10 UTC] {}
+[03-Apr-2023 20:34:10 UTC] {}
+[03-Apr-2023 20:34:48 UTC] Connection Successfully Established
+[03-Apr-2023 20:34:48 UTC] Settings hello :)
+[03-Apr-2023 20:34:48 UTC] {}
+[03-Apr-2023 20:34:48 UTC] {}
+[03-Apr-2023 20:34:48 UTC] {}
+[03-Apr-2023 20:34:48 UTC] {}
+[03-Apr-2023 20:35:34 UTC] Connection Successfully Established
+[03-Apr-2023 20:35:34 UTC] Settings hello :)
+[03-Apr-2023 20:35:34 UTC] {}
+[03-Apr-2023 20:35:34 UTC] {}
+[03-Apr-2023 20:35:34 UTC] {}
+[03-Apr-2023 20:35:34 UTC] {}

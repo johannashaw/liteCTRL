@@ -108,7 +108,7 @@ function LED()
 
 if(isset($_GET["settings"]))
 {
-    error_log("Settings {$_GET["settings"]}");
+    //error_log("Settings {$_GET["settings"]}");
     GetSettings();
 }
 
@@ -171,7 +171,7 @@ function GetSettings()
 // --- Light Intensity Change --------------------------------------------------------- 
 if(isset($_GET["intensity"]))
 {
-    error_log("Light Intensity {$_GET["intensity"]}");
+    //error_log("Light Intensity {$_GET["intensity"]}");
     LightIntensityDelete();
     LightIntensityInsert($_GET["intensity"]);
 }
@@ -198,7 +198,7 @@ function LightIntensityInsert($value)
 // --- Light Temperature Change ---------------------------------------------------------
 if(isset($_GET["temperature"]))
 {
-    error_log("Light Temperature {$_GET["temperature"]}");
+    //error_log("Light Temperature {$_GET["temperature"]}");
     LightTemperatureDelete();
     LightTemperatureInsert($_GET["temperature"]);
 }
@@ -225,7 +225,7 @@ function LightTemperatureInsert($value)
 // --- Curtain Position Change -----------------------------------------------------------
 if(isset($_GET["curtain"]))
 {
-    error_log("Curtain Position {$_GET["curtain"]}");
+    //error_log("Curtain Position {$_GET["curtain"]}");
     CurtainPositionDelete();
     CurtainPositionInsert($_GET["curtain"]);
 }
@@ -252,7 +252,7 @@ function CurtainPositionInsert($value)
 // --- LED Colour Change -----------------------------------------------------------
 if(isset($_GET["colour"]))
 {
-    error_log("LED Colour {$_GET["colour"]}");
+    //error_log("LED Colour {$_GET["colour"]}");
     LEDColourDelete();
     LEDColourInsert($_GET["colour"]);
 }

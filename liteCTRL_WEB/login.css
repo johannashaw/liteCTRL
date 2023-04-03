@@ -1,0 +1,157 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@100;200&display=swap');
+
+
+body {
+    background-color: black;
+    min-height: 800px;
+    font-family: 'Kanit', sans-serif;
+}
+
+div, footer, td, p {
+    
+    color: white;
+    border: 1px solid #555B63;
+    margin: 5px;
+    padding: 5px;
+    font-size: large;
+}
+
+input {
+    border-radius: 10px;
+    width: 85%;
+    text-align: center;
+    margin: inherit;
+    font-family: 'Kanit', sans-serif;
+    font-size: large;
+    font-weight: 600;
+}
+
+
+
+/* --- Browser View --------------------------------------------------------------- */
+
+@media screen and (min-width : 800px ) {
+
+    #mainGrid {
+        display: grid;
+        grid-template-columns: repeat(11, 1fr);
+        grid-template-rows: repeat(10, 1fr);
+        
+    }
+
+    #header {
+        grid-column: 1/12;
+        grid-row: 1/2;
+        text-align: center;
+        font-size: xx-large;
+    }
+
+    #automaticMenu {
+        grid-column: 2/6;
+        grid-row: 3/10;
+        
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #manualMenu {
+        grid-column: 7/11;
+        grid-row: 3/10;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .twoSpan {
+        grid-column: 1/3;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .leftMenu {
+        display: grid;
+        justify-content: right;
+        align-content: center;
+    }
+
+    .rightMenu {
+        display: grid;
+        justify-content: stretch;
+        align-content: center;
+    }
+    
+    footer {
+        grid-column: 1/12;
+        grid-row: 10/11;
+        text-align: center;
+    } 
+
+}
+
+/* --- Mobile View ---------------------------------------------------------- */
+
+@media screen and (max-width : 800px ) {
+
+    #login {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #mainGrid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        /* grid-template-rows: repeat(12, 1fr); */
+    }
+
+    #header {
+        grid-column: 1/3;
+        grid-row: 1/2;
+        text-align: center;
+        font-size: xx-large;
+    }
+
+    #automaticMenu {
+        grid-column: 1/3;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    #manualMenu {
+        grid-column: 1/3;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .twoSpan {
+        grid-column: 1/5;
+        display: flex;
+        justify-content: center;
+    }
+
+    .leftMenu {
+        grid-column: 1/2;
+        display: grid;
+        justify-content: right;
+        align-content: center;
+    }
+
+    .rightMenu {
+        grid-column: 2/5;
+        /* display: flex; */
+        justify-content: left;
+        align-content: center;
+    }
+
+    footer {
+        text-align: center;
+    }
+}
+
+
+
+
+
