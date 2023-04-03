@@ -2,6 +2,8 @@
 # File: Class def for Motor object
 #
 # Created by: Johanna Shaw
+# Edited:   
+    # April 3, 2023 -- have code for calibrate, stop at barrier, and move to a set amount. Currently untested.
 
 
 from machine import Pin, Timer, ADC
@@ -34,6 +36,9 @@ class Motor:
     # it may change based on how the wires are hooked up
     forward = 1
 
+    __calibrate = False
+    Frequency = 500
+
     def __init__(self, pinA, pinB, pinC, pinD, pinEnable, pinBarrier):
         
         # initialize the output Step pins
@@ -56,7 +61,7 @@ class Motor:
 
 
     # Helper function for StartBackwards and StartForwards
-    def __start(self, frequency, direction):
+    def __start(self, direction):
         if direction != 1 or direction != -1:
             raise ValueError(f'MotorSteps.__start : argument "direction" can only be 1 or -1, {direction} was given')
         
@@ -78,7 +83,7 @@ class Motor:
         self.EnablePin.value(1)
 
         # start timer for callback function
-        self.Timer.init(freq=frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
+        self.Timer.init(freq=self.Frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
 
         self.Moving = direction
 
@@ -115,22 +120,67 @@ class Motor:
             self.Stop()
 
         # check if a barrier has been hit
+        adcVal = self.BarPin.read_u16()
+        # one or both barrier buttons are pressed
+        if adcVal < 65535 - 200:
+            # Stop moving
+            self.Stop()
+            if adcVal < 65535/5:
+                # either both buttons are pressed or they are disconnected,
+                # stop with error
+                self.__calibrate = False
+                raise Exception('Maybe tell the server so that the user can know the barriers are messed up')
+                return
+            # not sure if we want to do anything with this information
+            elif adcVal < 65535 / 2 - 200: 
+                # far/closed barrier is hit
+                pass
+            else:
+                # close/open barrier is hit
+                pass
+
+            if self.__calibrate == True:
+                self.__calibrate()
         
 
 
     # will fully close and then fully close the curtains in order to get the total steps value
     def Calibrate(self):
-        pass
+        # self.__calibrate is used to indicate whether we're in the process of calibrating the curtain
+        # self.__caliStep will hold our place in this function
 
+        # Set Calibrating to true
+        if self.__calibrate == False:
+            self.__calibrate = True
+            self.__caliStep = 1
+        
+        match (self.__caliStep):       
+            case 1:
+                 # Start closing the curtain
+                self.Close()        
+            case 2:
+                # set CurentStep to 0
+                # Start openning the curtain
+                self.CurrentStep = 0
+                self.Open()
+            case 3:
+                # Set Max-steps to CurrentStep
+                # set Calibrating to false
+                self.MaxStep = self.CurrentStep
+                self.Calibrate = False
+                print(f'New SaxSteps = {self.MaxStep}')
+        
+        self.__caliStep += 1
 
+    
     # will completely open the curtains
     def Open(self):
-        pass
+        self.__start(1)
 
 
     # will completely close the curtains
     def Close(self):
-        pass
+        self.__start(-1)
 
 
     # will move curtains to percent open
@@ -140,7 +190,12 @@ class Motor:
         
         # set stepcheck so that the pico checks and stops at the desired location.
         self.StepCheck = True
-        pass
-    
+        
+        if self.StepTarget > self.CurrentStep:
+            self.Open()
+        elif self.StepTarget < self.CurrentStep:
+            self.Close()
+        
+        # do nothing if you're where you need to be
 
 

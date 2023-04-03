@@ -6,7 +6,7 @@
 # 
 # Note: Still having issues with the GPIO input callback, fix later (?)
 
-from machine import Pin, Timer, I2C, SoftI2C, PWM, ADC
+from machine import Pin, Timer, PWM, ADC
 from MotorSteps import Motor
 from I2C_Classes import base_i2c, VEML7700, APDS9960
 from LEDStrip import WS2812B_Strip, LED_Strip_PWM, Colour
@@ -74,16 +74,11 @@ class Main:
 
       
     def MotorInit(self):       
-
         # lets go for pins [24:27] (gp 18:21)
         # enable pin is on GPIO 28, or pin 34 irl
         self.ourMotor = Motor(18, 19, 20, 21, 28)
 
-        # self.ourMotor.StartForward(500)
-        # self.ourMotor.StartBackward(500)
-        # self.MGoBrr.irq(handler=self.m_OnOff, wake=Pin.IDLE)#, trigger=Pin.IRQ_RISING)#, wake=machine.IDLE|machine.SLEEP)
-        # Timer for testing start/stop functionality of the motor.
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.m_OnOff)
+        self.ourMotor.Calibrate()
 
 
     # initializes the VEML, APDS, and thier shared I2C channel
@@ -169,8 +164,6 @@ class Main:
     # Callback for VEML testing, prints LUX
     def printLUX(self, PIN):       
         print(self.VEML.Get_Lux())
-
-
        #  clear =565, red = 203, green = 148, blue = 151
 
 
