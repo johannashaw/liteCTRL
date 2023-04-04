@@ -164,8 +164,49 @@ function GetSettings()
         }
     }
 
+    // Get System Mode
+    $query = "SELECT * FROM SystemMode";
+    $results = mysqlQuery( $query );
+
+    if ($results)
+    {
+        while ( $row = $results->fetch_assoc() )
+        {
+            $returnArray["SystemMode"] = $row;
+        }
+    }
+
 
     echo json_encode($returnArray);
+}
+
+// --- System Mode Change -------------------------------------------------------------
+
+if(isset($_GET["systemmode"]))
+{
+    //error_log("Light Intensity {$_GET["intensity"]}");
+    SystemModeDelete();
+    SystemModeInsert($_GET["systemmode"]);
+}
+
+function SystemModeDelete()
+{
+    $query = "DELETE FROM SystemMode";
+
+    $results = mySQLNonQuery( $query );
+
+    // I can't echo here, it terminates the server process, equivalent to return in a function
+    //echo $results;
+}
+
+function SystemModeInsert($value)
+{
+    error_log("system mode value $value");
+    $query = "INSERT INTO `SystemMode` (`Mode`) VALUES ('$value')";
+
+    $results = mySQLNonQuery( $query );
+
+    echo $results;
 }
 
 // --- Light Intensity Change --------------------------------------------------------- 
@@ -188,7 +229,7 @@ function LightIntensityDelete()
 
 function LightIntensityInsert($value)
 {
-    $query = "INSERT INTO `LightIntensity` (`Value`) VALUES ($value)";
+    $query = "INSERT INTO `SystemMode`(`Mode`) VALUES ($value)";
 
     $results = mySQLNonQuery( $query );
 
