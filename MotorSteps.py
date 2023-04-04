@@ -126,22 +126,21 @@ class Motor:
         # one or both barrier buttons are pressed
         if adcVal < 60000:
             # Stop moving
-            self.Stop()
             if adcVal < 5000:
                 # either both buttons are pressed or they are disconnected,
                 # stop with error
                 self.Stop()
                 self.__calibrate = False
-                raise Exception('Maybe tell the server so that the user can know the barriers are messed up')
+                print('Maybe tell the server so that the user can know the barriers are messed up')
                 return
             # not sure if we want to do anything with this information
             elif adcVal < 25000 and self.Moving == -1: 
                 # far/closed barrier is hit                
                 self.Stop()
-                print('closed barrier hit')
+                print('Csclosed barrier hit')
             elif adcVal > 25000 and self.Moving == 1:              
                 self.Stop()
-                print('open barrier hit')
+                print('Open barrier hit')
 
             if self.__calibrate == True and self.Moving == 0:
                 self.Calibrate()
@@ -162,17 +161,20 @@ class Motor:
         
         if self.__caliStep == 1:    
              # Start closing the curtain
+            print('Calibrate Step 1')
             self.Close()
                 
         elif self.__caliStep == 2: 
             # set CurentStep to 0
             # Start openning the curtain
             self.CurrentStep = 0
+            print('Calibrate Step 2')
             self.Open()
 
         elif self.__caliStep == 3:        
             # Set Max-steps to CurrentStep
             # set Calibrating to false
+            print('Calibrate Step 3')
             self.MaxStep = self.CurrentStep
             self.__calibrate = False
             print(f'New SaxSteps = {self.MaxStep}')
