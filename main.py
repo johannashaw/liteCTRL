@@ -28,7 +28,7 @@ class Main:
         print("Got to main")
 
         # # initialize the Motor, sensors, and LEDs
-        # self.MotorInit()
+        self.MotorInit()
 
         # self.SensorsInit()
 
@@ -47,11 +47,20 @@ class Main:
         # print(self.BarPin.read_u16())
         # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
 
-        forward = Pin(15, Pin.IN)
-        forward.irq(handler=self.ForwardCallback, trigger=Pin.IRQ_RISING)
+        forward = Pin(16, Pin.IN)
+        forward.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
 
-    def ForwardCallback(self, pin):
-        print('it worked!')
+        
+        Backward = Pin(15, Pin.IN)
+        Backward.irq(handler=self.CloseCallback, trigger=Pin.IRQ_RISING)
+
+    def OpenCallback(self, pin):
+        print('openning')
+        self.ourMotor.Open()
+        
+    def CloseCallback(self, pin):
+        print('closing')
+        self.ourMotor.Close()
 
     def ADCCallback(self, timer):        
         print(self.BarPin.read_u16())
@@ -75,8 +84,9 @@ class Main:
       
     def MotorInit(self):       
         # lets go for pins [24:27] (gp 18:21)
-        # enable pin is on GPIO 28, or pin 34 irl
-        self.ourMotor = Motor(18, 19, 20, 21, 28)
+        # enable pin is on GPIO 10, or pin 14 irl
+        # ADCBarrier pin is on GPIO 28, or pin 34 irl
+        self.ourMotor = Motor(18, 19, 20, 21, pinEnable=10, pinADCBarrier=28)
 
         self.ourMotor.Calibrate()
 
@@ -182,3 +192,4 @@ class Main:
 
 if __name__ == '__main__':
     Main()
+0
