@@ -12,6 +12,7 @@ div, footer, td, p {
     color: white;
     /* background-color: #ADB9C1; */
     border: 1px solid #555B63;
+    border-radius: 12%;
     margin: 5px;
     padding: 5px;
     font-size: large;
@@ -29,18 +30,22 @@ input {
 
 .abbey {
     background-color: #555B63;
+    transition: background-color 0.5s;
 }
 
 .calico {
     background-color: #DFCA91;
+    transition: background-color 0.5s
 }
 
 .towergray {
     background-color: #ADB9C1;
+    transition: background-color 0.5s
 }
 
 .poloblue {
     background-color: #8998C4;
+    transition: background-color 0.5s
 }
 
 
@@ -122,6 +127,7 @@ input {
         grid-row: 1/2;
         text-align: center;
         font-size: xx-large;
+        margin-top: 15px;
     }
 
     #automaticMenu {

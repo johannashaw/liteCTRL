@@ -6,7 +6,7 @@ $(document).ready(function(){
 GetSettingsAjax()
 
 // Sweet sweet sunrise
-ColourWash()
+//ColourWash()
 
 // Light Intensity Event Handler
 $("#intensity").change(function()
@@ -57,16 +57,136 @@ $("#colour").change(function()
     LEDColourAjax(this.value)
 })
 
-});
+// event handlers to specify automatic or manual selection
+
+automaticModeFlag = null
+if($("#curtain").prop("disabled"))
+{
+    automaticModeFlag = true
+}
+
+$("#automaticMenu").click(function(){
+    console.log("automatic menu click")
+    if(!automaticModeFlag)
+    {
+        AutomaticMode()
+        SystemModeAjax("automatic")
+    }
+    automaticModeFlag = true
+    
+})
+
+$("#manualMenu").click(function(){
+    console.log("manual menu click")
+    if(automaticModeFlag)
+    {
+        ManualMode()
+        SystemModeAjax("manual")
+    }
+    automaticModeFlag = false
+    
+})
+
+}); // --- End of ready function block -------------------------------------------------------
+
+function AutomaticMode(){
+    $("#manualMenu > div").css("color", "gray")
+    $("#curtain").prop("disabled", true)
+    $("#colour").prop("disabled", true)
+
+    $("#automaticMenu > div").css("color", "white")
+    $("#intensity").prop("disabled", false)
+    $("#temperature").prop("disabled", false)
+}
+
+function ManualMode(){
+    $("#automaticMenu > div").css("color", "gray")
+    $("#intensity").prop("disabled", true)
+    $("#temperature").prop("disabled", true)
+
+    $("#manualMenu > div").css("color", "white")
+    $("#curtain").prop("disabled", false)
+    $("#colour").prop("disabled", false)
+}
 
 // --- function to handle colouring of page -----------------------------------------------
 function ColourWash()
 {
-    console.log("colourwash")
-    $("footer").attr("class", "calico")
+    
+    
     setTimeout(function(){
-        $("footer").attr("class", "towergray")
-    }, 1000)
+        State1()
+        setTimeout(function(){
+            State2()
+            setTimeout(function(){
+                State3()
+                setTimeout(function(){
+                    State4()
+                    setTimeout(function(){
+                        State5()
+                        setTimeout(function(){
+                            State6()
+                            setTimeout(function(){
+                                State7()
+                                setTimeout(function(){
+                                    State8()
+                                }, 50)
+                            }, 75)
+                        }, 100)
+                    }, 500) // Pause on full colour
+                }, 300)
+            }, 250)
+        }, 200)
+    }, 200)
+    
+}
+
+// --- Sunrise States ---------------------------------------------------------------------
+
+function State1(){
+    $("footer").attr("class", "calico")
+}
+
+function State2(){
+    $("footer").attr("class", "poloblue")
+    $("#manualMenu").attr("class", "calico")
+}
+
+function State3(){
+    $("footer").attr("class", "towergray")
+    $("#manualMenu").attr("class", "poloblue")
+    $("#automaticMenu").attr("class", "calico")
+}
+
+function State4(){
+    $("footer").attr("class", "abbey")
+    $("#manualMenu").attr("class", "towergray")
+    $("#automaticMenu").attr("class", "poloblue")
+    $("#header").attr("class", "calico")
+}
+
+// --- Sunset States ---------------------------------------------------------------------- 
+
+function State5(){
+    $("footer").attr("class", "towergray")
+    $("#manualMenu").attr("class", "poloblue")
+    $("#automaticMenu").attr("class", "calico")
+    $("#header").attr("class", "")
+}
+
+function State6(){
+    $("footer").attr("class", "poloblue")
+    $("#manualMenu").attr("class", "calico")
+    $("#automaticMenu").attr("class", "")
+}
+
+function State7(){
+    $("footer").attr("class", "calico")
+    $("#manualMenu").attr("class", "")
+}
+
+function State8(){
+    $("footer").attr("class", "")
 }
 
 // --- ajax call to retrieve all settings values from database ----------------------------
@@ -81,12 +201,22 @@ function GetSettingsSuccess(data)
 {
     console.log("Get Settings Success")
     console.log(data)
-    //data = JSON.parse(data)
 
     $("#intensity").val(data["LightIntensity"]["Value"])
     $("#temperature").val(data["LightTemperature"]["Value"])
     $("#curtain").val(data["CurtainPosition"]["Value"])
     $("#colour").val(data["LEDColour"]["HEX"])
+
+    if(data["SystemMode"]["Mode"] == "automatic")
+    {
+        AutomaticMode()
+    }
+    else
+    {
+        ManualMode()
+    }
+
+
 }
 function GetSettingsAjaxError()
 {
@@ -94,7 +224,23 @@ function GetSettingsAjaxError()
 }
 
 
+// --- ajax call to set system mode ------------------------------------------------------
 
+function SystemModeAjax(systemMode){
+    console.log("In system mode ajax")
+    let sendData = {}
+    sendData["systemmode"] = systemMode;
+
+    AjaxRequest("webservice.php", "GET", sendData, "json", SystemModeSuccess, SystemModeAjaxError)
+}
+function SystemModeSuccess()
+{
+    console.log("System Mode Success")
+}
+function SystemModeAjaxError()
+{
+    console.log("System Mode Ajax Error")
+}
 // --- ajax call to save changed input value to database ----------------------------------
 
 function LightIntensityAjax(intensityValue){

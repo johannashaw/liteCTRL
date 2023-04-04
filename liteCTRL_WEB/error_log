@@ -4,3 +4,149 @@
 [03-Apr-2023 21:12:42 UTC] In infor status block
 [03-Apr-2023 21:13:48 UTC] PHP Warning:  Undefined global variable $_SESSION in /home/litectrl/public_html/index.php on line 7
 [03-Apr-2023 21:13:48 UTC] null
+[03-Apr-2023 21:14:45 UTC] In login block
+[03-Apr-2023 21:14:45 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:14:45 UTC] In info status block
+[03-Apr-2023 21:14:46 UTC] {"username":"Johanna","response":"Successfully logged in as Johanna"}
+[03-Apr-2023 21:14:52 UTC] {"username":"Johanna","response":"Successfully logged in as Johanna"}
+[03-Apr-2023 21:14:56 UTC] {"username":"Johanna","response":"Successfully logged in as Johanna"}
+[03-Apr-2023 21:15:43 UTC] {"username":"Johanna","response":"Successfully logged in as Johanna"}
+[03-Apr-2023 21:15:43 UTC] {"username":"Johanna","response":"Successfully logged in as Johanna"}
+[03-Apr-2023 21:15:55 UTC] {"username":"Johanna","response":"Successfully logged in as Johanna"}
+[03-Apr-2023 21:17:16 UTC] In login block
+[03-Apr-2023 21:17:16 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:17:16 UTC] In info status block
+[03-Apr-2023 21:17:34 UTC] In login block
+[03-Apr-2023 21:17:34 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:17:34 UTC] In info status block
+[03-Apr-2023 21:17:52 UTC] In login block
+[03-Apr-2023 21:17:52 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:17:52 UTC] In info status block
+[03-Apr-2023 21:19:02 UTC] In login block
+[03-Apr-2023 21:19:02 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:19:02 UTC] In info status block
+[03-Apr-2023 21:19:27 UTC] In login block
+[03-Apr-2023 21:19:27 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:19:27 UTC] In info status block
+[03-Apr-2023 21:21:17 UTC] In login block
+[03-Apr-2023 21:21:17 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:21:17 UTC] In info status block
+[03-Apr-2023 21:21:43 UTC] In login block
+[03-Apr-2023 21:21:43 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:21:43 UTC] In info status block
+[03-Apr-2023 21:23:29 UTC] In login block
+[03-Apr-2023 21:23:29 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:23:29 UTC] In info status block
+[03-Apr-2023 21:24:54 UTC] PHP Parse error:  syntax error, unexpected end of file, expecting "elseif" or "else" or "endif" in /home/litectrl/public_html/index.php on line 61
+[03-Apr-2023 21:31:25 UTC] In login block
+[03-Apr-2023 21:31:25 UTC] Login WRONG!!!
+[03-Apr-2023 21:32:25 UTC] In login block
+[03-Apr-2023 21:32:25 UTC] Successfully logged in as Johanna
+[03-Apr-2023 21:32:25 UTC] In info status block
+[04-Apr-2023 19:18:15 UTC] In login block
+[04-Apr-2023 19:18:15 UTC] Successfully logged in as Johanna
+[04-Apr-2023 19:18:15 UTC] In info status block
+[04-Apr-2023 19:18:34 UTC] In login block
+[04-Apr-2023 19:18:34 UTC] Successfully logged in as Johanna
+[04-Apr-2023 19:18:34 UTC] In info status block
+[04-Apr-2023 19:18:49 UTC] In login block
+[04-Apr-2023 19:18:49 UTC] Successfully logged in as Johanna
+[04-Apr-2023 19:18:49 UTC] In info status block
+[04-Apr-2023 19:36:20 UTC] In login block
+[04-Apr-2023 19:36:20 UTC] Login WRONG!!!
+[04-Apr-2023 19:36:27 UTC] In login block
+[04-Apr-2023 19:36:27 UTC] Successfully logged in as Johanna
+[04-Apr-2023 19:36:27 UTC] In info status block
+[04-Apr-2023 20:19:38 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'Value' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:23:54 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'manual' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:28:04 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'manual' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:30:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'manual' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:30:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'manual' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:30:00 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'manual' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:30:04 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'automatic' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('automatic')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:30:05 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'automatic' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('automatic')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:30:08 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'automatic' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('automatic')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:30:11 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'automatic' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('automatic')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:32:10 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'manual' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(206): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:33:37 UTC] system mode value automatic
+[04-Apr-2023 20:33:37 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'automatic' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(207): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('automatic')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[04-Apr-2023 20:37:20 UTC] system mode value manual
+[04-Apr-2023 20:37:20 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''(manual)'' at line 1 in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Sy...')
+#1 /home/litectrl/public_html/webservice.php(207): mySQLNonQuery('INSERT INTO `Sy...')
+#2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
