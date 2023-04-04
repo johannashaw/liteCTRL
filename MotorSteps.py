@@ -37,7 +37,7 @@ class Motor:
     forward = 1
 
     __calibrate = False
-    Frequency = 500
+    Frequency = 750
 
     lastBarrier = None
 
@@ -101,6 +101,8 @@ class Motor:
         # reset the Stepcheck value
         self.StepCheck = False
 
+        self.Frequency = 750
+
 
     # The Callback function driving each motor step
     # Uses a full-wave stepping pattern
@@ -137,15 +139,16 @@ class Motor:
             elif adcVal < 25000 and self.Moving == -1: 
                 # far/closed barrier is hit                
                 self.Stop()
-                print('Csclosed barrier hit')
+                print('Closed barrier hit')
+                print(f'ADC = {adcVal}\n')
             elif adcVal > 25000 and self.Moving == 1:              
                 self.Stop()
                 print('Open barrier hit')
+                print(f'ADC = {adcVal}\n')
 
-            if self.__calibrate == True and self.Moving == 0:
+            if self.__calibrate and self.Moving == 0:
                 self.Calibrate()
 
-            print(f'ADC = {adcVal}')
         
 
 
@@ -206,5 +209,12 @@ class Motor:
             self.Close()
         
         # do nothing if you're where you need to be
+
+
+    def RampUpFreq(self):
+        if self.Moving == 0:
+            return
+        self.Frequency += 10
+        self.Timer.init(freq=self.Frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
 
 
