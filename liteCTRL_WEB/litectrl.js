@@ -59,10 +59,12 @@ $("#colour").change(function()
 
 // event handlers to specify automatic or manual selection
 
-automaticModeFlag = null
 if($("#curtain").prop("disabled"))
 {
     automaticModeFlag = true
+}
+else{
+    automaticModeFlag = false
 }
 
 $("#automaticMenu").click(function(){
