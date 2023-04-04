@@ -1,9 +1,11 @@
+automaticModeFlag = null
 
 // ensures document is loaded before contents are executed
 $(document).ready(function(){
 
 // Populate webpage inputs with previously saved values from database
 GetSettingsAjax()
+
 
 // Sweet sweet sunrise
 //ColourWash()
@@ -59,23 +61,14 @@ $("#colour").change(function()
 
 // event handlers to specify automatic or manual selection
 
-if($("#curtain").prop("disabled"))
-{
-    automaticModeFlag = true
-}
-else{
-    automaticModeFlag = false
-}
-
 $("#automaticMenu").click(function(){
     console.log("automatic menu click")
     if(!automaticModeFlag)
     {
         AutomaticMode()
         SystemModeAjax("automatic")
+        automaticModeFlag = true
     }
-    automaticModeFlag = true
-    
 })
 
 $("#manualMenu").click(function(){
@@ -84,9 +77,8 @@ $("#manualMenu").click(function(){
     {
         ManualMode()
         SystemModeAjax("manual")
+        automaticModeFlag = false
     }
-    automaticModeFlag = false
-    
 })
 
 }); // --- End of ready function block -------------------------------------------------------
@@ -197,7 +189,7 @@ function GetSettingsAjax(){
     let sendData = {}
     sendData["settings"] = "hello :)";
 
-    AjaxRequest("webservice.php", "GET", sendData, "json", GetSettingsSuccess, GetSettingsAjaxError)
+    return AjaxRequest("webservice.php", "GET", sendData, "json", GetSettingsSuccess, GetSettingsAjaxError)
 }
 function GetSettingsSuccess(data)
 {
@@ -212,12 +204,15 @@ function GetSettingsSuccess(data)
     if(data["SystemMode"]["Mode"] == "automatic")
     {
         AutomaticMode()
+        automaticModeFlag = true
     }
     else
     {
         ManualMode()
+        automaticModeFlag = false
     }
 
+    
 
 }
 function GetSettingsAjaxError()
