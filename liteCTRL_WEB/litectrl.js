@@ -8,7 +8,7 @@ GetSettingsAjax()
 
 
 // Sweet sweet sunrise
-//ColourWash()
+ColourWash()
 
 // Light Intensity Event Handler
 $("#intensity").change(function()
