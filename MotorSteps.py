@@ -22,7 +22,7 @@ class Motor:
 
     # Class Members:
 
-    # Step is the value of the current positiion of the curtain interms of steps
+    # Step is the value of the current position of the curtain interms of steps
     CurrentStep = 0
     # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
     MaxStep = 0
@@ -152,7 +152,7 @@ class Motor:
         
 
 
-    # will fully close and then fully close the curtains in order to get the total steps value
+    # will fully close and then fully open the curtains in order to get the total steps value
     def Calibrate(self):
         # self.__calibrate is used to indicate whether we're in the process of calibrating the curtain
         # self.__caliStep will hold our place in this function
