@@ -28,53 +28,61 @@ class Main:
         print("Got to main")
 
         # # initialize the Motor, sensors, and LEDs
-        self.MotorInit()
+        # self.MotorInit()
         # self.SensorsInit()
         # self.PWM_Strip_Init()
 
         # initialize the ADC curtain position pin:
         self.ManCurtainPosInit()
 
-        forward = Pin(16, Pin.IN)
-        forward.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
+        # forward = Pin(16, Pin.IN)
+        # forward.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
 
         
-        Backward = Pin(15, Pin.IN)
-        Backward.irq(handler=self.CloseCallback, trigger=Pin.IRQ_RISING)
+        # Backward = Pin(15, Pin.IN)
+        # Backward.irq(handler=self.CloseCallback, trigger=Pin.IRQ_RISING)
 
 
     # initializes the ADC pin used for manual curtain positioning
     # if on, the 
     def ManCurtainPosInit(self):
+        self.MC_Timer = Timer()
+        self.IsManual = False
         # Use this if we're working with 2 pin design:
-        # self.IsManual = Pin(16, Pin.IN)
-        # self.IsManual.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
-        # self.IsManual.irq(handler=self.OpenCallback, trigger=Pin.IRQ_FALLING)
-        
-        # prints the data received from both sensors every second
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
+        # GPIO pin 16 = irl pin 21
+        self.IsManualPin = Pin(16, Pin.IN)
+        self.IsManualPin.irq(handler=self.ManualModePinChange, trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING)
+        if self.IsManualPin.value() == 1:
+            self.ADCTimerStart()
 
-        self.CurPosPin = ADC(Pin(28))
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
-        pass
 
-    def StartManualPolling(self, pin):
-        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ManPositionPolling)
-        pass
+        #gpio pin 27 == irl pin 32
+        self.CurPosPin = ADC(Pin(27))
 
-    def StopManualPolling(self, pin):
-        pass
 
-    def ManPositionPolling_1Pin(self, timer):
+    def ManualModePinChange(self, pin):
+        print(pin.value())
+
+        # manual mode on
+        if pin.value() == 1:
+            self.ADCTimerStart()
+        # manual mode off
+        else:
+            self.MC_Timer.deinit()
+            self.IsManual = False
+
+    # used in ManCurtainPosInit and ManualModePinChange, keeps things consistant.
+    def ADCTimerStart(self):
+            self.MC_Timer.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
+            self.IsManual = True
+
+    def ADCCallback(self, timer):
         # number between 0 and 65535
-        # these correspond directly with 
+        # these theoretically correspond with 0 - 3.3V
         pinVal = self.CurPosPin.read_u16()
-        pass
 
-    def ManPositionPolling_2Pin(self, timer):
-        # number between 0 and 65535
-        pinVal = self.CurPosPin.read_u16()
-        pass
+        # irl values = 200-300 , 65535
+        print(pinVal)
 
     def OpenCallback(self, pin):           
         # GPIO pin 16
