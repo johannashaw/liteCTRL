@@ -29,23 +29,11 @@ class Main:
 
         # # initialize the Motor, sensors, and LEDs
         self.MotorInit()
-
         # self.SensorsInit()
+        # self.PWM_Strip_Init()
 
-        # self.WS2812B_Strip_Test()
-
-        # pwm = PWM(Pin(11, mode=Pin.ALT))
-        # pwm.freq(500)
-        # pwm.duty_u16(5000)
-
-        # self.PWM_StripTest()
-
-        # prints the data received from both sensors every second
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
-
-        # self.BarPin = ADC(Pin(28))
-        # print(self.BarPin.read_u16())
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
+        # initialize the ADC curtain position pin:
+        self.ManCurtainPosInit()
 
         forward = Pin(16, Pin.IN)
         forward.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
@@ -53,6 +41,40 @@ class Main:
         
         Backward = Pin(15, Pin.IN)
         Backward.irq(handler=self.CloseCallback, trigger=Pin.IRQ_RISING)
+
+
+    # initializes the ADC pin used for manual curtain positioning
+    # if on, the 
+    def ManCurtainPosInit(self):
+        # Use this if we're working with 2 pin design:
+        # self.IsManual = Pin(16, Pin.IN)
+        # self.IsManual.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
+        # self.IsManual.irq(handler=self.OpenCallback, trigger=Pin.IRQ_FALLING)
+        
+        # prints the data received from both sensors every second
+        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
+
+        self.CurPosPin = ADC(Pin(28))
+        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
+        pass
+
+    def StartManualPolling(self, pin):
+        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ManPositionPolling)
+        pass
+
+    def StopManualPolling(self, pin):
+        pass
+
+    def ManPositionPolling_1Pin(self, timer):
+        # number between 0 and 65535
+        # these correspond directly with 
+        pinVal = self.CurPosPin.read_u16()
+        pass
+
+    def ManPositionPolling_2Pin(self, timer):
+        # number between 0 and 65535
+        pinVal = self.CurPosPin.read_u16()
+        pass
 
     def OpenCallback(self, pin):           
         # GPIO pin 16
@@ -140,7 +162,6 @@ class Main:
     def printLUX(self, PIN):       
         print(self.VEML.Get_Lux())
        #  clear =565, red = 203, green = 148, blue = 151
-
 
 
 
