@@ -25,7 +25,7 @@ class Motor:
     # Step is the value of the current position of the curtain interms of steps
     CurrentStep = 0
     # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
-    MaxStep = 0
+    MaxStep = 1
     # Moving holds the direction that the curtain is moving in
     # 1 = forwards (openning), 0 = stopped, -1 = backwards (closing)
     Moving = 0
@@ -207,6 +207,9 @@ class Motor:
             self.Open()
         elif self.StepTarget < self.CurrentStep:
             self.Close()
+        else:
+            self.StepCheck = False
+
         
         # do nothing if you're where you need to be
 
@@ -216,5 +219,15 @@ class Motor:
             return
         self.Frequency += 10
         self.Timer.init(freq=self.Frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
+
+
+    # returns the current position of the curtain as a percent
+    def GetCurrentPosPercent(self):
+        return self.CurrentStep * 100 // self.MaxStep
+
+
+    # returns the target position of the curtain as a percent
+    def GetTargetPosPercent(self):
+        return self.StepTarget * 100 // self.MaxStep
 
 
