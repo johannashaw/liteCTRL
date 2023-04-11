@@ -98,6 +98,8 @@ class Motor:
         # Easy reference for whether or not the motor is currentlty running        
         self.Moving = 0
 
+        self.StepTarget = self.CurrentStep
+
         # reset the Stepcheck value
         self.StepCheck = False
 
