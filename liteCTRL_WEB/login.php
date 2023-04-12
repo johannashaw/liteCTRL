@@ -51,7 +51,9 @@ if(isset($_POST['submit']) && $_POST["submit"] == "Login"
     <link href="./login.css" rel="stylesheet" type="text/css"/>
     <link rel="shortcut icon" href="sun_moon.png?v=2" type="image/x-icon">
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
-    <script src="./litectrl.js"></script>
+    <!-- Login doesn't seem to need javascript, and link was triggering mode functions that were 
+        reactivating modes -->
+    <!-- <script src="./litectrl.js"></script> -->
     <title>liteCTRL</title>
 </head>
 <body>

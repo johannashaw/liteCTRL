@@ -150,3 +150,92 @@ Stack trace:
 #2 /home/litectrl/public_html/webservice.php(189): SystemModeInsert('manual')
 #3 {main}
   thrown in /home/litectrl/public_html/database.php on line 62
+[05-Apr-2023 11:29:42 UTC] system mode value manual
+[05-Apr-2023 11:29:43 UTC] system mode value automatic
+[05-Apr-2023 11:58:41 UTC] system mode value manual
+[05-Apr-2023 11:59:00 UTC] system mode value automatic
+[05-Apr-2023 11:59:05 UTC] system mode value manual
+[05-Apr-2023 11:59:06 UTC] system mode value automatic
+[06-Apr-2023 12:00:32 UTC] system mode value manual
+[06-Apr-2023 12:00:33 UTC] system mode value automatic
+[06-Apr-2023 12:00:33 UTC] system mode value manual
+[06-Apr-2023 12:00:35 UTC] system mode value automatic
+[06-Apr-2023 12:00:35 UTC] system mode value manual
+[06-Apr-2023 12:00:57 UTC] system mode value automatic
+[06-Apr-2023 12:01:01 UTC] system mode value manual
+[06-Apr-2023 12:13:06 UTC] system mode value automatic
+[06-Apr-2023 12:13:09 UTC] system mode value manual
+[06-Apr-2023 14:00:04 UTC] system mode value automatic
+[06-Apr-2023 14:00:05 UTC] system mode value manual
+[06-Apr-2023 21:05:35 UTC] system mode value automatic
+[06-Apr-2023 21:05:37 UTC] system mode value manual
+[06-Apr-2023 21:05:59 UTC] system mode value automatic
+[06-Apr-2023 21:06:02 UTC] system mode value manual
+[06-Apr-2023 21:25:35 UTC] system mode value automatic
+[11-Apr-2023 19:06:27 UTC] system mode value manual
+[11-Apr-2023 19:58:26 UTC] system mode value automatic
+[11-Apr-2023 19:58:27 UTC] system mode value manual
+[11-Apr-2023 20:00:35 UTC] system mode value automatic
+[11-Apr-2023 20:00:36 UTC] system mode value manual
+[11-Apr-2023 20:00:43 UTC] In login block
+[11-Apr-2023 20:00:43 UTC] Login WRONG!!!
+[11-Apr-2023 20:00:51 UTC] In login block
+[11-Apr-2023 20:00:51 UTC] Login WRONG!!!
+[11-Apr-2023 20:01:12 UTC] In login block
+[11-Apr-2023 20:01:12 UTC] Login WRONG!!!
+[11-Apr-2023 20:01:18 UTC] In login block
+[11-Apr-2023 20:01:18 UTC] Login WRONG!!!
+[11-Apr-2023 20:01:24 UTC] In login block
+[11-Apr-2023 20:01:24 UTC] Login WRONG!!!
+[11-Apr-2023 20:02:13 UTC] In login block
+[11-Apr-2023 20:02:13 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:02:13 UTC] In info status block
+[11-Apr-2023 20:03:47 UTC] In login block
+[11-Apr-2023 20:03:48 UTC] Login WRONG!!!
+[11-Apr-2023 20:03:53 UTC] In login block
+[11-Apr-2023 20:03:53 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:03:53 UTC] In info status block
+[11-Apr-2023 20:08:47 UTC] In login block
+[11-Apr-2023 20:08:47 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:08:47 UTC] In info status block
+[11-Apr-2023 20:08:50 UTC] system mode value automatic
+[11-Apr-2023 20:08:51 UTC] system mode value manual
+[11-Apr-2023 20:09:57 UTC] In login block
+[11-Apr-2023 20:09:57 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:09:57 UTC] In info status block
+[11-Apr-2023 20:10:06 UTC] In login block
+[11-Apr-2023 20:10:06 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:10:06 UTC] In info status block
+[11-Apr-2023 20:12:00 UTC] In login block
+[11-Apr-2023 20:12:00 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:12:00 UTC] In info status block
+[11-Apr-2023 20:12:13 UTC] In login block
+[11-Apr-2023 20:12:13 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:12:13 UTC] In info status block
+[11-Apr-2023 20:12:17 UTC] system mode value automatic
+[11-Apr-2023 20:12:18 UTC] system mode value manual
+[11-Apr-2023 20:12:46 UTC] In login block
+[11-Apr-2023 20:12:46 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:12:46 UTC] In info status block
+[11-Apr-2023 20:15:38 UTC] In login block
+[11-Apr-2023 20:15:38 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:15:38 UTC] In info status block
+[11-Apr-2023 20:15:41 UTC] system mode value automatic
+[11-Apr-2023 20:16:24 UTC] system mode value manual
+[11-Apr-2023 20:31:28 UTC] In login block
+[11-Apr-2023 20:31:28 UTC] Successfully logged in as Johanna
+[11-Apr-2023 20:31:28 UTC] In info status block
+[11-Apr-2023 20:35:11 UTC] system mode value automatic
+[11-Apr-2023 20:35:34 UTC] system mode value automatic
+[11-Apr-2023 20:35:35 UTC] system mode value manual
+[11-Apr-2023 20:35:35 UTC] system mode value automatic
+[11-Apr-2023 20:35:36 UTC] system mode value manual
+[11-Apr-2023 20:35:38 UTC] system mode value automatic
+[11-Apr-2023 20:36:33 UTC] system mode value automatic
+[11-Apr-2023 20:38:53 UTC] system mode value automatic
+[11-Apr-2023 20:39:49 UTC] system mode value automatic
+[11-Apr-2023 20:39:51 UTC] system mode value manual
+[11-Apr-2023 20:39:51 UTC] system mode value automatic
+[11-Apr-2023 20:40:23 UTC] system mode value automatic
+[11-Apr-2023 20:41:08 UTC] system mode value automatic
+[11-Apr-2023 20:41:50 UTC] Light Intensity 23

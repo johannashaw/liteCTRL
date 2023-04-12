@@ -41,12 +41,12 @@ session_unset();
 
             <div id="manualMenu">
                 <div class="twoSpan">Manual</div>
-                <div class="leftMenu">Curtain</div><div class="rightMenu"><input id="curtain" max="100" min="0" type="range"></div>
+                <div class="leftMenu">Curtain</div><div class="rightMenu"><input id="curtain" max="100" min="0" step="10" type="range"></div>
                 <div class="leftMenu">
-                    <label for="red">Colour</label>
+                    <label for="color">Colour</label>
                 </div>
                 <div class="rightMenu ">
-                    <input id="colour" type="color" name="blue">
+                    <input id="colour" type="color" name="color">
                 </div>
             </div>
 

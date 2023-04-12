@@ -212,7 +212,7 @@ function SystemModeInsert($value)
 // --- Light Intensity Change --------------------------------------------------------- 
 if(isset($_GET["intensity"]))
 {
-    //error_log("Light Intensity {$_GET["intensity"]}");
+    error_log("Light Intensity {$_GET["intensity"]}");
     LightIntensityDelete();
     LightIntensityInsert($_GET["intensity"]);
 }
@@ -229,7 +229,7 @@ function LightIntensityDelete()
 
 function LightIntensityInsert($value)
 {
-    $query = "INSERT INTO `SystemMode`(`Mode`) VALUES ($value)";
+    $query = "INSERT INTO `LightIntensity`(`Value`) VALUES ($value)";
 
     $results = mySQLNonQuery( $query );
 
