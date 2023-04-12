@@ -9,14 +9,9 @@
 from machine import Pin, Timer, PWM, ADC
 from MotorSteps import Motor
 from I2C_Classes import base_i2c, VEML7700, APDS9960
-from LEDStrip import WS2812B_Strip, LED_Strip_PWM, Colour
+from LEDStrip import LED_Strip_PWM, Colour
 import time
 
-
-# ourMotor = None
-# # MGoBrr uses irl pin 32
-# MGoBrr = Pin(27, Pin.IN)
-# timrr = Timer()
 
 class Main:
     # basic initializations
@@ -28,59 +23,95 @@ class Main:
         print("Got to main")
 
         # # initialize the Motor, sensors, and LEDs
-        self.MotorInit()
+        # self.MotorInit()
         # self.SensorsInit()
         # self.PWM_Strip_Init()
 
         # initialize the ADC curtain position pin:
         self.ManCurtainPosInit()
 
-        forward = Pin(16, Pin.IN)
-        forward.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
+        # self.SensorsTest()
+
+        # forward = Pin(16, Pin.IN)
+        # forward.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
 
         
-        Backward = Pin(15, Pin.IN)
-        Backward.irq(handler=self.CloseCallback, trigger=Pin.IRQ_RISING)
+        # Backward = Pin(15, Pin.IN)
+        # Backward.irq(handler=self.CloseCallback, trigger=Pin.IRQ_RISING)
 
 
     # initializes the ADC pin used for manual curtain positioning
-    # if on, the 
+    # GPIO pin 16 = irl pin 21
+    # GPIO pin 27 = irl pin 32
     def ManCurtainPosInit(self):
+        self.MC_Timer = Timer()
+        self.IsManual = False
         # Use this if we're working with 2 pin design:
-        # self.IsManual = Pin(16, Pin.IN)
-        # self.IsManual.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
-        # self.IsManual.irq(handler=self.OpenCallback, trigger=Pin.IRQ_FALLING)
+        # GPIO pin 16 = irl pin 21
+        self.IsManualPin = Pin(16, Pin.IN)
+        self.IsManualPin.irq(handler=self.ManualModePinChange, trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING)
+        if self.IsManualPin.value() == 1:
+            self.ADCTimerStart()
+
+
+        # GPIO pin 27 == irl pin 32
+        self.CurPosPin = ADC(Pin(27))
+
+
+    def ManualModePinChange(self, pin):
+        print(pin.value())
+
+        # manual mode on
+        if pin.value() == 1:
+            # Stop the motor (if on, no effect if off)
+            self.ourMotor.Stop()
+            # Start the callback timer
+            self.ADCTimerStart()
+        # manual mode off
+        else:
+            self.MC_Timer.deinit()
+            self.IsManual = False
+
+    # used in ManCurtainPosInit and ManualModePinChange, keeps things consistant.
+    def ADCTimerStart(self):
+            # callback set for 10Hz or 0.1s
+            self.MC_Timer.init(freq=10, mode=Timer.PERIODIC, callback=self.ADCCallback)
+            self.IsManual = True
+
+
+    def ADCCallback(self, timer):
+        # increments of 10%
+        increment = 10
+        # number between 0 and 65535
+        # these theoretically correspond with 0 - 3.3V
+        ADCVal = self.CurPosPin.read_u16()
+
+        # irl values = 200-300 , 65535
+
+        # working with ADC range of 350 to 65350, convert to %
+        DesPerc -= (ADCVal - 350) / 650
+        if DesPerc < 0:
+            DesPerc = 0
+        elif DesPerc > 100:
+            DesPerc = 100
+
+        # get the current curtain position rounded to "increment" percent
+        curPerc = ( self.ourMotor.GetTargetPosPercent() * increment + increment / 2) / increment
+
+        if DesPerc < curPerc - increment * 3/4 or DesPerc > curPerc + increment * 3/4:
+            # set the curtain position to the new rounded position
+            newPerc = (DesPerc * increment + increment / 2) / increment
+            self.ourMotor.MoveToPercent(newPerc)
         
-        # prints the data received from both sensors every second
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
+        print(f'{ADCVal}, {DesPerc}')
 
-        self.CurPosPin = ADC(Pin(28))
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
-        pass
-
-    def StartManualPolling(self, pin):
-        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.ManPositionPolling)
-        pass
-
-    def StopManualPolling(self, pin):
-        pass
-
-    def ManPositionPolling_1Pin(self, timer):
-        # number between 0 and 65535
-        # these correspond directly with 
-        pinVal = self.CurPosPin.read_u16()
-        pass
-
-    def ManPositionPolling_2Pin(self, timer):
-        # number between 0 and 65535
-        pinVal = self.CurPosPin.read_u16()
-        pass
 
     def OpenCallback(self, pin):           
         # GPIO pin 16
         print('openning')
         self.ourMotor.Open()
         
+
     def CloseCallback(self, pin):
         # GPIO piin 15
         print('closing')
@@ -145,7 +176,11 @@ class Main:
             return
         
 
-    def SensorDataCallback(self, PIN):
+    def SensorsTest(self):
+        self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
+
+
+    def SensorDataCallback(self, PIN=None):
         # receive the colours
         if self.APDS is not None:
             clear, red, green, blue = self.APDS.GetCRGB()
@@ -154,13 +189,19 @@ class Main:
         if self.VEML is not None:
             lux = self.VEML.Get_Lux()
 
+        # clear1 = (clear + 500) / 2
+        clear = (clear + 288) / 1.64
+        # clear3 = (clear + 224) / 1.5
+
         
-        print(f'lux = {lux}, clear ={clear}, red = {red}, green = {green}, blue = {blue}')
+        #print(f'lux = {lux}, clear ={clear}, red = {red}, green = {green}, blue = {blue}')
+        # print(f'{lux}, {clear1}, {clear2}, {clear3}')
+        print(f'{lux}, {clear}')
         
 
     # Callback for VEML testing, prints LUX
     def printLUX(self, PIN):       
-        print(self.VEML.Get_Lux())
+        print(f'VEML = {self.VEML.Get_Lux()} [lx]')
        #  clear =565, red = 203, green = 148, blue = 151
 
 

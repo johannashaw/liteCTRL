@@ -22,10 +22,10 @@ class Motor:
 
     # Class Members:
 
-    # Step is the value of the current positiion of the curtain interms of steps
+    # Step is the value of the current position of the curtain interms of steps
     CurrentStep = 0
     # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
-    MaxStep = 0
+    MaxStep = 1
     # Moving holds the direction that the curtain is moving in
     # 1 = forwards (openning), 0 = stopped, -1 = backwards (closing)
     Moving = 0
@@ -98,6 +98,8 @@ class Motor:
         # Easy reference for whether or not the motor is currentlty running        
         self.Moving = 0
 
+        self.StepTarget = self.CurrentStep
+
         # reset the Stepcheck value
         self.StepCheck = False
 
@@ -152,7 +154,7 @@ class Motor:
         
 
 
-    # will fully close and then fully close the curtains in order to get the total steps value
+    # will fully close and then fully open the curtains in order to get the total steps value
     def Calibrate(self):
         # self.__calibrate is used to indicate whether we're in the process of calibrating the curtain
         # self.__caliStep will hold our place in this function
@@ -207,6 +209,9 @@ class Motor:
             self.Open()
         elif self.StepTarget < self.CurrentStep:
             self.Close()
+        else:
+            self.StepCheck = False
+
         
         # do nothing if you're where you need to be
 
@@ -216,5 +221,15 @@ class Motor:
             return
         self.Frequency += 10
         self.Timer.init(freq=self.Frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
+
+
+    # returns the current position of the curtain as a percent
+    def GetCurrentPosPercent(self):
+        return self.CurrentStep * 100 // self.MaxStep
+
+
+    # returns the target position of the curtain as a percent
+    def GetTargetPosPercent(self):
+        return self.StepTarget * 100 // self.MaxStep
 
 
