@@ -87,7 +87,7 @@ function AutomaticMode(){
     $("#manualMenu > div").css("color", "gray")
     $("#curtain").prop("disabled", true)
     $("#colour").prop("disabled", true)
-    $("#curtain").attr("id", "notcurtain")
+    $("#curtain").attr("class", "curtainoff")
 
     $("#automaticMenu > div").css("color", "white")
     $("#intensity").prop("disabled", false)
@@ -102,7 +102,7 @@ function ManualMode(){
     $("#manualMenu > div").css("color", "white")
     $("#curtain").prop("disabled", false)
     $("#colour").prop("disabled", false)
-    $("#notcurtain").attr("id", "curtain")
+    $("#curtain").attr("class", "curtainon")
 }
 
 // --- function to handle colouring of page -----------------------------------------------

@@ -177,7 +177,7 @@ input {
 }
 
 /*********** Baseline, reset styles ***********/
-#curtain {
+.curtainon {
     -webkit-appearance: none;
     appearance: none;
     background: transparent;
@@ -186,20 +186,20 @@ input {
 }
 
 /* Removes default focus */
-#curtain:focus {
+.curtainon:focus {
     outline: none;
 }
 
 /******** Chrome, Safari, Opera and Edge Chromium styles ********/
 /* slider track */
-#curtain::-webkit-slider-runnable-track {
+.curtainon::-webkit-slider-runnable-track {
     background-color: #FFFFFF;
     /* border-radius: 0.5rem; */
     height: 0.5rem;
 }
 
 /* slider thumb */
-#curtain::-webkit-slider-thumb {
+.curtainon::-webkit-slider-thumb {
     -webkit-appearance: none; /* Override default look */
     appearance: none;
     margin-top: -12px; /* Centers thumb on the track */
@@ -210,7 +210,7 @@ input {
     width: 1rem;
 }
 
-#curtain:focus::-webkit-slider-thumb {
+.curtainon:focus::-webkit-slider-thumb {
     outline: 3px solid #808080;
     outline-offset: 0.125rem;
 }
