@@ -17,7 +17,9 @@ require_once "database.php";
 
 if(isset($_GET["CheckIn"]))
 {
-    CheckIn();
+    error_log("In CheckIn block");
+    //echo("Checked my bromes :)");
+    GetSettings();
 }
 
 function CheckIn()

@@ -5,6 +5,10 @@
 #
 # Sources:
 # projects.raspberrypi.org
+#
+# April 12, 2023
+# This section needs to be fully tested to ensure it 
+# is robust and easy to use via simple function calls
 
 import network
 from time import sleep
@@ -22,7 +26,7 @@ password = "deskmate"
 # function to connect to WLAN
 # Sets up wlan object, activates the wireless,
 # and provides ssid and password
-def connect():
+def Connect():
     #connect to WLAN
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
@@ -64,20 +68,36 @@ def GetRequest(**kwargs):
         
 
 
-wlan = connect()
-
-
-# Get testing
-counter = 0
-while True:
-        counter += 1
-        print (f"Get Request #: {counter}")
-        GetRequest(Motor="GoBrr")
-        sleep(5)
         
 # ------------------------------------------------------------------------------------------------
 
 # --- Pico CheckIn -------------------------------------------------------------------------------
+# 
+# Function for Pico to check database for user control parameters
+# Each call will need to return to Pico: SystemMode, Intensity, Temperature, Curtain, Colour
+
+def CheckIn():
+     
+    httpURL = "https://thor.cnt.sast.ca/~litectrl/webservice.php?CheckIn" 
+    
+    response = urequests.get(httpURL)
+    #print(f"Response status code: {response.status_code}")
+    #print(f"Response text: {response.text}")
+    rawDic = json.loads(response.text)
+    
+    response.close()
+
+    refinedDic = {}
+    refinedDic['SystemMode'] = rawDic['SystemMode']['Mode']
+    refinedDic['LightIntensity'] = rawDic['LightIntensity']['Value']
+    refinedDic['LightTemperature'] = rawDic['LightTemperature']['Value']
+    refinedDic['CurtainPosition'] = rawDic['CurtainPosition']['Value']
+    refinedDic['LEDColour'] = rawDic['LEDColour']['HEX']
+
+    return refinedDic
+
+    
+
 
 # ------------------------------------------------------------------------------------------------
 
