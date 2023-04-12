@@ -182,7 +182,7 @@ input {
     appearance: none;
     background: transparent;
     cursor: pointer;
-    
+    margin: 5% 3%;
 }
 
 /* Removes default focus */
