@@ -10,10 +10,7 @@ require_once "validate.php";
 // {
 //     header("Location: login.php");
 //     die();
-// }
-
-// This is how we redirect to pages 
-//header("Location: index.php");
+//}
 
 session_unset();
 
@@ -39,8 +36,8 @@ session_unset();
                 <div class="leftMenu">Temperature</div><div class="rightMenu"><input id="temperature" max="100" min="0" type="text"></div>
             </div>
 
-            <div id="manualMenu">
-                <div class="twoSpan">Manual</div>
+            <div id="customMenu">
+                <div class="twoSpan">Custom</div>
                 <div class="leftMenu">Curtain</div><div class="rightMenu"><input id="curtain" max="100" min="0" step="10" type="range"></div>
                 <div class="leftMenu">
                     <label for="color">Colour</label>
