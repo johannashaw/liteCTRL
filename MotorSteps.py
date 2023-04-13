@@ -219,13 +219,6 @@ class Motor:
         # do nothing if you're where you need to be
 
 
-    def RampUpFreq(self):
-        if self.Moving == 0:
-            return
-        self.Frequency += 10
-        self.Timer.init(freq=self.Frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
-
-
     # returns the current position of the curtain as a percent
     def GetCurrentPosPercent(self):
         return self.CurrentStep * 100 // self.MaxStep
