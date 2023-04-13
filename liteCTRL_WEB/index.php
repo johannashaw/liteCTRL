@@ -10,7 +10,7 @@ require_once "validate.php";
 // {
 //     header("Location: login.php");
 //     die();
-//}
+// }
 
 session_unset();
 

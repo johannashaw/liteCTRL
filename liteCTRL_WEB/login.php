@@ -73,7 +73,7 @@ if(isset($_POST['submit']) && $_POST["submit"] == "Login"
                 <div class="leftMenu">Temperature</div><div class="rightMenu"><input disabled id="temperature" max="100" min="0" type="text"></div>
             </div>
 
-            <div id="manualMenu">
+            <div id="customMenu">
                 <div class="twoSpan">Custom</div>
                 <div class="leftMenu">Curtain</div><div class="rightMenu"><input disabled id="curtain" max="100" min="0" type="range"></div>
                 <div class="leftMenu">

@@ -118,6 +118,7 @@ function ColourWash()
                 State3()
                 setTimeout(function(){
                     State4()
+                    Sun()
                     setTimeout(function(){
                         State5()
                         setTimeout(function(){
@@ -129,7 +130,7 @@ function ColourWash()
                                 }, 50)
                             }, 75)
                         }, 100)
-                    }, 500) // Pause on full colour
+                    }, 1500) // Pause on full colour
                 }, 300)
             }, 250)
         }, 200)
@@ -161,6 +162,10 @@ function State4(){
     $("#header").attr("class", "calico")
 }
 
+function Sun(){
+    $("#mainGrid").attr("class", "gold")
+}
+
 // --- Sunset States ---------------------------------------------------------------------- 
 
 function State5(){
@@ -168,6 +173,7 @@ function State5(){
     $("#customMenu").attr("class", "poloblue")
     $("#automaticMenu").attr("class", "calico")
     $("#header").attr("class", "")
+    $("#mainGrid").attr("class", "")
 }
 
 function State6(){

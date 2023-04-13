@@ -38,6 +38,11 @@ input {
     transition: background-color 0.5s
 }
 
+.gold {
+    background-color: goldenrod;
+    transition: background-color 2s;
+}
+
 .towergray {
     background-color: #ADB9C1;
     transition: background-color 0.5s
