@@ -59,7 +59,7 @@ $("#colour").change(function()
     LEDColourAjax(this.value)
 })
 
-// event handlers to specify automatic or manual selection
+// event handlers to specify automatic or custom selection
 
 $("#automaticMenu").click(function(){
     console.log("automatic menu click")
@@ -71,12 +71,12 @@ $("#automaticMenu").click(function(){
     }
 })
 
-$("#manualMenu").click(function(){
-    console.log("manual menu click")
+$("#customMenu").click(function(){
+    console.log("custom menu click")
     if(automaticModeFlag)
     {
-        ManualMode()
-        SystemModeAjax("manual")
+        CustomMode()
+        SystemModeAjax("custom")
         automaticModeFlag = false
     }
 })
@@ -84,7 +84,7 @@ $("#manualMenu").click(function(){
 }); // --- End of ready function block -------------------------------------------------------
 
 function AutomaticMode(){
-    $("#manualMenu > div").css("color", "gray")
+    $("#customMenu > div").css("color", "gray")
     $("#curtain").prop("disabled", true)
     $("#colour").prop("disabled", true)
     $("#curtain").attr("class", "curtainoff")
@@ -94,12 +94,12 @@ function AutomaticMode(){
     $("#temperature").prop("disabled", false)
 }
 
-function ManualMode(){
+function CustomMode(){
     $("#automaticMenu > div").css("color", "gray")
     $("#intensity").prop("disabled", true)
     $("#temperature").prop("disabled", true)
 
-    $("#manualMenu > div").css("color", "white")
+    $("#customMenu > div").css("color", "white")
     $("#curtain").prop("disabled", false)
     $("#colour").prop("disabled", false)
     $("#curtain").attr("class", "curtainon")
@@ -145,18 +145,18 @@ function State1(){
 
 function State2(){
     $("footer").attr("class", "poloblue")
-    $("#manualMenu").attr("class", "calico")
+    $("#customMenu").attr("class", "calico")
 }
 
 function State3(){
     $("footer").attr("class", "towergray")
-    $("#manualMenu").attr("class", "poloblue")
+    $("#customMenu").attr("class", "poloblue")
     $("#automaticMenu").attr("class", "calico")
 }
 
 function State4(){
     $("footer").attr("class", "abbey")
-    $("#manualMenu").attr("class", "towergray")
+    $("#customMenu").attr("class", "towergray")
     $("#automaticMenu").attr("class", "poloblue")
     $("#header").attr("class", "calico")
 }
@@ -165,20 +165,20 @@ function State4(){
 
 function State5(){
     $("footer").attr("class", "towergray")
-    $("#manualMenu").attr("class", "poloblue")
+    $("#customMenu").attr("class", "poloblue")
     $("#automaticMenu").attr("class", "calico")
     $("#header").attr("class", "")
 }
 
 function State6(){
     $("footer").attr("class", "poloblue")
-    $("#manualMenu").attr("class", "calico")
+    $("#customMenu").attr("class", "calico")
     $("#automaticMenu").attr("class", "")
 }
 
 function State7(){
     $("footer").attr("class", "calico")
-    $("#manualMenu").attr("class", "")
+    $("#customMenu").attr("class", "")
 }
 
 function State8(){
@@ -210,7 +210,7 @@ function GetSettingsSuccess(data)
     }
     else
     {
-        ManualMode()
+        CustomMode()
         automaticModeFlag = false
     }
 

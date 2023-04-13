@@ -74,7 +74,7 @@ if(isset($_POST['submit']) && $_POST["submit"] == "Login"
             </div>
 
             <div id="manualMenu">
-                <div class="twoSpan">Manual</div>
+                <div class="twoSpan">Custom</div>
                 <div class="leftMenu">Curtain</div><div class="rightMenu"><input disabled id="curtain" max="100" min="0" type="range"></div>
                 <div class="leftMenu">
                     <label for="red">Colour</label>
