@@ -23,7 +23,7 @@ class Main:
         print("Got to main")
 
         # # initialize the Motor, sensors, and LEDs
-        # self.MotorInit()
+        self.MotorInit()
         # self.SensorsInit()
         # self.PWM_Strip_Init()
 
@@ -32,12 +32,6 @@ class Main:
 
         # self.SensorsTest()
 
-        # forward = Pin(16, Pin.IN)
-        # forward.irq(handler=self.OpenCallback, trigger=Pin.IRQ_RISING)
-
-        
-        # Backward = Pin(15, Pin.IN)
-        # Backward.irq(handler=self.CloseCallback, trigger=Pin.IRQ_RISING)
 
 
     # initializes the ADC pin used for manual curtain positioning
@@ -75,7 +69,7 @@ class Main:
     # used in ManCurtainPosInit and ManualModePinChange, keeps things consistant.
     def ADCTimerStart(self):
             # callback set for 10Hz or 0.1s
-            self.MC_Timer.init(freq=10, mode=Timer.PERIODIC, callback=self.ADCCallback)
+            self.MC_Timer.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
             self.IsManual = True
 
 
@@ -89,21 +83,22 @@ class Main:
         # irl values = 200-300 , 65535
 
         # working with ADC range of 350 to 65350, convert to %
-        DesPerc -= (ADCVal - 350) / 650
+        DesPerc = (ADCVal - 350) / 650
         if DesPerc < 0:
             DesPerc = 0
         elif DesPerc > 100:
             DesPerc = 100
 
         # get the current curtain position rounded to "increment" percent
-        curPerc = ( self.ourMotor.GetTargetPosPercent() * increment + increment / 2) / increment
+        curPerc = ( self.ourMotor.GetTargetPosPercent() * increment + increment / 2) // increment
+        newPerc = -1
 
         if DesPerc < curPerc - increment * 3/4 or DesPerc > curPerc + increment * 3/4:
             # set the curtain position to the new rounded position
-            newPerc = (DesPerc * increment + increment / 2) / increment
+            newPerc = (DesPerc * increment + increment / 2) // increment
             self.ourMotor.MoveToPercent(newPerc)
         
-        print(f'{ADCVal}, {DesPerc}')
+        print(f'ADC ={ADCVal}, Percent = {DesPerc}, New Perc = {newPerc}, Target = {self.ourMotor.GetTargetPosPercent()}')
 
 
     def OpenCallback(self, pin):           

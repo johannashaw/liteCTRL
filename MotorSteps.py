@@ -23,9 +23,11 @@ class Motor:
     # Class Members:
 
     # Step is the value of the current position of the curtain interms of steps
-    CurrentStep = 0
+    CurrentStep = 112397
+    StepTarget = CurrentStep
+    
     # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
-    MaxStep = 1
+    MaxStep = 112397
     # Moving holds the direction that the curtain is moving in
     # 1 = forwards (openning), 0 = stopped, -1 = backwards (closing)
     Moving = 0
@@ -71,11 +73,11 @@ class Motor:
         isforward = direction == 1          # true if forward
         iseven = self.CurrentStep & 1 == 0  # true if even
         if  isforward and iseven or not isforward and not iseven:
-            self.PinA.value(0)
-            self.PinB.value(1)
-        else:
             self.PinA.value(1)
             self.PinB.value(0)
+        else:
+            self.PinA.value(0)
+            self.PinB.value(1)
 
         # Pin C and D start at the same spot regardless of direction       
         self.PinC.value(0)
@@ -139,11 +141,12 @@ class Motor:
                 return
             # not sure if we want to do anything with this information
             elif adcVal < 25000 and self.Moving == -1: 
-                # far/closed barrier is hit                
+                # far/closed barrier is hit (470)                
                 self.Stop()
                 print('Closed barrier hit')
                 print(f'ADC = {adcVal}\n')
-            elif adcVal > 25000 and self.Moving == 1:              
+            elif adcVal > 25000 and self.Moving == 1:
+                # close/open barrier hit (1k)              
                 self.Stop()
                 print('Open barrier hit')
                 print(f'ADC = {adcVal}\n')
@@ -166,14 +169,14 @@ class Motor:
         
         if self.__caliStep == 1:    
              # Start closing the curtain
-            print('Calibrate Step 1')
+            print('Calibrate Step 1\nStart closing the curtain')
             self.Close()
                 
         elif self.__caliStep == 2: 
             # set CurentStep to 0
             # Start openning the curtain
             self.CurrentStep = 0
-            print('Calibrate Step 2')
+            print('Calibrate Step 2\nStart openning the curtain')
             self.Open()
 
         elif self.__caliStep == 3:        
@@ -231,5 +234,7 @@ class Motor:
     # returns the target position of the curtain as a percent
     def GetTargetPosPercent(self):
         return self.StepTarget * 100 // self.MaxStep
+
+
 
 
