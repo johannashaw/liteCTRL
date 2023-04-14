@@ -26,6 +26,9 @@ class Main:
         self.MotorInit()
         # self.SensorsInit()
         # self.PWM_Strip_Init()
+        
+        
+        #self.ourMotor.Calibrate()
 
         # initialize the ADC curtain position pin:
         self.ManCurtainPosInit()
@@ -83,19 +86,22 @@ class Main:
         # irl values = 200-300 , 65535
 
         # working with ADC range of 350 to 65350, convert to %
-        DesPerc = (ADCVal - 350) / 650
+        # DesPerc = (ADCVal - 350) // 650
+        DesPerc = ((((ADCVal - 350) // 650) + increment / 2) // increment) * increment
         if DesPerc < 0:
             DesPerc = 0
         elif DesPerc > 100:
             DesPerc = 100
 
         # get the current curtain position rounded to "increment" percent
-        curPerc = ( self.ourMotor.GetTargetPosPercent() * increment + increment / 2) // increment
+        curPerc = (( self.ourMotor.GetTargetPosPercent() + increment / 2) // increment) * increment
         newPerc = -1
 
-        if DesPerc < curPerc - increment * 3/4 or DesPerc > curPerc + increment * 3/4:
+        if DesPerc != curPerc:
+        # if DesPerc < curPerc - increment * 3/4 or DesPerc > curPerc + increment * 3/4:
+        # if DesPerc < curPerc - increment * 3/4 or DesPerc > curPerc + increment * 3/4:
             # set the curtain position to the new rounded position
-            newPerc = (DesPerc * increment + increment / 2) // increment
+            newPerc = ((DesPerc + increment / 2) // increment) * increment
             self.ourMotor.MoveToPercent(newPerc)
         
         print(f'ADC ={ADCVal}, Percent = {DesPerc}, New Perc = {newPerc}, Target = {self.ourMotor.GetTargetPosPercent()}')
@@ -127,10 +133,6 @@ class Main:
         # enable pin is on GPIO 10, or pin 14 irl
         # ADCBarrier pin is on GPIO 28, or pin 34 irl
         self.ourMotor = Motor(18, 19, 20, 21, pinEnable=10, pinADCBarrier=28)
-
-        self.ourMotor.Frequency = 750
-
-        self.ourMotor.Calibrate()
 
 
     # initializes the VEML, APDS, and thier shared I2C channel
@@ -178,11 +180,11 @@ class Main:
     def SensorDataCallback(self, PIN=None):
         # receive the colours
         if self.APDS is not None:
-            clear, red, green, blue = self.APDS.GetCRGB()
+            lux_APDS, clear, red, green, blue = self.APDS.GetCRGB()
 
         # Get Lux
         if self.VEML is not None:
-            lux = self.VEML.Get_Lux()
+            lux_VEML = self.VEML.Get_Lux()
 
         # clear1 = (clear + 500) / 2
         clear = (clear + 288) / 1.64
@@ -191,7 +193,7 @@ class Main:
         
         #print(f'lux = {lux}, clear ={clear}, red = {red}, green = {green}, blue = {blue}')
         # print(f'{lux}, {clear1}, {clear2}, {clear3}')
-        print(f'{lux}, {clear}')
+        print(f'VEML = {lux_VEML}, APDS = {lux_APDS}')
         
 
     # Callback for VEML testing, prints LUX

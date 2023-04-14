@@ -259,6 +259,9 @@ class APDS9960(base_i2c):
         # get Blue
         blue = int.from_bytes(CRGB[6:8], "little")
 
+        
+        lux = (clear + 288) / 1.64
+
         # stop bit        
         # base_i2c.i2c.stop()
 
@@ -266,4 +269,4 @@ class APDS9960(base_i2c):
         # print(f'clear ={clear}, red = {red}, green = {green}, blue = {blue}')
 
         # Return RGB
-        return clear, red, green, blue
+        return lux, clear, red, green, blue
