@@ -181,3 +181,17 @@ class Colour:
     def get(self):
         return self.Red, self.Green, self.Blue 
 
+
+# takes in raw RGB values returned from the ADPS sensor and converts it into the standard 255 values
+# returns a colour object
+def ConvertSensorRGB(Red, Green, Blue):
+    temp = [Red, Green, Blue]
+    # find the largest value
+    largestval = max(temp)
+
+    # use the largest value to normalize all of the colours
+    for i in range(3):
+        temp[i] = (temp[i] * 255) // largestval
+    
+    # return Color object with the normalized colour values
+    return Colour(temp[0], temp[1], temp[2])
