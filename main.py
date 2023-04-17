@@ -25,18 +25,22 @@ class Main:
 
         print("Got to main")
 
-        # # initialize the Motor, sensors, and LEDs
-        self.MotorInit()
+        # initialize the Motor, sensors, and LEDs
+
+        # self.MotorInit()
         self.SensorsInit()
-        self.PWM_Strip_Init()
-        
+        # self.PWM_Strip_Init()
+        # self.ManCurtainPosInit()      # initialize the ADC curtain position pin:
         
 
-        # initialize the ADC curtain position pin:
-        self.ManCurtainPosInit()
-
-        #self.ourMotor.Calibrate()
+        # self.ourMotor.Calibrate()
         # self.SensorsTest()
+        
+        # testing my colour converter
+        if self.APDS is not None:
+
+            l, c, R, G, B = self.APDS.GetCRGB()
+            print(LEDStrip.ConvertSensorRGB(R, G, B))
 
 
 

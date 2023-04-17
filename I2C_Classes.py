@@ -260,7 +260,7 @@ class APDS9960(base_i2c):
         blue = int.from_bytes(CRGB[6:8], "little")
 
         
-        lux = (clear + 288) / 1.64
+        lux = int((clear + 288) / 1.64)
 
         # stop bit        
         # base_i2c.i2c.stop()
