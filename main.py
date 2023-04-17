@@ -9,34 +9,87 @@
 from machine import Pin, Timer, PWM, ADC
 from MotorSteps import Motor
 from I2C_Classes import base_i2c, VEML7700, APDS9960
-from LEDStrip import LED_Strip_PWM, Colour
+# from LEDStrip import LED_Strip_PWM, Colour
+import LEDStrip
 import time
 
 
 class Main:
     # basic initializations
+    timrr = Timer()
+
+    MC_Timer = Timer()  # The timer used for ADC positioning callbacks
+    IsManual = False
 
     def __init__(self):
-
-        self.timrr = Timer()
 
         print("Got to main")
 
         # # initialize the Motor, sensors, and LEDs
         self.MotorInit()
-        # self.SensorsInit()
-        # self.PWM_Strip_Init()
+        self.SensorsInit()
+        self.PWM_Strip_Init()
         
         
-        #self.ourMotor.Calibrate()
 
         # initialize the ADC curtain position pin:
         self.ManCurtainPosInit()
 
+        #self.ourMotor.Calibrate()
         # self.SensorsTest()
 
 
 
+    # Initializes the light strip object
+    # This should be the only add on that doesn't risk failing
+    def PWM_Strip_Init(self):
+
+        # initialize strip
+        # GPIO pins: 11, 12, 13  =  irl pin: 15, 16, 17
+        self.Strip = LEDStrip.LED_Strip_PWM(R_Pin=11, G_Pin=12, B_Pin=13)
+        print('Light strip initialized')
+
+      
+    def MotorInit(self):       
+        # lets go for pins [24:27] (gp 18:21)
+        # enable pin is on GPIO 10, or pin 14 irl
+        # ADCBarrier pin is on GPIO 28, or pin 34 irl
+        self.ourMotor = Motor(18, 19, 20, 21, pinEnable=10, pinADCBarrier=28)
+
+
+    # initializes the VEML, APDS, and thier shared I2C channel
+    def SensorsInit(self):
+        # GPIO pins 4 and 5 map to irl pins 6 and 7
+        base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
+        
+        self.VEMLInit()
+        self.APDSInit()
+
+
+    # VEML is the ambient light sensor
+    def VEMLInit(self):
+        # try to initialize the VEML, if not responding, variable is set to none and exits function
+        try:
+            self.VEML = VEML7700()
+            print('VEML init')
+        except Exception as err:
+            self.VEML = None
+            print(err)
+            return
+
+
+    # APDS is the Colour light sensor
+    def APDSInit(self):
+        # try to initialize the APDS, if not responding, variable is set to none and exits function
+        try:
+            self.APDS = APDS9960()
+            print('APDS init')
+        except Exception as err:
+            self.APDS = None
+            print(err)
+            return
+        
+    
     # initializes the ADC pin used for manual curtain positioning
     # GPIO pin 16 = irl pin 21
     # GPIO pin 27 = irl pin 32
@@ -55,6 +108,7 @@ class Main:
         self.CurPosPin = ADC(Pin(27))
 
 
+    # Called if the user has turned on/off the manual modepositioning switch
     def ManualModePinChange(self, pin):
         print(pin.value())
 
@@ -69,7 +123,8 @@ class Main:
             self.MC_Timer.deinit()
             self.IsManual = False
 
-    # used in ManCurtainPosInit and ManualModePinChange, keeps things consistant.
+    # A Helper function
+    # Uused in ManCurtainPosInit and ManualModePinChange, keeps things consistant.
     def ADCTimerStart(self):
             # callback set for 10Hz or 0.1s
             self.MC_Timer.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
@@ -107,70 +162,6 @@ class Main:
         print(f'ADC ={ADCVal}, Percent = {DesPerc}, New Perc = {newPerc}, Target = {self.ourMotor.GetTargetPosPercent()}')
 
 
-    def OpenCallback(self, pin):           
-        # GPIO pin 16
-        print('openning')
-        self.ourMotor.Open()
-        
-
-    def CloseCallback(self, pin):
-        # GPIO piin 15
-        print('closing')
-        self.ourMotor.Close()
-
-    # Initializes the light strip object
-    # This should be the only add on that doesn't risk failing
-    def PWM_Strip_Init(self):
-
-        # initialize strip
-        # GPIO pins: 11, 12, 13  =  irl pin: 15, 16, 17
-        self.Strip = LED_Strip_PWM(R_Pin=11, G_Pin=12, B_Pin=13)
-        print('Light strip initialized')
-
-      
-    def MotorInit(self):       
-        # lets go for pins [24:27] (gp 18:21)
-        # enable pin is on GPIO 10, or pin 14 irl
-        # ADCBarrier pin is on GPIO 28, or pin 34 irl
-        self.ourMotor = Motor(18, 19, 20, 21, pinEnable=10, pinADCBarrier=28)
-
-
-    # initializes the VEML, APDS, and thier shared I2C channel
-    def SensorsInit(self):
-        # GPIO pins 4 and 5 map to irl pins 6 and 7
-        base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
-        
-        self.VEMLInit()
-        self.APDSInit()
-
-
-    # VEML is the ambient light sensor
-    def VEMLInit(self):
-        # try to initialize the VEML, if not responding, variable is set to none and exits function
-        try:
-            self.VEML = VEML7700()
-            print('VEML init')
-        except Exception as err:
-            self.VEML = None
-            print(err)
-            return
-        
-        # print(VEML.I2C_Read(4))		# 4 is the command code for reading Ambient light
-        
-        self.VEML.Get_Lux()
-        # self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.printLUX)
-
-
-    # APDS is the Colour light sensor
-    def APDSInit(self):
-        # try to initialize the APDS, if not responding, variable is set to none and exits function
-        try:
-            self.APDS = APDS9960()
-            print('APDS init')
-        except Exception as err:
-            self.APDS = None
-            print(err)
-            return
         
 
     def SensorsTest(self):
@@ -195,12 +186,6 @@ class Main:
         # print(f'{lux}, {clear1}, {clear2}, {clear3}')
         print(f'VEML = {lux_VEML}, APDS = {lux_APDS}')
         
-
-    # Callback for VEML testing, prints LUX
-    def printLUX(self, PIN):       
-        print(f'VEML = {self.VEML.Get_Lux()} [lx]')
-       #  clear =565, red = 203, green = 148, blue = 151
-
 
 
 if __name__ == '__main__':
