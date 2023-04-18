@@ -239,3 +239,99 @@ Stack trace:
 [11-Apr-2023 20:40:23 UTC] system mode value automatic
 [11-Apr-2023 20:41:08 UTC] system mode value automatic
 [11-Apr-2023 20:41:50 UTC] Light Intensity 23
+[13-Apr-2023 21:31:21 UTC] In login block
+[13-Apr-2023 21:31:21 UTC] Successfully logged in as Johanna
+[13-Apr-2023 21:31:21 UTC] In info status block
+[13-Apr-2023 21:32:32 UTC] PHP Parse error:  Unmatched '}' in /home/litectrl/public_html/index.php on line 13
+[13-Apr-2023 21:35:13 UTC] system mode value custom
+[13-Apr-2023 21:35:17 UTC] system mode value automatic
+[13-Apr-2023 21:35:20 UTC] system mode value custom
+[13-Apr-2023 21:35:22 UTC] system mode value automatic
+[13-Apr-2023 23:39:26 UTC] system mode value custom
+[13-Apr-2023 23:39:27 UTC] system mode value automatic
+[13-Apr-2023 23:39:29 UTC] system mode value custom
+[13-Apr-2023 23:39:30 UTC] system mode value automatic
+[13-Apr-2023 23:39:31 UTC] system mode value custom
+[14-Apr-2023 12:52:16 UTC] system mode value automatic
+[14-Apr-2023 12:52:17 UTC] system mode value custom
+[14-Apr-2023 12:52:19 UTC] system mode value automatic
+[14-Apr-2023 12:52:19 UTC] system mode value custom
+[14-Apr-2023 12:52:20 UTC] system mode value automatic
+[14-Apr-2023 12:52:22 UTC] system mode value custom
+[14-Apr-2023 12:52:23 UTC] system mode value automatic
+[14-Apr-2023 12:52:24 UTC] system mode value custom
+[14-Apr-2023 12:52:26 UTC] system mode value automatic
+[14-Apr-2023 12:52:27 UTC] system mode value custom
+[14-Apr-2023 12:52:29 UTC] system mode value automatic
+[14-Apr-2023 12:52:31 UTC] system mode value custom
+[14-Apr-2023 12:52:40 UTC] system mode value automatic
+[14-Apr-2023 12:52:41 UTC] system mode value custom
+[14-Apr-2023 12:52:42 UTC] system mode value automatic
+[14-Apr-2023 12:52:43 UTC] system mode value custom
+[14-Apr-2023 12:52:45 UTC] system mode value automatic
+[14-Apr-2023 12:52:46 UTC] system mode value custom
+[14-Apr-2023 12:52:48 UTC] system mode value automatic
+[14-Apr-2023 12:53:05 UTC] system mode value custom
+[14-Apr-2023 12:53:06 UTC] system mode value automatic
+[14-Apr-2023 12:53:06 UTC] system mode value custom
+[14-Apr-2023 12:53:13 UTC] system mode value automatic
+[14-Apr-2023 12:53:14 UTC] system mode value custom
+[14-Apr-2023 12:53:59 UTC] system mode value automatic
+[14-Apr-2023 12:54:00 UTC] system mode value custom
+[14-Apr-2023 12:54:08 UTC] system mode value automatic
+[14-Apr-2023 12:54:10 UTC] system mode value custom
+[14-Apr-2023 13:22:42 UTC] system mode value automatic
+[14-Apr-2023 13:22:43 UTC] system mode value custom
+[14-Apr-2023 13:22:45 UTC] system mode value automatic
+[14-Apr-2023 13:22:47 UTC] system mode value custom
+[14-Apr-2023 13:22:58 UTC] system mode value automatic
+[14-Apr-2023 16:12:15 UTC] system mode value custom
+[14-Apr-2023 16:12:16 UTC] system mode value automatic
+[14-Apr-2023 16:12:17 UTC] system mode value custom
+[14-Apr-2023 17:21:41 UTC] system mode value automatic
+[14-Apr-2023 17:24:14 UTC] system mode value custom
+[14-Apr-2023 17:24:38 UTC] system mode value automatic
+[14-Apr-2023 17:24:48 UTC] system mode value custom
+[14-Apr-2023 17:25:21 UTC] system mode value automatic
+[14-Apr-2023 17:32:46 UTC] Light Intensity cheery
+[14-Apr-2023 17:32:46 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'cheery' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Li...')
+#1 /home/litectrl/public_html/webservice.php(236): mySQLNonQuery('INSERT INTO `Li...')
+#2 /home/litectrl/public_html/webservice.php(219): LightIntensityInsert('cheery')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[14-Apr-2023 17:33:05 UTC] Light Intensity bright
+[14-Apr-2023 17:33:05 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'bright' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Li...')
+#1 /home/litectrl/public_html/webservice.php(236): mySQLNonQuery('INSERT INTO `Li...')
+#2 /home/litectrl/public_html/webservice.php(219): LightIntensityInsert('bright')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[14-Apr-2023 17:38:39 UTC] system mode value automatic
+[14-Apr-2023 17:38:44 UTC] Light Intensity cheery
+[14-Apr-2023 17:38:44 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'cheery' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Li...')
+#1 /home/litectrl/public_html/webservice.php(235): mySQLNonQuery('INSERT INTO `Li...')
+#2 /home/litectrl/public_html/webservice.php(218): LightIntensityInsert('cheery')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[14-Apr-2023 17:42:56 UTC] Light Intensity dim
+[14-Apr-2023 17:42:56 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'dim' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Li...')
+#1 /home/litectrl/public_html/webservice.php(235): mySQLNonQuery('INSERT INTO `Li...')
+#2 /home/litectrl/public_html/webservice.php(218): LightIntensityInsert('dim')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62
+[14-Apr-2023 17:49:19 UTC] Light Intensity bright
+[14-Apr-2023 17:49:19 UTC] INSERT INTO `LightIntensity`(`Value`) VALUES (bright)
+[14-Apr-2023 17:49:19 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'bright' in 'field list' in /home/litectrl/public_html/database.php:62
+Stack trace:
+#0 /home/litectrl/public_html/database.php(62): mysqli->query('INSERT INTO `Li...')
+#1 /home/litectrl/public_html/webservice.php(236): mySQLNonQuery('INSERT INTO `Li...')
+#2 /home/litectrl/public_html/webservice.php(218): LightIntensityInsert('bright')
+#3 {main}
+  thrown in /home/litectrl/public_html/database.php on line 62

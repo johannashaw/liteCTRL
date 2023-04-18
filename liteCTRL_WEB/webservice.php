@@ -186,7 +186,6 @@ function GetSettings()
 
 if(isset($_GET["systemmode"]))
 {
-    //error_log("Light Intensity {$_GET["intensity"]}");
     SystemModeDelete();
     SystemModeInsert($_GET["systemmode"]);
 }
@@ -231,7 +230,8 @@ function LightIntensityDelete()
 
 function LightIntensityInsert($value)
 {
-    $query = "INSERT INTO `LightIntensity`(`Value`) VALUES ($value)";
+    $query = "INSERT INTO `LightIntensity`(`Value`) VALUES ('$value')";
+    error_log($query);
 
     $results = mySQLNonQuery( $query );
 
@@ -258,7 +258,7 @@ function LightTemperatureDelete()
 
 function LightTemperatureInsert($value)
 {
-    $query = "INSERT INTO `LightTemperature` (`Value`) VALUES ($value)";
+    $query = "INSERT INTO `LightTemperature` (`Value`) VALUES ('$value')";
 
     $results = mySQLNonQuery( $query );
 

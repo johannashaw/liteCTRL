@@ -32,26 +32,8 @@ session_unset();
         <div id="header">liteCTRL Panel</div>
             <div id="automaticMenu">
                 <div class="twoSpan">Automatic</div>
-                <div class="leftMenu">Intensity</div>
-                <div class="rightMenu">
-                    <select name="intensity" id="intensity">
-                        <option value="bright">Bright</option>
-                        <option value="cheery">Cheery</option>
-                        <option value="shade">Shady</option>
-                        <option value="dim">Dim</option>
-                        <option value="gloomy">Gloomy</option>
-                    </select>
-                </div>
-                <div class="leftMenu">Temperature</div>
-                <div class="rightMenu">
-                <select name="temperature" id="temperature">
-                        <option value="warm">Warm</option>
-                        <option value="warmer">Warmer</option>
-                        <option value="neutral">Neutral</option>
-                        <option value="cold">Cold</option>
-                        <option value="colder">Colder</option>
-                    </select>
-                </div>
+                <div class="leftMenu">Intensity</div><div class="rightMenu"><input id="intensity" max="100" min="0" type="text"></div>
+                <div class="leftMenu">Temperature</div><div class="rightMenu"><input id="temperature" max="100" min="0" type="text"></div>
             </div>
 
             <div id="customMenu">
