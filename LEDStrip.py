@@ -7,7 +7,7 @@
 # 
 
 from machine import Pin, PWM
-from I2C_Classes import APDS9960 as APDS
+# from I2C_Classes import APDS9960 as APDS
 import time
 
 
@@ -16,6 +16,12 @@ import time
 # Represents individual lights on the LED strip
 class Colour:
     
+    # to initialize from ints
+    def __init__(self, Red:int = 0, Green:int = 0, Blue:int = 0):
+        self.Red = Red
+        self.Green = Green
+        self.Blue = Blue
+
     def __iter__(self):
         self.iter = 0
         return self
@@ -32,16 +38,19 @@ class Colour:
             return self.Red
         
         raise StopIteration
+    
+    def __getitem__(self, item):
+        # returns the RGB values
+        if item == 0:
+            return self.Red
+        elif item == 1:
+            return self.Green
+        elif item == 2:
+            return self.Red
 
     
-    # to initialize from ints
-    def __init__(self, Red:int = 0, Green:int = 0, Blue:int = 0):
-        self.Red = Red
-        self.Green = Green
-        self.Blue = Blue
-
     # to initialize from another Colour
-    def __init__(self, col):
+    def Copy(self, col):
         
         self.Red += col.Red
         self.Green += col.Green
@@ -89,7 +98,7 @@ class Colour:
             self.Blue += o
             return self
         if type(o) is Colour:
-            col = Colour(o)
+            col = Colour().Copy(o)
             col.Red = (col.Red + self.Red) // 2
             col.Green = (col.Green + self.Green) // 2
             col.Blue = (col.Blue + self.Blue) // 2
@@ -181,7 +190,6 @@ class LED_Strip_PWM:
 
         
 
-        # 
         """            Color c1 = label2.BackColor;
             Color c2 = label3.BackColor;
 
