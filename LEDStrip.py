@@ -7,7 +7,91 @@
 # 
 
 from machine import Pin, PWM
+from I2C_Classes import APDS9960 as APDS
 import time
+
+
+
+
+# Represents individual lights on the LED strip
+class Colour:
+    # to initialize from ints
+    def __init__(self, Red = 0, Green = 0, Blue = 0):
+        self.Red = Red
+        self.Green = Green
+        self.Blue = Blue
+
+    # to initialize from another Colour
+    def __init__(self, col):
+        
+        self.Red += col.Red
+        self.Green += col.Green
+        self.Blue += col.Blue
+
+
+    # Used as an enumeration where it returns bits in order Green, Red, Blue, MSB first
+    # Tested, looks good :)
+    def GetBits(self):
+        # return all of the bits for green
+        for i in range(7, -1, -1):
+            yield (self.Green >> i) & 1
+        # return bits for red
+        for i in range(7, -1, -1):
+            yield (self.Red >> i) & 1
+        # return bits for blue
+        for i in range(7, -1, -1):
+            yield (self.Blue >> i) & 1
+        return
+
+
+    # easy set of all the colours
+    def Set(self, Red, Green, Blue):
+        self.Red = Red
+        self.Green = Green
+        self.Blue = Blue
+
+    # returns the RGB values in one call
+    def get(self):
+        return self.Red, self.Green, self.Blue 
+    
+    def __str__(self) -> str:
+        return f'Red = {self.Red}, Green = {self.Green}, Blue = {self.Blue}'
+    
+    def __eq__(self, o) -> bool:
+        if type(o) is not Colour:
+            return False
+        
+        return self.Red == o.Red and self.Green == o.Green and self.Blue == o.Blue
+    
+    def __add__(self, o):
+        if type(o) is int:
+            self.Red += o
+            self.Green += o
+            self.Blue += o
+            return self
+        if type(o) is Colour:
+            col = Colour(o)
+            col.Red = (col.Red + self.Red) // 2
+            col.Green = (col.Green + self.Green) // 2
+            col.Blue = (col.Blue + self.Blue) // 2
+
+            return col
+            
+
+
+# takes in raw RGB values returned from the ADPS sensor and converts it into the standard 255 values
+# returns a colour object
+def ConvertSensorRGB(Red, Green, Blue):
+    temp = [Red, Green, Blue]
+    # find the largest value
+    largestval = max(temp)
+
+    # use the largest value to normalize all of the colours
+    for i in range(3):
+        temp[i] = (temp[i] * 255) // largestval
+    
+    # return Color object with the normalized colour values
+    return Colour(temp[0], temp[1], temp[2])
 
 
 # class to drive an LED strip where the colours are set by PWM 
@@ -66,6 +150,34 @@ class LED_Strip_PWM:
         print(f'duty: red = {rdut}, green = {gdut}, blue = {bdut}')
 
         self.colour = colour
+
+
+    def AdjustAmbient(self, DesiredColour:Colour, sensor:APDS):
+        
+        # get the sensor colour
+        l, c, r, g, b = sensor.GetCRGB()
+
+        # average out the components of both colours
+        newPWM = ConvertSensorRGB(r, g, b) + DesiredColour
+
+        # 
+        """            Color c1 = label2.BackColor;
+            Color c2 = label3.BackColor;
+
+            int[] rgb = {(c1.R + c2.R)/2, (c1.G + c2.G) / 2 , (c1.B + c2.B) / 2 };
+
+
+            label5.BackColor = Color.FromArgb(rgb[0], rgb[1], rgb[2]);
+
+            while (rgb.Max() < 255)
+            {
+                for (int i = 0; i < rgb.Length; i++)
+                {
+                    rgb[i]++;
+                }
+            }
+
+            label4.BackColor = Color.FromArgb(rgb[0], rgb[1], rgb[2]);"""
 
 
 # Designed for strip using WS2812B LEDs
@@ -146,38 +258,3 @@ class WS2812B_Strip:
         if send:
             self.SendColours()
         
-
-
-# Represents individual lights on the LED strip
-class Colour:
-    def __init__(self, Red = 0, Green = 0, Blue = 0):
-        self.Red = Red
-        self.Green = Green
-        self.Blue = Blue
-
-
-    # Used as an enumeration where it returns bits in order Green, Red, Blue, MSB first
-    # Tested, looks good :)
-    def GetBits(self):
-        # return all of the bits for green
-        for i in range(7, -1, -1):
-            yield (self.Green >> i) & 1
-        # return bits for red
-        for i in range(7, -1, -1):
-            yield (self.Red >> i) & 1
-        # return bits for blue
-        for i in range(7, -1, -1):
-            yield (self.Blue >> i) & 1
-        return
-
-
-    # easy set of all the colours
-    def Set(self, Red, Green, Blue):
-        self.Red = Red
-        self.Green = Green
-        self.Blue = Blue
-
-    # returns the RGB values in one call
-    def get(self):
-        return self.Red, self.Green, self.Blue 
-

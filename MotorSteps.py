@@ -7,7 +7,7 @@
 
 
 from machine import Pin, Timer, ADC
-
+import time
 
 # Notes:
 #	Consider Adding an enable pin for the motor so that it doesn't overheat!
@@ -21,13 +21,14 @@ from machine import Pin, Timer, ADC
 class Motor:
 
     # Class Members:
+    
+    # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
+    MaxStep = 112397
 
     # Step is the value of the current position of the curtain interms of steps
     CurrentStep = 112397
     StepTarget = CurrentStep
     
-    # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
-    MaxStep = 112397
     # Moving holds the direction that the curtain is moving in
     # 1 = forwards (openning), 0 = stopped, -1 = backwards (closing)
     Moving = 0
@@ -40,6 +41,8 @@ class Motor:
 
     __calibrate = False
     Frequency = 750
+    MinFq = 750
+    MaxFq = 750
 
     lastBarrier = None
 
@@ -69,6 +72,9 @@ class Motor:
         if direction != 1 and direction != -1:
             raise ValueError(f'MotorSteps.__start : argument "direction" can only be 1 or -1, {direction} was given')
         
+        # reset the frequency to the min
+        self.Frequency = self.MinFq
+        
         # Start position of motor pins A and B depend on position and whether Current Step is odd or even
         isforward = direction == 1          # true if forward
         iseven = self.CurrentStep & 1 == 0  # true if even
@@ -89,6 +95,9 @@ class Motor:
         # start timer for callback function
         self.Timer.init(freq=self.Frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
 
+
+        print(self.Frequency)
+
         self.Moving = direction
 
 
@@ -106,6 +115,8 @@ class Motor:
         self.StepCheck = False
 
         self.Frequency = 750
+
+        time.sleep(0.001)
 
 
     # The Callback function driving each motor step
@@ -153,8 +164,12 @@ class Motor:
 
             if self.__calibrate and self.Moving == 0:
                 self.Calibrate()
+                return
 
-        
+        #
+        if self.CurrentStep % 200 == 0 and self.Frequency != self.MaxFq:
+            pass
+            self.RampUpFreq()
 
 
     # will fully close and then fully open the curtains in order to get the total steps value
@@ -227,6 +242,20 @@ class Motor:
     # returns the target position of the curtain as a percent
     def GetTargetPosPercent(self):
         return self.StepTarget * 100 // self.MaxStep
+    
+    
+    #increases the Frequency that the motor is running at by 10Hz 
+    def RampUpFreq(self):
+        # check so don't do anything that you shouldn't be doing
+        if self.Moving == 0 or self.Frequency == self.MaxFq:
+            return
+        self.Frequency += 10
+        self.Timer.deinit()
+
+        
+        print(f'ramp = {self.Frequency}')
+
+        self.Timer.init(freq=self.Frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
 
 
 
