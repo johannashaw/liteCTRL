@@ -15,8 +15,27 @@ import time
 
 # Represents individual lights on the LED strip
 class Colour:
+    
+    def __iter__(self):
+        self.iter = 0
+        return self
+    def __next__(self):
+        # returns the RGB values
+        if self.iter == 0:
+            self.iter += 1
+            return self.Red
+        elif self.iter == 1:
+            self.iter += 1
+            return self.Green
+        elif self.iter == 2:
+            self.iter += 1
+            return self.Red
+        
+        raise StopIteration
+
+    
     # to initialize from ints
-    def __init__(self, Red = 0, Green = 0, Blue = 0):
+    def __init__(self, Red:int = 0, Green:int = 0, Blue:int = 0):
         self.Red = Red
         self.Green = Green
         self.Blue = Blue
@@ -45,7 +64,7 @@ class Colour:
 
 
     # easy set of all the colours
-    def Set(self, Red, Green, Blue):
+    def Set(self, Red:int, Green:int, Blue:int):
         self.Red = Red
         self.Green = Green
         self.Blue = Blue
@@ -81,7 +100,7 @@ class Colour:
 
 # takes in raw RGB values returned from the ADPS sensor and converts it into the standard 255 values
 # returns a colour object
-def ConvertSensorRGB(Red, Green, Blue):
+def ConvertSensorRGB(Red:int, Green:int, Blue:int):    
     temp = [Red, Green, Blue]
     # find the largest value
     largestval = max(temp)
@@ -125,7 +144,7 @@ class LED_Strip_PWM:
 
     # Sets the Colour of the LED strip
     # Takes a Colour object as an argument, returns None
-    def Set_Colour(self, colour):
+    def Set_Colour(self, colour:Colour):
         # raise error if colour is not type Colour
         if type(colour) is not Colour:
             raise TypeError(f"""LEDStrip.LED_Strip_PWM.Set_Colour : "colour" argument needs to be of type Colour, {type(colour)} was given""")
@@ -160,15 +179,18 @@ class LED_Strip_PWM:
         # average out the components of both colours
         newPWM = ConvertSensorRGB(r, g, b) + DesiredColour
 
+        
+
         # 
         """            Color c1 = label2.BackColor;
             Color c2 = label3.BackColor;
 
             int[] rgb = {(c1.R + c2.R)/2, (c1.G + c2.G) / 2 , (c1.B + c2.B) / 2 };
 
-
+            // the Average value
             label5.BackColor = Color.FromArgb(rgb[0], rgb[1], rgb[2]);
 
+            // the average value set to 100%
             while (rgb.Max() < 255)
             {
                 for (int i = 0; i < rgb.Length; i++)
@@ -248,7 +270,7 @@ class WS2812B_Strip:
 
     # Sets all of the lights to the given colour
     # Will send the data once it is done by default, option to not
-    def SetColours(self, Red, Green, Blue, send = True):
+    def SetColours(self, Red:int, Green:int, Blue:int, send = True):
 
         # Go through light list changing each of the colours' RGB values to given RGB values
         for Col in self.LED_list:
