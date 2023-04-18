@@ -53,6 +53,16 @@ input, select {
     transition: background-color 0.5s
 }
 
+#automaticMenu:hover {
+    background-color: #202020;
+    transition : background-color 0.5s
+}
+
+#customMenu:hover {
+    background-color: #202020;
+    transition : background-color 0.5s
+}
+
 
 
 /* --- Browser View --------------------------------------------------------------- */
