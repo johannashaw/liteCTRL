@@ -7,7 +7,7 @@
 # 
 
 from machine import Pin, PWM
-# from I2C_Classes import APDS9960 as APDS
+from I2C_Classes import APDS9960 as APDS
 import time
 
 
@@ -35,7 +35,7 @@ class Colour:
             return self.Green
         elif self.iter == 2:
             self.iter += 1
-            return self.Red
+            return self.Blue
         
         raise StopIteration
     
@@ -46,7 +46,16 @@ class Colour:
         elif item == 1:
             return self.Green
         elif item == 2:
-            return self.Red
+            return self.Blue
+        
+    def __setitem__(self, key, newvalue):
+        # returns the RGB values
+        if key == 0:
+            self.Red = newvalue
+        elif key == 1:
+            self.Green = newvalue
+        elif key == 2:
+            self.Blue = newvalue
 
     
     # to initialize from another Colour
@@ -82,8 +91,30 @@ class Colour:
     def get(self):
         return self.Red, self.Green, self.Blue 
     
+    def NormalizeColour(self):
+        # make sure that all components are positive
+        smallest = min(self)
+        if smallest < 0:
+            for i in range(3):
+                self[i] -= smallest		#since this is negative, this is like adding the absolute value of the smallest
+                
+        # find the largest value
+        largestval = max(self)
+
+        # print(f' colour = {self}, max = {largestval}')
+
+
+        # use the largest value to normalize all of the colours
+        for i in range(3):
+            # print(self[i])
+            self[i] = (self[i] * 255) // largestval
+            # print(self[i])
+        
+        # return Color object with the normalized colour values
+        return self
+    
     def __str__(self) -> str:
-        return f'Red = {self.Red}, Green = {self.Green}, Blue = {self.Blue}'
+        return f'[Red = {self.Red}, Green = {self.Green}, Blue = {self.Blue}]'
     
     def __eq__(self, o) -> bool:
         if type(o) is not Colour:
@@ -111,15 +142,33 @@ class Colour:
 # returns a colour object
 def ConvertSensorRGB(Red:int, Green:int, Blue:int):    
     temp = [Red, Green, Blue]
+    
+    # print(f'ConvertSensorRGB : start = {temp}')
+
+    # make sure that all of the values are positive
+    smallest = min(temp)
+    if smallest < 0:
+        for i in range(3):
+            temp[i] -= smallest		#since this is negative, this is like adding the absolute value of the smallest
+            
+    
+    # print(f'ConvertSensorRGB : positive = {temp}')       
+
     # find the largest value
     largestval = max(temp)
+
 
     # use the largest value to normalize all of the colours
     for i in range(3):
         temp[i] = (temp[i] * 255) // largestval
+
+    
+    # print(f'ConvertSensorRGB : normalized = {temp}')
     
     # return Color object with the normalized colour values
     return Colour(temp[0], temp[1], temp[2])
+
+
 
 
 # class to drive an LED strip where the colours are set by PWM 
@@ -184,9 +233,30 @@ class LED_Strip_PWM:
         
         # get the sensor colour
         l, c, r, g, b = sensor.GetCRGB()
+    
+        # get the sensor colour
+        # r, g, b = 255, 128, 64
 
         # average out the components of both colours
-        newPWM = ConvertSensorRGB(r, g, b) + DesiredColour
+        sens = Colour(r, g, b).NormalizeColour()
+
+        DesiredColour.NormalizeColour()
+
+        print(f'desired: {DesiredColour},\t sensor: {sens}')
+
+        # newcol = Colour()
+
+        temps = Colour()
+        
+
+        for i in range(3):
+            temps[i] = DesiredColour[i]*2 - sens[i]
+
+        # print(temps)
+        
+        newcol = temps.NormalizeColour()
+
+        print (newcol)
 
         
 
@@ -288,3 +358,5 @@ class WS2812B_Strip:
         if send:
             self.SendColours()
         
+
+
