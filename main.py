@@ -31,6 +31,7 @@ class Main:
 
     # Motor:
     ourMotor = None
+    LastLuxTarget = None
 
     def __init__(self):
 
@@ -54,10 +55,10 @@ class Main:
         # self.Strip.Set_Colour(Colour( 0, 0, 255))
         
         # testing my colour converter
-        if self.APDS is not None:
-            time.sleep(0.5)
-            l, c, R, G, B = self.APDS.GetCRGB()
-            print(LEDStrip.ConvertSensorRGB(R, G, B))
+        # if self.APDS is not None:
+        #     time.sleep(0.5)
+        #     l, c, R, G, B = self.APDS.GetCRGB()
+        #     print(LEDStrip.ConvertSensorRGB(R, G, B))
 
 
         # KEEP THIS AT THE END! it is a continuous loop
@@ -155,6 +156,7 @@ class Main:
             # self.MC_Timer.deinit()
             self.ADCTimerStop()
 
+
     # A Helper function
     # Uused in ManCurtainPosInit and ManualModePinChange, keeps things consistant.
     def ADCTimerStart(self):
@@ -212,7 +214,7 @@ class Main:
             if not self.IsManual:
                 self.ParseWebDic(WU.CheckIn())
 
-            time.sleep(10)
+            time.sleep(5)
 
     def ParseWebDic(self, dic):
         # don't bother if it's not a dictionary
@@ -222,18 +224,66 @@ class Main:
 
         print(dic)
         
-        # automatic mode stuff
+        # Automatic mode stuff
         if 'SystemMode' in dic and dic['SystemMode'] == 'automatic':
             print(f'1 it is {dic['SystemMode']}')
-        # custom mode stuff
+
+            # 'LightTemperature': 'warm'
+            if 'LightTemperature' in dic:
+                self.LightTemp_Stuff(dic['LightTemperature'])
+            # 'LightIntensity': 'shade'
+
+
+
+        # Custom mode stuff
         elif 'SystemMode' in dic and dic['SystemMode'] == 'custom':
-            # {'SystemMode': 'custom', 'LEDColour': '#554d80', 'LightTemperature': 'warm', 'LightIntensity': 'shade', 'CurtainPosition': '24'}
             print(f'2 it is {dic['SystemMode']}')
 
             # 'CurtainPosition': '24'
+            if 'CurtainPosition' in dic:
+                perc = int(dic['CurtainPosition'])
+                # only request a curtain position change if the position is different from where it's already going
+                if self.ourMotor.GetTargetPosPercent() != perc:
+                    self.ourMotor.MoveToPercent(perc)
+
             # 'LEDColour': '#554d80'
-            if 'LEDColour' in dic:
+            if 'LEDColour' in dic: # and self.LastColour != dic['LEDColour']:
+                # self.LastColour = 
                 self.Strip.SetFromHex(dic['LEDColour'])
+
+
+    def LightIntensity_Stuff(self, Intense):
+        LuxIntensities = {'bright': 2000, 'cheery', 'shady', 'dim', 'gloomy': 50}
+
+        if Intense in LuxIntensities:
+            DesLux = LuxIntensities[Intense]
+        # do nothing if the value is garbage.
+        else:
+            return
+
+        if self.LastLuxTarget != DesLux:
+
+
+            # DO A THING HERE, I'M TIRED AND FORGOT WHAT
+            pass
+
+
+    def LightTemp_Stuff(self, temp):
+        # Dictionary containing the Colours corresponding to the desired light temperature
+        tempColours = {'warmer': Colour(255, 165, 45), 'warm': Colour(255, 202, 128), 'neutral': Colour(255, 255, 255), 'cold': Colour(214, 228, 255), 'colder': Colour(168, 197, 255)}
+
+        if temp in tempColours:
+            DesiredColour = tempColours[temp]
+        # do nothing if the value is garbage.
+        else:
+            return
+
+        # AdjustAmbient(self, DesiredColour:Colour, sensor:APDS)
+        if self.APDS is not None:
+            self.Strip.AdjustAmbient(DesiredColour, self.APDS)     
+        else:
+            self.Strip.Set_Colour = DesiredColour
+
 
 
     def SensorsTest(self):

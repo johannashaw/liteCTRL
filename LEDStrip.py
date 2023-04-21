@@ -237,11 +237,11 @@ class LED_Strip_PWM:
         self.__set()
 
 
-        print(f'duty: red = {rdut}, green = {gdut}, blue = {bdut}')
-
-
 
     def AdjustAmbient(self, DesiredColour:Colour, sensor:APDS):
+        if APDS is None:
+            self.Set_Colour(DesiredColour)
+            return
         
         # get the sensor colour
         l, c, r, g, b = sensor.GetCRGB()
@@ -262,13 +262,16 @@ class LED_Strip_PWM:
         
 
         for i in range(3):
-            temps[i] = DesiredColour[i]*2 - sens[i]
+            # temps[i] = DesiredColour[i]*2 - sens[i]
+            self.colour[i] = DesiredColour[i]*2 - sens[i]
 
         # print(temps)
         
-        newcol = temps.NormalizeColour()
+        # newcol = temps.NormalizeColour()
+        self.colour.NormalizeColour()
 
-        print (newcol)
+        print (self.colour)
+        self.__set()
 
     # takes in the string representation of a hex form colour, and uses it to set the light colours
     def SetFromHex(self, col):
