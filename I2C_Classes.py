@@ -5,7 +5,7 @@
 #           - LED_Strip (maybe, depends if it needs I2C)
 # Created by: Johanna Shaw
 from machine import Pin, I2C, SoftI2C
-from LEDStrip import Colour
+# from LEDStrip import Colour
 
 # Base class for both sensors. 
 # Created under the assumption that both sensors are using the same I2C channel and this class ensures that they are.
@@ -21,7 +21,7 @@ class base_i2c:
 # the ambient light sensor
 class VEML7700(base_i2c):
     # Attributes:
-    address = 0x10    # PLEASE DON"T CHANGE THIS, address = 16
+    address = 0x10    # PLEASE DON'T CHANGE THIS, address = 16
     
     # Note:
     #   ALS means Ambient Light Sensor

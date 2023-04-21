@@ -15,14 +15,51 @@ import time
 
 # Represents individual lights on the LED strip
 class Colour:
+    
     # to initialize from ints
-    def __init__(self, Red = 0, Green = 0, Blue = 0):
+    def __init__(self, Red:int = 0, Green:int = 0, Blue:int = 0):
         self.Red = Red
         self.Green = Green
         self.Blue = Blue
 
+    def __iter__(self):
+        self.iter = 0
+        return self
+    def __next__(self):
+        # returns the RGB values
+        if self.iter == 0:
+            self.iter += 1
+            return self.Red
+        elif self.iter == 1:
+            self.iter += 1
+            return self.Green
+        elif self.iter == 2:
+            self.iter += 1
+            return self.Blue
+        
+        raise StopIteration
+    
+    def __getitem__(self, item):
+        # returns the RGB values
+        if item == 0:
+            return self.Red
+        elif item == 1:
+            return self.Green
+        elif item == 2:
+            return self.Blue
+        
+    def __setitem__(self, key, newvalue):
+        # returns the RGB values
+        if key == 0:
+            self.Red = newvalue
+        elif key == 1:
+            self.Green = newvalue
+        elif key == 2:
+            self.Blue = newvalue
+
+    
     # to initialize from another Colour
-    def __init__(self, col):
+    def Copy(self, col):
         
         self.Red += col.Red
         self.Green += col.Green
@@ -45,7 +82,7 @@ class Colour:
 
 
     # easy set of all the colours
-    def Set(self, Red, Green, Blue):
+    def Set(self, Red:int, Green:int, Blue:int):
         self.Red = Red
         self.Green = Green
         self.Blue = Blue
@@ -54,8 +91,30 @@ class Colour:
     def get(self):
         return self.Red, self.Green, self.Blue 
     
+    def NormalizeColour(self):
+        # make sure that all components are positive
+        smallest = min(self)
+        if smallest < 0:
+            for i in range(3):
+                self[i] -= smallest		#since this is negative, this is like adding the absolute value of the smallest
+                
+        # find the largest value
+        largestval = max(self)
+
+        # print(f' colour = {self}, max = {largestval}')
+
+
+        # use the largest value to normalize all of the colours
+        for i in range(3):
+            # print(self[i])
+            self[i] = (self[i] * 255) // largestval
+            # print(self[i])
+        
+        # return Color object with the normalized colour values
+        return self
+    
     def __str__(self) -> str:
-        return f'Red = {self.Red}, Green = {self.Green}, Blue = {self.Blue}'
+        return f'[Red = {self.Red}, Green = {self.Green}, Blue = {self.Blue}]'
     
     def __eq__(self, o) -> bool:
         if type(o) is not Colour:
@@ -70,7 +129,7 @@ class Colour:
             self.Blue += o
             return self
         if type(o) is Colour:
-            col = Colour(o)
+            col = Colour().Copy(o)
             col.Red = (col.Red + self.Red) // 2
             col.Green = (col.Green + self.Green) // 2
             col.Blue = (col.Blue + self.Blue) // 2
@@ -81,17 +140,35 @@ class Colour:
 
 # takes in raw RGB values returned from the ADPS sensor and converts it into the standard 255 values
 # returns a colour object
-def ConvertSensorRGB(Red, Green, Blue):
+def ConvertSensorRGB(Red:int, Green:int, Blue:int):    
     temp = [Red, Green, Blue]
+    
+    # print(f'ConvertSensorRGB : start = {temp}')
+
+    # make sure that all of the values are positive
+    smallest = min(temp)
+    if smallest < 0:
+        for i in range(3):
+            temp[i] -= smallest		#since this is negative, this is like adding the absolute value of the smallest
+            
+    
+    # print(f'ConvertSensorRGB : positive = {temp}')       
+
     # find the largest value
     largestval = max(temp)
+
 
     # use the largest value to normalize all of the colours
     for i in range(3):
         temp[i] = (temp[i] * 255) // largestval
+
+    
+    # print(f'ConvertSensorRGB : normalized = {temp}')
     
     # return Color object with the normalized colour values
     return Colour(temp[0], temp[1], temp[2])
+
+
 
 
 # class to drive an LED strip where the colours are set by PWM 
@@ -125,7 +202,7 @@ class LED_Strip_PWM:
 
     # Sets the Colour of the LED strip
     # Takes a Colour object as an argument, returns None
-    def Set_Colour(self, colour):
+    def Set_Colour(self, colour:Colour):
         # raise error if colour is not type Colour
         if type(colour) is not Colour:
             raise TypeError(f"""LEDStrip.LED_Strip_PWM.Set_Colour : "colour" argument needs to be of type Colour, {type(colour)} was given""")
@@ -156,19 +233,42 @@ class LED_Strip_PWM:
         
         # get the sensor colour
         l, c, r, g, b = sensor.GetCRGB()
+    
+        # get the sensor colour
+        # r, g, b = 255, 128, 64
 
         # average out the components of both colours
-        newPWM = ConvertSensorRGB(r, g, b) + DesiredColour
+        sens = Colour(r, g, b).NormalizeColour()
 
-        # 
+        DesiredColour.NormalizeColour()
+
+        print(f'desired: {DesiredColour},\t sensor: {sens}')
+
+        # newcol = Colour()
+
+        temps = Colour()
+        
+
+        for i in range(3):
+            temps[i] = DesiredColour[i]*2 - sens[i]
+
+        # print(temps)
+        
+        newcol = temps.NormalizeColour()
+
+        print (newcol)
+
+        
+
         """            Color c1 = label2.BackColor;
             Color c2 = label3.BackColor;
 
             int[] rgb = {(c1.R + c2.R)/2, (c1.G + c2.G) / 2 , (c1.B + c2.B) / 2 };
 
-
+            // the Average value
             label5.BackColor = Color.FromArgb(rgb[0], rgb[1], rgb[2]);
 
+            // the average value set to 100%
             while (rgb.Max() < 255)
             {
                 for (int i = 0; i < rgb.Length; i++)
@@ -248,7 +348,7 @@ class WS2812B_Strip:
 
     # Sets all of the lights to the given colour
     # Will send the data once it is done by default, option to not
-    def SetColours(self, Red, Green, Blue, send = True):
+    def SetColours(self, Red:int, Green:int, Blue:int, send = True):
 
         # Go through light list changing each of the colours' RGB values to given RGB values
         for Col in self.LED_list:
@@ -258,3 +358,5 @@ class WS2812B_Strip:
         if send:
             self.SendColours()
         
+
+

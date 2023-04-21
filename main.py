@@ -50,7 +50,11 @@ class Main:
 
         # initialize strip
         # GPIO pins: 11, 12, 13  =  irl pin: 15, 16, 17
-        self.Strip = LEDStrip.LED_Strip_PWM(R_Pin=11, G_Pin=12, B_Pin=13)
+        # self.Strip = LEDStrip.LED_Strip_PWM(R_Pin=11, G_Pin=12, B_Pin=13)
+
+        
+        # lets go for pins [24:26] (gp 18:20)
+        self.Strip = LEDStrip.LED_Strip_PWM(R_Pin=18, G_Pin=19, B_Pin=20)
         print('Light strip initialized')
 
       
@@ -58,13 +62,21 @@ class Main:
         # lets go for pins [24:27] (gp 18:21)
         # enable pin is on GPIO 10, or pin 14 irl
         # ADCBarrier pin is on GPIO 28, or pin 34 irl
-        self.ourMotor = Motor(18, 19, 20, 21, pinEnable=10, pinADCBarrier=28)
+        # self.ourMotor = Motor(18, 19, 20, 21, pinEnable=10, pinADCBarrier=28)
+        
+        # lets go for pins [14:17] (gp 10:13)
+        # enable pin is on GPIO 14, or irl pin 19 
+        # ADCBarrier pin is on GPIO 26, or pin 31 irl
+        self.ourMotor = Motor(14, 15, 16, 17, pinEnable=14, pinADCBarrier=26)
 
 
     # initializes the VEML, APDS, and thier shared I2C channel
     def SensorsInit(self):
         # GPIO pins 4 and 5 map to irl pins 6 and 7
-        base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
+        # base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
+
+        # GPIO pins 16 and 17 map to irl pins 21 and 22
+        base_i2c(SCL=17, SDA=16)      #initialize the I2C channel
         
         self.VEMLInit()
         self.APDSInit()
@@ -95,14 +107,14 @@ class Main:
         
     
     # initializes the ADC pin used for manual curtain positioning
-    # GPIO pin 16 = irl pin 21
+    # GPIO pin 28 = irl pin 34
     # GPIO pin 27 = irl pin 32
     def ManCurtainPosInit(self):
         self.MC_Timer = Timer()
         self.IsManual = False
         # Use this if we're working with 2 pin design:
-        # GPIO pin 16 = irl pin 21
-        self.IsManualPin = Pin(16, Pin.IN)
+    # GPIO pin 28 = irl pin 34
+        self.IsManualPin = Pin(28, Pin.IN)
         self.IsManualPin.irq(handler=self.ManualModePinChange, trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING)
         if self.IsManualPin.value() == 1:
             self.ADCTimerStart()

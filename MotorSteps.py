@@ -21,6 +21,7 @@ import time
 class Motor:
 
     # Class Members:
+    SaveFilename = 'Steps.txt'
     
     # MaxStep is the total steps it takes to get the curtain to completely closed to completely open 
     MaxStep = 112397
@@ -64,6 +65,9 @@ class Motor:
 
         # initialize the timer
         self.Timer = Timer()
+
+        # Get the saved steps from the last bootup
+        self.ReadSteps(self)
 
 
 
@@ -116,6 +120,10 @@ class Motor:
 
         self.Frequency = 750
 
+        #save our new position.
+        self.SaveSteps()
+
+        # to give a small delay if the motor is changing directions
         time.sleep(0.001)
 
 
@@ -166,10 +174,11 @@ class Motor:
                 self.Calibrate()
                 return
 
-        #
-        if self.CurrentStep % 200 == 0 and self.Frequency != self.MaxFq:
-            pass
-            self.RampUpFreq()
+        # this will save the steps every rotation
+        if self.CurrentStep % 200 == 0:     # and self.Frequency != self.MaxFq:
+            self.SaveSteps()
+            # pass
+            # self.RampUpFreq()
 
 
     # will fully close and then fully open the curtains in order to get the total steps value
@@ -201,6 +210,10 @@ class Motor:
             self.MaxStep = self.CurrentStep
             self.__calibrate = False
             print(f'New SaxSteps = {self.MaxStep}')
+
+            # save the new steps to file 
+            # (needs to do this again since the MaxStep may have changed)
+            self.SaveSteps()
         
         self.__caliStep += 1
 
@@ -257,6 +270,36 @@ class Motor:
 
         self.Timer.init(freq=self.Frequency, mode=Timer.PERIODIC, callback=self.__MoveStep)
 
+
+    # will save the current step position and the last recorded MaxStep value
+    def SaveSteps(self):
+        try:
+            with open(self.SaveFilename, 'w', encoding='utf-8-sig') as file:
+                file.write(f'{self.CurrentStep}\n')
+                file.write(f'{self.MaxStep}')
+
+        except Exception as ex:
+            print(f'The given filename "{self.SaveFilename}" yielded an exception of type {type(ex)}')
+            print(f'Exception was {ex}')
+            print('Fhe Candidates and their weighted odds were not loaded')
+            
+            
+    # reads the saved current step position and the last recorded maxstep value 
+    # and then saves them to the corresponding class members 
+    def ReadSteps(self):
+        try:
+            with open(self.SaveFilename, 'r', encoding='utf-8-sig') as file:
+                try:
+                    self.CurrentStep = int(file.readline())
+                    self.MaxStep = int(file.readline())
+                except:
+                    print('Parsing the file did not work. WHOOPSIES!')
+
+        except Exception as ex:
+            print(f'The given filename "{self.SaveFilename}" yielded an exception of type {type(ex)}')
+            print(f'Exception was {ex}')
+        
+        
 
 
 
