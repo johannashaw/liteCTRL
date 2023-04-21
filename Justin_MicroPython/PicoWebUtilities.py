@@ -50,6 +50,7 @@ def Connect():
     # return connection object
     return wlan
 
+Connect()
      
 # function for making get requests to our server
 def GetRequest(**kwargs):
