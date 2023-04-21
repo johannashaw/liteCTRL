@@ -18,7 +18,7 @@ import urequests
 import json
 
 # Connection indicator off
-pico_led.off()
+#pico_led.off()
 
 ssid = "Justin’s iPhone"
 password = "deskmate"
