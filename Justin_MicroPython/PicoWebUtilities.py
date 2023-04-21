@@ -12,7 +12,7 @@
 
 import network
 from time import sleep
-from picozero import pico_temp_sensor, pico_led
+#from picozero import pico_temp_sensor, pico_led
 import machine
 import urequests
 import json
@@ -37,11 +37,11 @@ def Connect():
     while wlan.isconnected() == False:
         connectCount += 1
         print(f"{connectCount}-Attempting connection...")
-        pico_led.toggle()
+        #pico_led.toggle()
         sleep(1)
         
     # Connection indicator on
-    pico_led.on()
+    #pico_led.on()
 
     # print Pico ip address
     ip = wlan.ifconfig()[0]
