@@ -171,7 +171,7 @@ class Main:
         
         self.IsManual = False
 
-        self.MC_Timer.init(freq=1, mode=Timer.PERIODIC, callback=self.WebShit)
+        # self.MC_Timer.init(freq=1, mode=Timer.PERIODIC, callback=self.WebShit)
 
     def ADCCallback(self, timer):
         # increments of 10%
@@ -208,12 +208,33 @@ class Main:
     def WebShit(self):
 
         while True:
-            dic = WU.CheckIn()
-        
-            print(dic)
+            # 
+            if not self.IsManual:
+                self.ParseWebDic(WU.CheckIn())
 
             time.sleep(10)
+
+    def ParseWebDic(self, dic):
+        # don't bother if it's not a dictionary
+        if type(dic) is not dict:
+            print(f'Not a Dictionary : {dic}')
+            return
+
+        print(dic)
         
+        # automatic mode stuff
+        if 'SystemMode' in dic and dic['SystemMode'] == 'automatic':
+            print(f'1 it is {dic['SystemMode']}')
+        # custom mode stuff
+        elif 'SystemMode' in dic and dic['SystemMode'] == 'custom':
+            # {'SystemMode': 'custom', 'LEDColour': '#554d80', 'LightTemperature': 'warm', 'LightIntensity': 'shade', 'CurtainPosition': '24'}
+            print(f'2 it is {dic['SystemMode']}')
+
+            # 'CurtainPosition': '24'
+            # 'LEDColour': '#554d80'
+            if 'LEDColour' in dic:
+                self.Strip.SetFromHex(dic['LEDColour'])
+
 
     def SensorsTest(self):
         self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)

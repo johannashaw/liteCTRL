@@ -112,6 +112,9 @@ class Colour:
         
         # return Color object with the normalized colour values
         return self
+
+
+    
     
     def __str__(self) -> str:
         return f'[Red = {self.Red}, Green = {self.Green}, Blue = {self.Blue}]'
@@ -203,6 +206,22 @@ class LED_Strip_PWM:
 
         return pwm
 
+    def __set(self):
+            # Convert colour.Red to duty value / 1023
+        # set duty cycle
+        rdut = self.colour.Red * (65535 // 255)
+        self.Red.duty_u16(rdut)
+
+        # Convert colour.Green to duty value / 1023
+        # set duty cycle
+        gdut = self.colour.Green * (65535 // 255)
+        self.Green.duty_u16(gdut)
+
+        # Convert colour.Blue to duty value / 1023
+        # set duty cycle
+        bdut = self.colour.Blue * (65535 // 255)
+        self.Blue.duty_u16(bdut)
+
 
     # Sets the Colour of the LED strip
     # Takes a Colour object as an argument, returns None
@@ -213,24 +232,13 @@ class LED_Strip_PWM:
 
         #   as an unsigned 16-bit value in the range 0 (all off) to 65535 (all on) inclusive
 
-        # Convert colour.Red to duty value / 1023
-        # set duty cycle
-        rdut = colour.Red * (65535 // 255)
-        self.Red.duty_u16(rdut)
+        self.colour = colour
 
-        # Convert colour.Green to duty value / 1023
-        # set duty cycle
-        gdut = colour.Green * (65535 // 255)
-        self.Green.duty_u16(gdut)
+        self.__set()
 
-        # Convert colour.Blue to duty value / 1023
-        # set duty cycle
-        bdut = colour.Blue * (65535 // 255)
-        self.Blue.duty_u16(bdut)
 
         print(f'duty: red = {rdut}, green = {gdut}, blue = {bdut}')
 
-        self.colour = colour
 
 
     def AdjustAmbient(self, DesiredColour:Colour, sensor:APDS):
@@ -262,28 +270,16 @@ class LED_Strip_PWM:
 
         print (newcol)
 
+    # takes in the string representation of a hex form colour, and uses it to set the light colours
+    def SetFromHex(self, col):
+        start = 1
+
+        for i in range(3):
+            print('0x' + col[start : start + 2])
+            self.colour[i] = int('0x' + col[start : start + 2], 16)
+            start += 2
+
         
-
-        """            Color c1 = label2.BackColor;
-            Color c2 = label3.BackColor;
-
-            int[] rgb = {(c1.R + c2.R)/2, (c1.G + c2.G) / 2 , (c1.B + c2.B) / 2 };
-
-            // the Average value
-            label5.BackColor = Color.FromArgb(rgb[0], rgb[1], rgb[2]);
-
-            // the average value set to 100%
-            while (rgb.Max() < 255)
-            {
-                for (int i = 0; i < rgb.Length; i++)
-                {
-                    rgb[i]++;
-                }
-            }
-
-            label4.BackColor = Color.FromArgb(rgb[0], rgb[1], rgb[2]);"""
-
-
-
+        self.__set()
 
 
