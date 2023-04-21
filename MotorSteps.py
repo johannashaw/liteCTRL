@@ -41,9 +41,9 @@ class Motor:
     forward = 1
 
     __calibrate = False
-    Frequency = 750
-    MinFq = 750
-    MaxFq = 750
+    MinFq = 500
+    Frequency = MinFq
+    MaxFq = 720
 
     lastBarrier = None
 
@@ -67,7 +67,7 @@ class Motor:
         self.Timer = Timer()
 
         # Get the saved steps from the last bootup
-        self.ReadSteps(self)
+        self.ReadSteps()
 
 
 
@@ -118,7 +118,7 @@ class Motor:
         # reset the Stepcheck value
         self.StepCheck = False
 
-        self.Frequency = 750
+        self.Frequency = self.MinFq
 
         #save our new position.
         self.SaveSteps()
@@ -177,8 +177,7 @@ class Motor:
         # this will save the steps every rotation
         if self.CurrentStep % 200 == 0:     # and self.Frequency != self.MaxFq:
             self.SaveSteps()
-            # pass
-            # self.RampUpFreq()
+            self.RampUpFreq()
 
 
     # will fully close and then fully open the curtains in order to get the total steps value
@@ -235,6 +234,7 @@ class Motor:
         
         # set stepcheck so that the pico checks and stops at the desired location.
         self.StepCheck = True
+        print(f'moving to {percent}%')
         
         if self.StepTarget > self.CurrentStep:
             self.Open()
@@ -300,6 +300,7 @@ class Motor:
             print(f'Exception was {ex}')
         
         
+
 
 
 

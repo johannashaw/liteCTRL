@@ -166,9 +166,6 @@ class APDS9960(base_i2c):
         # bit 1 = ALS Enable
         if self.Write(0x80, 0x03) != 0:
             raise Exception('APDS9960 not initialized')
-        else:
-            print('APDS9960 initialized')
-
         # set integration time to 100ms
         self.Write(0x81, 220)
 
@@ -270,3 +267,4 @@ class APDS9960(base_i2c):
 
         # Return RGB
         return lux, clear, red, green, blue
+
