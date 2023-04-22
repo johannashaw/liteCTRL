@@ -13,6 +13,8 @@ from LEDStrip import LED_Strip_PWM, Colour
 import LEDStrip
 import time
 import PicoWebUtilities as WU
+# import _thread
+# import threading
 
 
 class Main:
@@ -61,8 +63,12 @@ class Main:
         #     print(LEDStrip.ConvertSensorRGB(R, G, B))
 
 
-        # KEEP THIS AT THE END! it is a continuous loop
+        # KEEP THIS AT THE END! it is a continuous loop    
         self.WebShit()
+
+        # threading alternative
+        # _thread.start_new_thread(self.WebShit, (0,0))
+        # print('Thread started:')
 
 
     # Initializes the light strip object
@@ -207,16 +213,44 @@ class Main:
 
 
     # does get request and then does *something* with the data :)
-    def WebShit(self):
+    def WebShit(self, DC_1 = None, DC_2 = None):
+
+        lastRequest = None
+        Luxes = []
+        Temps = []
+        lastTime = time.ticks_ms()
 
         while True:
+            time.sleep(1)
             # 
             if not self.IsManual:
-                self.ParseWebDic(WU.CheckIn())
+                # get the Lux and Temp, add to arrays                
+                if self.APDS is not None:
+                    lux_APDS, clear, red, green, blue = self.APDS.GetCRGB()
+                    Luxes.append(lux_APDS)
+                    Temps.append(Colour(red, green, blue).NormalizeColour())
 
-            time.sleep(5)
+                dic = WU.CheckIn()
 
-    def ParseWebDic(self, dic):
+                # if there's been a change in values or it's been a minute
+                if lastRequest != dic or time.ticks_diff(time.ticks_ms(), lastTime) > 10 * 1000:
+                    lastTime = time.ticks_ms()
+                    lastRequest = dic
+
+                    # Pass the 
+                    self.ParseWebDic(dic, Luxes, Temps)
+                    Luxes.clear()
+                    Temps.clear()
+
+            else:
+                lastTime = time.ticks_ms()
+                lastRequest = None
+                Luxes.clear()
+                Temps.clear()
+
+           
+
+    def ParseWebDic(self, dic, Luxes, Temps):
         # don't bother if it's not a dictionary
         if type(dic) is not dict:
             print(f'Not a Dictionary : {dic}')
@@ -253,7 +287,7 @@ class Main:
 
 
     def LightIntensity_Stuff(self, Intense):
-        LuxIntensities = {'bright': 2000, 'cheery', 'shady', 'dim', 'gloomy': 50}
+        LuxIntensities = {'bright': 5000, 'cheery' : 2000, 'shady' : 1000, 'dim' : 500, 'gloomy': 50}
 
         if Intense in LuxIntensities:
             DesLux = LuxIntensities[Intense]
@@ -309,6 +343,18 @@ class Main:
         print(f'VEML = {lux_VEML}, APDS = {lux_APDS}')
         
 
+def AverageColours(ColDic:dict) -> Colour:
+    retCol = Colour()
+
+    # Add all of the colour components together
+    for col in ColDic:
+        retCol += col
+
+    # Devide each colour component by the length of the dictionary
+    for x in range[3]:
+        retCol[x] /= len(ColDic)
+
+    return retCol
 
 if __name__ == '__main__':
     Main()

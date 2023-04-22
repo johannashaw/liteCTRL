@@ -72,10 +72,13 @@ class Motor:
 
 
     # Helper function for StartBackwards and StartForwards
-    def __start(self, direction):
+    def __start(self, direction) -> None:
+        # raise an error if direction is invalid
         if direction != 1 and direction != -1:
             raise ValueError(f'MotorSteps.__start : argument "direction" can only be 1 or -1, {direction} was given')
-        
+        # if the motor is already moving in the direction that we want, do nothing
+        elif direction == self.Moving:
+            return
         # reset the frequency to the min
         self.Frequency = self.MinFq
         
@@ -106,7 +109,8 @@ class Motor:
 
 
     # Stops the motor and makes it so that there's no electricity going through it
-    def Stop(self):
+    def Stop(self) -> None:
+        print('Motor Stopped')
         self.EnablePin.value(0)
         self.Timer.deinit()
 
@@ -129,7 +133,7 @@ class Motor:
 
     # The Callback function driving each motor step
     # Uses a full-wave stepping pattern
-    def __MoveStep(self, timer):
+    def __MoveStep(self, timer) -> None:
         # if forward: Step += 1,
         # if backwards Step -= 1
         self.CurrentStep += self.Moving
@@ -181,7 +185,7 @@ class Motor:
 
 
     # will fully close and then fully open the curtains in order to get the total steps value
-    def Calibrate(self):
+    def Calibrate(self) -> None:
         # self.__calibrate is used to indicate whether we're in the process of calibrating the curtain
         # self.__caliStep will hold our place in this function
 
@@ -218,17 +222,21 @@ class Motor:
 
     
     # will completely open the curtains
-    def Open(self):
+    def Open(self) -> None:
         self.__start(1)
 
 
     # will completely close the curtains
-    def Close(self):
+    def Close(self) -> None:
         self.__start(-1)
 
 
     # will move curtains to percent open
-    def MoveToPercent(self, percent):
+    def MoveToPercent(self, percent:int) -> None:
+        # if the curtain is already going to where it shoulld, do nothing
+        if self.GetTargetPosPercent() == percent:
+            return
+
         # set desired position
         self.StepTarget = (self.MaxStep * percent) // 100
         
@@ -248,17 +256,17 @@ class Motor:
 
 
     # returns the current position of the curtain as a percent
-    def GetCurrentPosPercent(self):
-        return self.CurrentStep * 100 // self.MaxStep
+    def GetCurrentPosPercent(self) -> int:
+        return (self.CurrentStep * 100.01) // self.MaxStep
 
 
     # returns the target position of the curtain as a percent
-    def GetTargetPosPercent(self):
-        return self.StepTarget * 100 // self.MaxStep
+    def GetTargetPosPercent(self) -> int:
+        return (self.StepTarget * 100.01) // self.MaxStep
     
     
     #increases the Frequency that the motor is running at by 10Hz 
-    def RampUpFreq(self):
+    def RampUpFreq(self) -> None:
         # check so don't do anything that you shouldn't be doing
         if self.Moving == 0 or self.Frequency == self.MaxFq:
             return
@@ -272,7 +280,7 @@ class Motor:
 
 
     # will save the current step position and the last recorded MaxStep value
-    def SaveSteps(self):
+    def SaveSteps(self) -> None:
         try:
             with open(self.SaveFilename, 'w', encoding='utf-8-sig') as file:
                 file.write(f'{self.CurrentStep}\n')

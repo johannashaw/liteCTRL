@@ -102,6 +102,8 @@ class Colour:
         largestval = max(self)
 
         # print(f' colour = {self}, max = {largestval}')
+        if largestval == 0:
+             return self
 
 
         # use the largest value to normalize all of the colours
