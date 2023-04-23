@@ -1,6 +1,5 @@
 from LEDStrip import Colour, ConvertSensorRGB
 
-
 def SaveSteps():
     Steps = 112397
     MaxSteps = 112397
@@ -74,7 +73,23 @@ def ColTest2():
 
     AdjustAmbient(col, 255, 128, 64)
 
-ColTest2()
+
+
+def convertHexToCol(col) -> Colour:
+    start = 1
+    convCol = Colour()
+
+    for i in range(3):
+        print('0x' + col[start : start + 2])
+        convCol[i] = int('0x' + col[start : start + 2], 16)
+        start += 2
+
+    return convCol
+
+
+# ColTest2()
+
+print(convertHexToCol('#554d80'))
         
 # SaveSteps()
 # ReadSteps()

@@ -9,9 +9,10 @@
 from machine import Pin, Timer, PWM, ADC
 from MotorSteps import Motor
 from I2C_Classes import base_i2c, VEML7700, APDS9960
-# from LEDStrip import LED_Strip_PWM, Colour
+from LEDStrip import LED_Strip_PWM, Colour
 import LEDStrip
 import time
+import PicoWebUtilities as WU
 
 
 class Main:
@@ -20,6 +21,17 @@ class Main:
 
     MC_Timer = Timer()  # The timer used for ADC positioning callbacks
     IsManual = False
+    
+    # Sensors:
+    VEML = None
+    APDS = None
+
+    # Lights:
+    Strip = None
+
+    # Motor:
+    ourMotor = None
+    LastLuxTarget = None
 
     def __init__(self):
 
@@ -27,21 +39,30 @@ class Main:
 
         # initialize the Motor, sensors, and LEDs
 
-        # self.MotorInit()
+        self.MotorInit()
         self.SensorsInit()
-        # self.PWM_Strip_Init()
-        # self.ManCurtainPosInit()      # initialize the ADC curtain position pin:
+        self.PWM_Strip_Init()
+        self.ManCurtainPosInit()      # initialize the ADC curtain position pin:
         
 
         # self.ourMotor.Calibrate()
+        # self.ourMotor.Open()
+        # self.ourMotor.Close()
+
         # self.SensorsTest()
+        # self.Strip.Set_Colour(Colour(255, 0, 0))
+        # self.Strip.Set_Colour(Colour(0, 255, 0))
+        # self.Strip.Set_Colour(Colour( 0, 0, 255))
         
         # testing my colour converter
-        if self.APDS is not None:
+        # if self.APDS is not None:
+        #     time.sleep(0.5)
+        #     l, c, R, G, B = self.APDS.GetCRGB()
+        #     print(LEDStrip.ConvertSensorRGB(R, G, B))
 
-            l, c, R, G, B = self.APDS.GetCRGB()
-            print(LEDStrip.ConvertSensorRGB(R, G, B))
 
+        # KEEP THIS AT THE END! it is a continuous loop
+        self.WebShit()
 
 
     # Initializes the light strip object
@@ -54,26 +75,20 @@ class Main:
 
         
         # lets go for pins [24:26] (gp 18:20)
-        self.Strip = LEDStrip.LED_Strip_PWM(R_Pin=18, G_Pin=19, B_Pin=20)
+        self.Strip = LED_Strip_PWM(R_Pin=18, G_Pin=19, B_Pin=20)
         print('Light strip initialized')
 
       
     def MotorInit(self):       
-        # lets go for pins [24:27] (gp 18:21)
-        # enable pin is on GPIO 10, or pin 14 irl
-        # ADCBarrier pin is on GPIO 28, or pin 34 irl
-        # self.ourMotor = Motor(18, 19, 20, 21, pinEnable=10, pinADCBarrier=28)
         
-        # lets go for pins [14:17] (gp 10:13)
+        # lets go for pins  GPIO 10, 11, 12, 13, or irl [14:17]
         # enable pin is on GPIO 14, or irl pin 19 
         # ADCBarrier pin is on GPIO 26, or pin 31 irl
-        self.ourMotor = Motor(14, 15, 16, 17, pinEnable=14, pinADCBarrier=26)
+        self.ourMotor = Motor(10, 11, 12, 13, pinEnable=14, pinADCBarrier=26)
 
 
     # initializes the VEML, APDS, and thier shared I2C channel
     def SensorsInit(self):
-        # GPIO pins 4 and 5 map to irl pins 6 and 7
-        # base_i2c(SCL=5, SDA=4)      #initialize the I2C channel
 
         # GPIO pins 16 and 17 map to irl pins 21 and 22
         base_i2c(SCL=17, SDA=16)      #initialize the I2C channel
@@ -118,6 +133,8 @@ class Main:
         self.IsManualPin.irq(handler=self.ManualModePinChange, trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING)
         if self.IsManualPin.value() == 1:
             self.ADCTimerStart()
+        else :
+            self.ADCTimerStop()
 
 
         # GPIO pin 27 == irl pin 32
@@ -127,25 +144,36 @@ class Main:
     # Called if the user has turned on/off the manual modepositioning switch
     def ManualModePinChange(self, pin):
         print(pin.value())
+        self.ourMotor.Stop()
 
         # manual mode on
         if pin.value() == 1:
             # Stop the motor (if on, no effect if off)
-            self.ourMotor.Stop()
             # Start the callback timer
             self.ADCTimerStart()
         # manual mode off
         else:
-            self.MC_Timer.deinit()
-            self.IsManual = False
+            # self.MC_Timer.deinit()
+            self.ADCTimerStop()
+
 
     # A Helper function
     # Uused in ManCurtainPosInit and ManualModePinChange, keeps things consistant.
     def ADCTimerStart(self):
-            # callback set for 10Hz or 0.1s
-            self.MC_Timer.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
-            self.IsManual = True
+        # self.timrr.deinit()
+        self.MC_Timer.deinit()
 
+        # callback set for 10Hz or 0.1s
+        self.MC_Timer.init(freq=1, mode=Timer.PERIODIC, callback=self.ADCCallback)
+        self.IsManual = True
+
+
+    def ADCTimerStop(self):
+        self.MC_Timer.deinit()
+        
+        self.IsManual = False
+
+        # self.MC_Timer.init(freq=1, mode=Timer.PERIODIC, callback=self.WebShit)
 
     def ADCCallback(self, timer):
         # increments of 10%
@@ -178,7 +206,85 @@ class Main:
         print(f'ADC ={ADCVal}, Percent = {DesPerc}, New Perc = {newPerc}, Target = {self.ourMotor.GetTargetPosPercent()}')
 
 
+    # does get request and then does *something* with the data :)
+    def WebShit(self):
+
+        while True:
+            # 
+            if not self.IsManual:
+                self.ParseWebDic(WU.CheckIn())
+
+            time.sleep(5)
+
+    def ParseWebDic(self, dic):
+        # don't bother if it's not a dictionary
+        if type(dic) is not dict:
+            print(f'Not a Dictionary : {dic}')
+            return
+
+        print(dic)
         
+        # Automatic mode stuff
+        if 'SystemMode' in dic and dic['SystemMode'] == 'automatic':
+            print(f'1 it is {dic['SystemMode']}')
+
+            # 'LightTemperature': 'warm'
+            if 'LightTemperature' in dic:
+                self.LightTemp_Stuff(dic['LightTemperature'])
+            # 'LightIntensity': 'shade'
+
+
+
+        # Custom mode stuff
+        elif 'SystemMode' in dic and dic['SystemMode'] == 'custom':
+            print(f'2 it is {dic['SystemMode']}')
+
+            # 'CurtainPosition': '24'
+            if 'CurtainPosition' in dic:
+                perc = int(dic['CurtainPosition'])
+                # only request a curtain position change if the position is different from where it's already going
+                if self.ourMotor.GetTargetPosPercent() != perc:
+                    self.ourMotor.MoveToPercent(perc)
+
+            # 'LEDColour': '#554d80'
+            if 'LEDColour' in dic: # and self.LastColour != dic['LEDColour']:
+                # self.LastColour = 
+                self.Strip.SetFromHex(dic['LEDColour'])
+
+
+    def LightIntensity_Stuff(self, Intense):
+        LuxIntensities = {'bright': 2000, 'cheery', 'shady', 'dim', 'gloomy': 50}
+
+        if Intense in LuxIntensities:
+            DesLux = LuxIntensities[Intense]
+        # do nothing if the value is garbage.
+        else:
+            return
+
+        if self.LastLuxTarget != DesLux:
+
+
+            # DO A THING HERE, I'M TIRED AND FORGOT WHAT
+            pass
+
+
+    def LightTemp_Stuff(self, temp):
+        # Dictionary containing the Colours corresponding to the desired light temperature
+        tempColours = {'warmer': Colour(255, 165, 45), 'warm': Colour(255, 202, 128), 'neutral': Colour(255, 255, 255), 'cold': Colour(214, 228, 255), 'colder': Colour(168, 197, 255)}
+
+        if temp in tempColours:
+            DesiredColour = tempColours[temp]
+        # do nothing if the value is garbage.
+        else:
+            return
+
+        # AdjustAmbient(self, DesiredColour:Colour, sensor:APDS)
+        if self.APDS is not None:
+            self.Strip.AdjustAmbient(DesiredColour, self.APDS)     
+        else:
+            self.Strip.Set_Colour = DesiredColour
+
+
 
     def SensorsTest(self):
         self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)

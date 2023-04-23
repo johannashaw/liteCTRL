@@ -84,9 +84,13 @@ def CheckIn():
     response = urequests.get(httpURL)
     #print(f"Response status code: {response.status_code}")
     #print(f"Response text: {response.text}")
-    rawDic = json.loads(response.text)
-    
-    response.close()
+    try:
+        rawDic = json.loads(response.text)
+    except Exception as ex:
+        print(f'PicoWebUtilities.Checkin : {ex}')
+        return {}
+    finally:
+        response.close()
 
     refinedDic = {}
     refinedDic['SystemMode'] = rawDic['SystemMode']['Mode']
