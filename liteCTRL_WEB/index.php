@@ -45,8 +45,8 @@ session_unset();
                 <div class="leftMenu">Temperature</div>
                 <div class="rightMenu">
                 <select name="temperature" id="temperature">
-                        <option value="warm">Warm</option>
                         <option value="warmer">Warmer</option>
+                        <option value="warm">Warm</option>
                         <option value="neutral">Neutral</option>
                         <option value="cold">Cold</option>
                         <option value="colder">Colder</option>
