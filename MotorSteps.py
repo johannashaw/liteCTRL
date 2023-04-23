@@ -39,6 +39,7 @@ class Motor:
     # this indicates the value for openning.
     # it may change based on how the wires are hooked up
     forward = 1
+    
 
     __calibrate = False
     MinFq = 500
@@ -55,6 +56,8 @@ class Motor:
         self.PinB = Pin(pinB, Pin.OUT)
         self.PinC = Pin(pinC, Pin.OUT)
         self.PinD = Pin(pinD, Pin.OUT)
+
+        
         
         # Pin dedicated to enabling the motor  (So that the motor doesn't get super hot)
         self.EnablePin = Pin(pinEnable, Pin.OUT)
@@ -166,17 +169,21 @@ class Motor:
             elif adcVal < 25000 and self.Moving == -1: 
                 # far/closed barrier is hit (470)                
                 self.Stop()
+                self.lastBarrier = 'Closed'
                 print('Closed barrier hit')
                 print(f'ADC = {adcVal}\n')
             elif adcVal > 25000 and self.Moving == 1:
                 # close/open barrier hit (1k)              
                 self.Stop()
+                self.lastBarrier = 'Open'
                 print('Open barrier hit')
                 print(f'ADC = {adcVal}\n')
 
             if self.__calibrate and self.Moving == 0:
                 self.Calibrate()
                 return
+        else:
+            self.lastBarrier = None
 
         # this will save the steps every rotation
         if self.CurrentStep % 200 == 0:     # and self.Frequency != self.MaxFq:
@@ -223,19 +230,28 @@ class Motor:
     
     # will completely open the curtains
     def Open(self) -> None:
-        self.__start(1)
+        if self.__calibrate or self.lastBarrier != 'Open':
+            self.__start(1)
 
 
     # will completely close the curtains
     def Close(self) -> None:
-        self.__start(-1)
+        
+        if self.__calibrate or self.lastBarrier != 'Closed':
+            self.__start(-1)
 
 
     # will move curtains to percent open
     def MoveToPercent(self, percent:int) -> None:
-        # if the curtain is already going to where it shoulld, do nothing
+        # if the curtain is already going to where it should, do nothing
         if self.GetTargetPosPercent() == percent:
             return
+        
+        # keep the curtains in bounds:
+        if percent < 0:
+            percent = 0
+        elif percent > 100:
+            percent = 100
 
         # set desired position
         self.StepTarget = (self.MaxStep * percent) // 100

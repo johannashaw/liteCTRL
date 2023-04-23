@@ -13,16 +13,22 @@ from LEDStrip import LED_Strip_PWM, Colour
 import LEDStrip
 import time
 import PicoWebUtilities as WU
-# import _thread
+import _thread
 # import threading
+
+
+CurMain = None
 
 
 class Main:
     # basic initializations
-    timrr = Timer()
-
+    timrr = Timer()    
     MC_Timer = Timer()  # The timer used for ADC positioning callbacks
     IsManual = False
+
+    # Things for plant mode
+    IsPlant = False
+    PlantModePin = None
     
     # Sensors:
     VEML = None
@@ -45,7 +51,8 @@ class Main:
         self.SensorsInit()
         self.PWM_Strip_Init()
         self.ManCurtainPosInit()      # initialize the ADC curtain position pin:
-        
+
+        self.PlantModeInit()
 
         # self.ourMotor.Calibrate()
         # self.ourMotor.Open()
@@ -63,12 +70,24 @@ class Main:
         #     print(LEDStrip.ConvertSensorRGB(R, G, B))
 
 
-        # KEEP THIS AT THE END! it is a continuous loop    
-        self.WebShit()
+    # The pin used to determine if the device is in plant mode or not is:
+    # GPIO pin 15, or irl pin 20
+    def PlantModeInit(self):
+        self.PlantModePin  = Pin(15, Pin.IN)
 
-        # threading alternative
-        # _thread.start_new_thread(self.WebShit, (0,0))
-        # print('Thread started:')
+        self.PlantModeCallback()
+        
+        self.PlantModePin.irq(handler=self.PlantModeCallback, trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING)
+
+    
+    def PlantModeCallback(self, Pin=None):
+        # Let high be Wifi Mode Enabled
+        if self.PlantModePin.value() == 1:
+            self.IsPlant = False
+        # Let low be Plant Mode Enabled
+        else:
+            self.IsPlant = True
+
 
 
     # Initializes the light strip object
@@ -212,114 +231,6 @@ class Main:
         print(f'ADC ={ADCVal}, Percent = {DesPerc}, New Perc = {newPerc}, Target = {self.ourMotor.GetTargetPosPercent()}')
 
 
-    # does get request and then does *something* with the data :)
-    def WebShit(self, DC_1 = None, DC_2 = None):
-
-        lastRequest = None
-        Luxes = []
-        Temps = []
-        lastTime = time.ticks_ms()
-
-        while True:
-            time.sleep(1)
-            # 
-            if not self.IsManual:
-                # get the Lux and Temp, add to arrays                
-                if self.APDS is not None:
-                    lux_APDS, clear, red, green, blue = self.APDS.GetCRGB()
-                    Luxes.append(lux_APDS)
-                    Temps.append(Colour(red, green, blue).NormalizeColour())
-
-                dic = WU.CheckIn()
-
-                # if there's been a change in values or it's been a minute
-                if lastRequest != dic or time.ticks_diff(time.ticks_ms(), lastTime) > 10 * 1000:
-                    lastTime = time.ticks_ms()
-                    lastRequest = dic
-
-                    # Pass the 
-                    self.ParseWebDic(dic, Luxes, Temps)
-                    Luxes.clear()
-                    Temps.clear()
-
-            else:
-                lastTime = time.ticks_ms()
-                lastRequest = None
-                Luxes.clear()
-                Temps.clear()
-
-           
-
-    def ParseWebDic(self, dic, Luxes, Temps):
-        # don't bother if it's not a dictionary
-        if type(dic) is not dict:
-            print(f'Not a Dictionary : {dic}')
-            return
-
-        print(dic)
-        
-        # Automatic mode stuff
-        if 'SystemMode' in dic and dic['SystemMode'] == 'automatic':
-            print(f'1 it is {dic['SystemMode']}')
-
-            # 'LightTemperature': 'warm'
-            if 'LightTemperature' in dic:
-                self.LightTemp_Stuff(dic['LightTemperature'])
-            # 'LightIntensity': 'shade'
-
-
-
-        # Custom mode stuff
-        elif 'SystemMode' in dic and dic['SystemMode'] == 'custom':
-            print(f'2 it is {dic['SystemMode']}')
-
-            # 'CurtainPosition': '24'
-            if 'CurtainPosition' in dic:
-                perc = int(dic['CurtainPosition'])
-                # only request a curtain position change if the position is different from where it's already going
-                if self.ourMotor.GetTargetPosPercent() != perc:
-                    self.ourMotor.MoveToPercent(perc)
-
-            # 'LEDColour': '#554d80'
-            if 'LEDColour' in dic: # and self.LastColour != dic['LEDColour']:
-                # self.LastColour = 
-                self.Strip.SetFromHex(dic['LEDColour'])
-
-
-    def LightIntensity_Stuff(self, Intense):
-        LuxIntensities = {'bright': 5000, 'cheery' : 2000, 'shady' : 1000, 'dim' : 500, 'gloomy': 50}
-
-        if Intense in LuxIntensities:
-            DesLux = LuxIntensities[Intense]
-        # do nothing if the value is garbage.
-        else:
-            return
-
-        if self.LastLuxTarget != DesLux:
-
-
-            # DO A THING HERE, I'M TIRED AND FORGOT WHAT
-            pass
-
-
-    def LightTemp_Stuff(self, temp):
-        # Dictionary containing the Colours corresponding to the desired light temperature
-        tempColours = {'warmer': Colour(255, 165, 45), 'warm': Colour(255, 202, 128), 'neutral': Colour(255, 255, 255), 'cold': Colour(214, 228, 255), 'colder': Colour(168, 197, 255)}
-
-        if temp in tempColours:
-            DesiredColour = tempColours[temp]
-        # do nothing if the value is garbage.
-        else:
-            return
-
-        # AdjustAmbient(self, DesiredColour:Colour, sensor:APDS)
-        if self.APDS is not None:
-            self.Strip.AdjustAmbient(DesiredColour, self.APDS)     
-        else:
-            self.Strip.Set_Colour = DesiredColour
-
-
-
     def SensorsTest(self):
         self.timrr.init(freq=1, mode=Timer.PERIODIC, callback=self.SensorDataCallback)
 
@@ -343,18 +254,203 @@ class Main:
         print(f'VEML = {lux_VEML}, APDS = {lux_APDS}')
         
 
-def AverageColours(ColDic:dict) -> Colour:
+
+
+
+
+# does get request and then does *something* with the data :)
+def WebShit(DC_1 = None, DC_2 = None):
+
+    print("in WebShit")
+
+    # Vars for plantmode
+    Out_Luxes = []
+
+    # Vars for wifi mode
+    lastRequest = None
+    Luxes = []
+    Temps = []
+    lastTime = time.ticks_ms()
+
+
+
+    while True:
+        time.sleep(1)
+
+        # if it's in manual mode and not moving
+        if not CurMain.IsManual:
+            if CurMain.IsPlant:
+                print('Plant mode on')
+                # can't do anything for this one if the sensor isn't working
+                if CurMain.VEML is None:
+                    continue
+                tempLux = CurMain.VEML.Get_Lux()
+                print(tempLux)
+                Out_Luxes.append(tempLux)
+
+                # get the average of x Luxes
+                if len(Out_Luxes) == 10:
+                    AveLux = sum(Out_Luxes) / len(Out_Luxes)
+                    print(f'AverageLux == {AveLux}')
+                    # it's bright out, open curtains
+                    if AveLux > 700:
+                        CurMain.ourMotor.MoveToPercent(100)
+                    # it's dark out, close curtains
+                    elif AveLux < 100:
+                        CurMain.ourMotor.MoveToPercent(0)
+                    
+                    Out_Luxes.clear()
+
+
+
+            elif CurMain.ourMotor.Moving == 0:
+                print('Wifi mode')
+                # get the Lux and Temp, add to arrays                
+                if CurMain.APDS is not None:
+                    lux_APDS, clear, red, green, blue = CurMain.APDS.GetCRGB()
+                    Luxes.append(lux_APDS)
+                    Temps.append(Colour(red, green, blue).NormalizeColour())
+                
+                print('gettin:')
+                dic = WU.CheckIn()
+                print('got')
+
+                # if there's been a change in values or it's been a minute
+                if lastRequest != dic or time.ticks_diff(time.ticks_ms(), lastTime) > 10 * 1000:
+                    lastTime = time.ticks_ms()
+                    lastRequest = dic
+
+                    # Pass the 
+                    ParseWebDic(dic, Luxes, Temps)
+                    Luxes.clear()
+                    Temps.clear()
+
+        else:
+            lastTime = time.ticks_ms()
+            lastRequest = None
+            Luxes.clear()
+            Temps.clear()
+
+        
+
+def ParseWebDic(dic, Luxes, Temps):
+    # don't bother if it's not a dictionary
+    if type(dic) is not dict:
+        print(f'Not a Dictionary : {dic}')
+        return
+
+    print(dic)
+    
+    # Automatic mode stuff
+    if 'SystemMode' in dic and dic['SystemMode'] == 'automatic':
+        # print(f'1 it is {dic['SystemMode']}')
+
+        # 'LightTemperature': 'warm'
+        if 'LightTemperature' in dic:
+            LightTemp_Stuff(dic['LightTemperature'], Temps)
+        # 'LightIntensity': 'shade'
+        if 'LightIntensity' in dic:
+            LightIntensity_Stuff(dic['LightIntensity'], Luxes)
+
+
+
+    # Custom mode stuff
+    elif 'SystemMode' in dic and dic['SystemMode'] == 'custom':
+        # print(f'2 it is {dic['SystemMode']}')
+
+        # 'CurtainPosition': '24'
+        if 'CurtainPosition' in dic:
+            perc = int(dic['CurtainPosition'])
+            # only request a curtain position change if the position is different from where it's already going
+            if CurMain.ourMotor.GetTargetPosPercent() != perc:
+                CurMain.ourMotor.MoveToPercent(perc)
+
+        # 'LEDColour': '#554d80'
+        if 'LEDColour' in dic: # and self.LastColour != dic['LEDColour']:
+            # self.LastColour = 
+            CurMain.Strip.SetFromHex(dic['LEDColour'])
+
+
+def LightIntensity_Stuff(Intense, LuxList):
+    LuxIntensities = {'bright': 5000, 'cheery' : 2000, 'shady' : 1000, 'dim' : 500, 'gloomy': 50}
+
+    if Intense in LuxIntensities:
+        DesLux = LuxIntensities[Intense]
+    # do nothing if the value is garbage.
+    else:
+        return
+    
+    if len(LuxList) == 0:
+        # if the sensors aren't working, just open the curtains to an amount proportional to the desired brightness level
+        if CurMain.APDS is None:
+            CurMain.ourMotor.MoveToPercent(DesLux // 50)
+            return
+        # otherwise, just add a sensor value and continue (this shouldn't happen but just incase)
+        lux_APDS, clear, red, green, blue = CurMain.APDS.GetCRGB()
+        LuxList.append(lux_APDS)
+        
+    # Get average lux, compare it to our desured lux, adjust the curtains accordingly
+    AveLux = sum(LuxList) / len(LuxList)
+    print(f'AverageLux == {AveLux}')
+    # if it's a little darker than we want, open curtains 10% more
+    if DesLux > AveLux + 100 :
+        print('opening another 10%')
+        CurMain.ourMotor.MoveToPercent(CurMain.ourMotor.GetCurrentPosPercent() + 10)
+    # if it's a little lighter than we want, close curtains 10% more
+    elif DesLux < AveLux - 100:
+        print('closing by 10%')
+        CurMain.ourMotor.MoveToPercent(CurMain.ourMotor.GetCurrentPosPercent() - 10)
+
+    
+
+
+def LightTemp_Stuff(temp, ColList):
+    # Dictionary containing the Colours corresponding to the desired light temperature
+    tempColours = {'warmer': Colour(255, 165, 45), 'warm': Colour(255, 202, 128), 'neutral': Colour(255, 255, 255), 'cold': Colour(214, 228, 255), 'colder': Colour(168, 197, 255)}
+
+    if temp in tempColours:
+        DesiredColour = tempColours[temp]
+    # do nothing if the value is garbage.
+    else:
+        return
+
+    # AdjustAmbient(self, DesiredColour:Colour, sensor:APDS)
+    if CurMain.APDS is not None:
+
+        CurMain.Strip.AdjustAmbient(DesiredColour, AverageColours(ColList))    
+    else:
+        CurMain.Strip.Set_Colour = DesiredColour
+
+
+
+
+
+def AverageColours(ColList:list) -> Colour:
     retCol = Colour()
 
     # Add all of the colour components together
-    for col in ColDic:
+    for col in ColList:
         retCol += col
 
     # Devide each colour component by the length of the dictionary
     for x in range[3]:
-        retCol[x] /= len(ColDic)
+        retCol[x] /= len(ColList)
 
     return retCol
 
 if __name__ == '__main__':
-    Main()
+    #global CurMain
+    CurMain = Main()
+    
+    # KEEP THIS AT THE END! it is a continuous loop    
+    WebShit()
+
+    # threading alternative
+    # _thread.start_new_thread(WebShit, (0,0))
+    # print('Thread started:')
+
+    
+if CurMain is not None:
+    print('not None')
+else:
+    print('idk man')

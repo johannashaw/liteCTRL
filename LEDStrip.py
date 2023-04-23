@@ -102,6 +102,8 @@ class Colour:
         largestval = max(self)
 
         # print(f' colour = {self}, max = {largestval}')
+
+        # If all of them are zero, just stop now
         if largestval == 0:
              return self
 
@@ -240,19 +242,20 @@ class LED_Strip_PWM:
 
 
 
-    def AdjustAmbient(self, DesiredColour:Colour, sensor:APDS):
-        if APDS is None:
-            self.Set_Colour(DesiredColour)
-            return
+    def AdjustAmbient(self, DesiredColour:Colour, sens:Colour):
+    # def AdjustAmbient(self, DesiredColour:Colour, sensor:APDS):
+    #     if APDS is None:
+    #         self.Set_Colour(DesiredColour)
+    #         return
         
-        # get the sensor colour
-        l, c, r, g, b = sensor.GetCRGB()
+    #     # get the sensor colour
+    #     l, c, r, g, b = sensor.GetCRGB()
     
-        # get the sensor colour
-        # r, g, b = 255, 128, 64
+    #     # get the sensor colour
+    #     # r, g, b = 255, 128, 64
 
-        # average out the components of both colours
-        sens = Colour(r, g, b).NormalizeColour()
+    #     # average out the components of both colours
+    #     sens = Colour(r, g, b).NormalizeColour()
 
         DesiredColour.NormalizeColour()
 
@@ -260,7 +263,7 @@ class LED_Strip_PWM:
 
         # newcol = Colour()
 
-        temps = Colour()
+        # temps = Colour()
         
 
         for i in range(3):
