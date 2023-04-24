@@ -10,7 +10,7 @@ from machine import Pin, Timer, PWM, ADC
 from MotorSteps import Motor
 from I2C_Classes import base_i2c, VEML7700, APDS9960
 from LEDStrip import LED_Strip_PWM, Colour
-import LEDStrip
+# import LEDStrip
 import time
 import PicoWebUtilities as WU
 import _thread
@@ -272,17 +272,23 @@ def WebShit(DC_1 = None, DC_2 = None):
     Temps = []
     lastTime = time.ticks_ms()
 
-
+    print('gettin:')
+    dic = WU.CheckIn()
+    print('got')
 
     while True:
         time.sleep(1)
 
-        # if it's in manual mode and not moving
+        
         if not CurMain.IsManual:
+            # if the plant mode swich is on, or device isn't connected
+            # if there is no connection, default to plant mode
             if CurMain.IsPlant:
                 print('Plant mode on')
                 # can't do anything for this one if the sensor isn't working
                 if CurMain.VEML is None:
+                    # See if you can initialize it again
+                    CurMain.VEMLInit()
                     continue
                 tempLux = CurMain.VEML.Get_Lux()
                 print(tempLux)
@@ -302,8 +308,9 @@ def WebShit(DC_1 = None, DC_2 = None):
                     Out_Luxes.clear()
 
 
-
-            elif CurMain.ourMotor.Moving == 0:
+            # if it's in manual mode and an internet connection is established:
+            # It is in WiFi mode.
+            elif WU.connection.isconnected():
                 print('Wifi mode')
                 # get the Lux and Temp, add to arrays                
                 if CurMain.APDS is not None:
@@ -311,9 +318,12 @@ def WebShit(DC_1 = None, DC_2 = None):
                     Luxes.append(lux_APDS)
                     Temps.append(Colour(red, green, blue).NormalizeColour())
                 
-                print('gettin:')
-                dic = WU.CheckIn()
-                print('got')
+                # make sure the motor is stopped and enough time has passed to get a couple of readings before getting
+                # since get requests seems to hault our code
+                if CurMain.ourMotor.Moving == 0 and time.ticks_diff(time.ticks_ms(), lastTime) > 10 * 1000:
+                    print('gettin:')
+                    dic = WU.CheckIn()
+                    print('got')
 
                 # if there's been a change in values or it's been a minute
                 if lastRequest != dic or time.ticks_diff(time.ticks_ms(), lastTime) > 10 * 1000:
@@ -358,7 +368,7 @@ def ParseWebDic(dic, Luxes, Temps):
     elif 'SystemMode' in dic and dic['SystemMode'] == 'custom':
         # print(f'2 it is {dic['SystemMode']}')
 
-        # 'CurtainPosition': '24'
+        # Set your curtain position to the desired position
         if 'CurtainPosition' in dic:
             perc = int(dic['CurtainPosition'])
             # only request a curtain position change if the position is different from where it's already going
@@ -372,7 +382,7 @@ def ParseWebDic(dic, Luxes, Temps):
 
 
 def LightIntensity_Stuff(Intense, LuxList):
-    LuxIntensities = {'bright': 5000, 'cheery' : 2000, 'shady' : 1000, 'dim' : 500, 'gloomy': 50}
+    LuxIntensities = {'bright': 10000, 'cheery' : 2000, 'shady' : 1000, 'dim' : 500, 'gloomy': 50}
 
     if Intense in LuxIntensities:
         DesLux = LuxIntensities[Intense]
@@ -384,6 +394,8 @@ def LightIntensity_Stuff(Intense, LuxList):
         # if the sensors aren't working, just open the curtains to an amount proportional to the desired brightness level
         if CurMain.APDS is None:
             CurMain.ourMotor.MoveToPercent(DesLux // 50)
+            # try to initialize it again
+            CurMain.APDSInit()
             return
         # otherwise, just add a sensor value and continue (this shouldn't happen but just incase)
         lux_APDS, clear, red, green, blue = CurMain.APDS.GetCRGB()
@@ -391,7 +403,7 @@ def LightIntensity_Stuff(Intense, LuxList):
         
     # Get average lux, compare it to our desured lux, adjust the curtains accordingly
     AveLux = sum(LuxList) / len(LuxList)
-    print(f'AverageLux == {AveLux}')
+    print(f'Average Lux = {AveLux}, Desired Lux = {DesLux}')
     # if it's a little darker than we want, open curtains 10% more
     if DesLux > AveLux + 100 :
         print('opening another 10%')
@@ -415,7 +427,7 @@ def LightTemp_Stuff(temp, ColList):
         return
 
     # AdjustAmbient(self, DesiredColour:Colour, sensor:APDS)
-    if CurMain.APDS is not None:
+    if CurMain.APDS is not None and len(ColList) != 0:
 
         CurMain.Strip.AdjustAmbient(DesiredColour, AverageColours(ColList))    
     else:
@@ -428,13 +440,21 @@ def LightTemp_Stuff(temp, ColList):
 def AverageColours(ColList:list) -> Colour:
     retCol = Colour()
 
+    # print(ColList)
+
     # Add all of the colour components together
     for col in ColList:
-        retCol += col
+        for x in range(3):
+            retCol[x] += col[x]
+        # retCol += col
+
+    # print(f'{retCol} of type {type(retCol)}')
 
     # Devide each colour component by the length of the dictionary
-    for x in range[3]:
-        retCol[x] /= len(ColList)
+    for x in range(3):
+        retCol[x] //= len(ColList)
+
+    # retCol.NormalizeColour()
 
     return retCol
 

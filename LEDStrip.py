@@ -39,31 +39,31 @@ class Colour:
         
         raise StopIteration
     
-    def __getitem__(self, item):
+    def __getitem__(self, key):
         # returns the RGB values
-        if item == 0:
+        if key == 0 or key == 'Red':
             return self.Red
-        elif item == 1:
+        elif key == 1 or key == 'Green':
             return self.Green
-        elif item == 2:
+        elif key == 2 or key == 'Blue':
             return self.Blue
         
     def __setitem__(self, key, newvalue):
         # returns the RGB values
-        if key == 0:
+        if key == 0 or key == 'Red':
             self.Red = newvalue
-        elif key == 1:
+        elif key == 1 or key == 'Green':
             self.Green = newvalue
-        elif key == 2:
+        elif key == 2 or key == 'Blue':
             self.Blue = newvalue
 
     
     # to initialize from another Colour
     def Copy(self, col):
         
-        self.Red += col.Red
-        self.Green += col.Green
-        self.Blue += col.Blue
+        self.Red = col.Red
+        self.Green = col.Green
+        self.Blue = col.Blue
 
 
     # Used as an enumeration where it returns bits in order Green, Red, Blue, MSB first
@@ -121,7 +121,7 @@ class Colour:
     
     
     def __str__(self) -> str:
-        return f'[Red = {self.Red}, Green = {self.Green}, Blue = {self.Blue}]'
+        return f'* Red = {self.Red}, Green = {self.Green}, Blue = {self.Blue} *'
     
     def __eq__(self, o) -> bool:
         if type(o) is not Colour:
@@ -136,12 +136,15 @@ class Colour:
             self.Blue += o
             return self
         if type(o) is Colour:
-            col = Colour().Copy(o)
-            col.Red = (col.Red + self.Red) // 2
-            col.Green = (col.Green + self.Green) // 2
-            col.Blue = (col.Blue + self.Blue) // 2
+            self.Red += o.Red
+            self.Green += o.Green
+            self.Blue += o.Blue
+            # col = Colour().Copy(o)
+            # col.Red = (col.Red + self.Red) // 2
+            # col.Green = (col.Green + self.Green) // 2
+            # col.Blue = (col.Blue + self.Blue) // 2
 
-            return col
+            return self
             
 
 
@@ -257,7 +260,11 @@ class LED_Strip_PWM:
     #     # average out the components of both colours
     #     sens = Colour(r, g, b).NormalizeColour()
 
-        DesiredColour.NormalizeColour()
+
+        if DesiredColour is None or sens is None:
+            return
+
+        # DesiredColour.NormalizeColour()
 
         print(f'desired: {DesiredColour},\t sensor: {sens}')
 

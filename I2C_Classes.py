@@ -99,7 +99,7 @@ class VEML7700(base_i2c):
         temp = base_i2c.i2c.write(buff)
         if temp != 2:
             print(f'VLEM7700:Read: Write command: 2 ACK expected, {temp} ACK received')
-            return None#1
+            return None #1
         
         buff = bytes([(self.address << 1) + 1] )
 
@@ -138,15 +138,21 @@ class VEML7700(base_i2c):
     def Get_Lux(self):
         # Uses Command code #4 ( 04h, idk)
         # if you're using a different integration time you'll need to change this.
-        return self.Read(4) / 10
+        temp = self.Read(4)
+        if temp is not None:
+            temp /= 10
+        return  temp
     
 
     # Returns the white value (?)
     def Get_White(self):
-        return self.Read(5)
+        temp = self.Read(5)
+        if temp is not None:
+            temp /= 10
+        return  temp
 
 
-# NOTE: READ AND WRITE AREN'T TESTED
+# The ambient colour sensor
 class APDS9960(base_i2c):
     address = 0x39
 
